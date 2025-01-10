@@ -27,5 +27,5 @@ const LayoutStyle = styled.div`
 `
 const MainStyle = styled.div`
   margin-top: 3.5rem;
-  margin-bottom: 4.5rem;
+  margin-bottom: 4rem;
 `
