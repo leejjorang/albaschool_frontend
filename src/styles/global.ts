@@ -7,4 +7,4 @@ export const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     box-sizing: border-box;
   }
-`
+`;
