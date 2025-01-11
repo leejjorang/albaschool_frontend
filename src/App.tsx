@@ -1,13 +1,13 @@
 import { GlobalStyle } from "./styles/global";
 import Layout from "./components/layout/Layout";
-import Login from "./pages/common/Login";
+import WritePost from "./pages/manager/WritePost";
 
 function App() {
   return (
     <>
       <GlobalStyle />
       <Layout>
-        <Login />
+        <WritePost />
       </Layout>
     </>
   )
