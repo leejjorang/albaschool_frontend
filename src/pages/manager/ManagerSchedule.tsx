@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Button,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  FormControl,
+} from "@mui/material";
 import { ISchedule } from "../../types/schedule";
+import ScheduleModal from "./ScheduleModal";
 
 import moment from "moment";
 
@@ -34,6 +42,7 @@ const createEvents = () => {
 
 const ManagerSchedule = () => {
   const [events] = useState<ISchedule[]>(createEvents());
+  const [shopId, setShopId] = useState("1");
 
   // 이벤트 스타일 커스터마이징
   const eventStyleGetter = (event: ISchedule) => {
@@ -56,9 +65,31 @@ const ManagerSchedule = () => {
     </div>
   );
 
+  const handleShopChange = (event: SelectChangeEvent) => {
+    setShopId(event.target.value);
+  };
+
   return (
     <Box>
-      <Box></Box>
+      <Box
+        sx={{
+          padding: "1rem",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <FormControl sx={{ height: "3rem", width: "12rem" }}>
+          <Select
+            value={shopId}
+            onChange={handleShopChange}
+            sx={{ overflow: "hidden" }}
+          >
+            <MenuItem value="1">솥뚜껑 삼겹살</MenuItem>
+            <MenuItem value="2">롯데리아</MenuItem>
+          </Select>
+        </FormControl>
+        <ScheduleModal />
+      </Box>
       <Box
         sx={{
           height: "800px",
@@ -92,6 +123,9 @@ const ManagerSchedule = () => {
           },
           "& .rbc-event-content div": {
             overflow: "hidden",
+          },
+          "& .rbc-current-time-indicator": {
+            opacity: "0",
           },
         }}
       >
