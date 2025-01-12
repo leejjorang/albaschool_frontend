@@ -4,6 +4,7 @@ import StaffRegisterStore from "./pages/staff/RegisterStore";
 import ManagerRegisterStore from "./pages/manager/RegisterStore";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/common/Home";
+import User from "./pages/staff/User";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/store/register/staff" element={<StaffRegisterStore />} />
           <Route path="/store/register/manager" element={<ManagerRegisterStore />} />
+          <Route path="/user" element={<User />} />
         </Routes>
       </Layout>
     </BrowserRouter>
