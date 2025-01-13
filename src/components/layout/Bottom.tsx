@@ -53,7 +53,7 @@ export default Bottom;
 
 const BottomStyle = styled.div`
   background-color: #FFD400;
-  padding: 0.5rem;
+  padding: 0.2rem;
   position: fixed;
   bottom: 0;
   width: 100%
