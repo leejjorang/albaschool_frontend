@@ -7,6 +7,7 @@ import Home from "./pages/common/Home";
 import StaffUser from "./pages/staff/User";
 import ManagerUser from "./pages/manager/User";
 import UserEdit from "./pages/common/UserEdit";
+import ChatList from "./pages/common/ChatList";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/user/staff" element={<StaffUser />} />
           <Route path="/user/manager" element={<ManagerUser />} />
           <Route path="/user/edit" element={<UserEdit />} />
+          <Route path="/chats" element={<ChatList />} />
         </Routes>
       </Layout>
     </BrowserRouter>
