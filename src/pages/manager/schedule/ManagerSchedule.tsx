@@ -9,8 +9,8 @@ import {
   SelectChangeEvent,
   FormControl,
 } from "@mui/material";
-import { ISchedule } from "../../types/schedule";
-import ScheduleModal from "./ScheduleModal";
+import { ISchedule } from "../../../types/schedule";
+import ScheduleModal from "./AddModal";
 
 import moment from "moment";
 

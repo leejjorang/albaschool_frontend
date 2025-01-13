@@ -4,9 +4,11 @@ import StaffRegisterStore from "./pages/staff/RegisterStore";
 import ManagerRegisterStore from "./pages/manager/RegisterStore";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/common/Home";
-import ManagerSchedule from "./pages/manager/ManagerSchedule";
+import ManagerSchedule from "./pages/manager/schedule/ManagerSchedule";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./styles/theme";
+import Notice from "./pages/common/Notice";
+import ShopList from "./pages/common/ShopList";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
               element={<ManagerRegisterStore />}
             />
             <Route path="/schedule/manager" element={<ManagerSchedule />} />
+            <Route path="/notice" element={<Notice />} />
+            <Route path="/shop-list" element={<ShopList />} />
           </Routes>
         </Layout>
       </ThemeProvider>
