@@ -1,42 +1,66 @@
-import { Box, Button,Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
-interface SignUpProps {
+interface SignUpProps {   // 알바생
   email: string;
   verification: string;
   phone: string;
   password: string;
   checkPassword: string;
   name: string;
-  bussinessNum: string;
 }
-function Signup() {
+
+export interface BusinessSignUpProps extends SignUpProps {   // 사업자
+  businessNum: string;
+}
+
+type SignUpType = "staff" | "business";
+interface SignUpFormProps {
+  type: SignUpType;
+}
+
+function SignUpForm({ type }: SignUpFormProps) {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<SignUpProps>();
+  } = useForm<BusinessSignUpProps>();
 
-  const onSubmit = async () => {
-    //백엔드에 데이터 전송
+  const password = watch("password");
+
+  const onSubmit = async (data: BusinessSignUpProps | SignUpProps) => {
+    if (type === "business") {
+      // 사업자 회원가입 처리
+      const businessData = data as BusinessSignUpProps;
+    } else {
+      // 일반 회원가입 처리
+      const staffData = data as SignUpProps;
+    }
   };
 
-  const password = watch("password"); // password 필드의 값을 실시간으로 감시
-
   return (
-    <SignUpStyle>
+    <SignUpFormStyle>
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
         <Typography
           component="h1"
           variant="h4"
-          sx={{ fontWeight: "bold", width: "fit-content", margin: "0 auto" }}
+          sx={{
+            fontWeight: "bold",
+            width: "fit-content",
+            margin: "20px auto",
+            marginBottom: "1rem",
+          }}
         >
-          SignUp
+          회원가입
         </Typography>
         <Box>
-          <Box sx={{ display: "flex", marginTop: "40px" }}>
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
             <Typography className="title">이메일</Typography>
             <input
               className="inputBox"
@@ -48,12 +72,13 @@ function Signup() {
                   message: "올바른 이메일 형식이 아닙니다",
                 },
               })}
-              placeholder="  abc@naver.com"
+              placeholder="abc@naver.com"
             />
             <Button
               size="small"
               variant="contained"
               sx={{
+                marginRight: 1,
                 height: "35px",
                 color: "black",
                 background: "#FAED7D",
@@ -69,7 +94,11 @@ function Signup() {
             )}
           </Box>
 
-          <Box sx={{ display: "flex" }}>
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
             <Typography className="title"></Typography>
             <input
               className="inputBox"
@@ -77,12 +106,13 @@ function Signup() {
               {...register("verification", {
                 required: "인증번호를 입력하세요",
               })}
-              placeholder="  인증번호 입력"
+              placeholder="인증번호 입력"
             />
             <Button
               size="small"
               variant="contained"
               sx={{
+                marginRight: 1,
                 height: "35px",
                 color: "black",
                 background: "#FAED7D",
@@ -98,7 +128,11 @@ function Signup() {
             )}
           </Box>
 
-          <Box sx={{ display: "flex" }}>
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
             <Typography className="title">비밀번호</Typography>
             <input
               className="inputBox"
@@ -109,7 +143,12 @@ function Signup() {
               <p className="error-text">{errors.password.message}</p>
             )}
           </Box>
-          <Box sx={{ display: "flex" }}>
+
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
             <Typography className="title">비밀번호 확인</Typography>
             <input
               className="inputBox"
@@ -125,7 +164,11 @@ function Signup() {
             )}
           </Box>
 
-          <Box sx={{ display: "flex" }}>
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
             <Typography className="title">이름</Typography>
             <input
               className="inputBox"
@@ -135,32 +178,42 @@ function Signup() {
             {errors.name && <p className="error-text">{errors.name.message}</p>}
           </Box>
 
-          <Box sx={{ display: "flex" }}>
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
             <Typography className="title">전화번호</Typography>
             <input
               className="inputBox"
               type="text"
               {...register("phone", { required: "전화번호를 입력하세요" })}
-              placeholder="  010-1234-5678"
+              placeholder="010-1234-5678"
             />
             {errors.phone && (
               <p className="error-text">{errors.phone.message}</p>
             )}
           </Box>
 
-          <Box sx={{ display: "flex" }}>
-            <Typography className="title">사업자번호</Typography>
-            <input
-              className="inputBox"
-              type="text"
-              {...register("bussinessNum", {
-                required: "사업자번호를 입력하세요",
-              })}
-            />
-            {errors.bussinessNum && (
-              <p className="error-text">{errors.bussinessNum.message}</p>
-            )}
-          </Box>
+          {type === "business" && (
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Typography className="title">사업자번호</Typography>
+              <input
+                className="inputBox"
+                type="text"
+                {...register("businessNum", {
+                  required: "사업자번호를 입력하세요",
+                })}
+              />
+              {errors.businessNum && (
+                <p className="error-text">{errors.businessNum.message}</p>
+              )}
+            </Box>
+          )}
         </Box>
         <Box
           sx={{
@@ -188,25 +241,19 @@ function Signup() {
           </Button>
         </Box>
       </StyledForm>
-    </SignUpStyle>
+    </SignUpFormStyle>
   );
 }
-const StyledForm = styled.form`
-  width: 100%;
-  max-width: 600px; 
-  padding: 0 20px; 
-`;
 
-const SignUpStyle = styled.div`
+const SignUpFormStyle = styled.div`
+  width: 100%;
   height: calc(100vh - 8rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
 
   .title {
-    font-weight: bold;
     min-width: 140px; // 최소 너비 설정
     text-align: center;
   }
@@ -218,8 +265,9 @@ const SignUpStyle = styled.div`
     border-radius: 10px;
     background-color: #f7f6f6;
     border: 1px solid #dbcdcd;
-    margin-bottom: 20px;
-    margin-right: 20px;
+    margin-bottom: 16px;
+    margin-right: 10px;
+    padding: 10px;
 
     &:focus {
       outline: none;
@@ -232,13 +280,23 @@ const SignUpStyle = styled.div`
     font-size: 10px;
     position: absolute;
     bottom: 0;
-    left: 55%;
-    transform: translateX(-50%);
-    margin-bottom: 5px;
+    left:55%;
+    transform: translateX(-40%);
+    margin-bottom: 2px;
   }
 
   .MuiBox-root {
     position: relative;
   }
 `;
-export default Signup;
+
+const StyledForm = styled.form`
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+`;
+export default SignUpForm;

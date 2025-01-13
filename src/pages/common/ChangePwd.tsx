@@ -14,6 +14,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 20px;
 `;
 
 const commonTextFieldStyle = {
@@ -108,7 +109,7 @@ function ChangePwd() {
           variant="contained"
           sx={{
             width: "40%",
-            marginBottom: 3,
+            marginTop: 3,
             color: "black",
             background: "#FAED7D",
             "&:hover": {
@@ -116,7 +117,7 @@ function ChangePwd() {
             },
           }}
         >
-          확인
+          변경
         </Button>
       </StyledForm>
     </ChangePwdStyle>
