@@ -30,7 +30,7 @@ const BackgroundStyle = styled.div`
   left: 0;
   right: 0;
   z-index: 20;
-  height: 86vh;
+  height: calc(100vh - 3.4rem - 4rem);
   background-color: rgba(0, 0, 0, 0.4);
 `
 
