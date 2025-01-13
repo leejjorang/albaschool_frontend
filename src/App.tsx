@@ -4,6 +4,11 @@ import StaffRegisterStore from "./pages/staff/RegisterStore";
 import ManagerRegisterStore from "./pages/manager/RegisterStore";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/common/Home";
+import StaffUser from "./pages/staff/User";
+import ManagerUser from "./pages/manager/User";
+import UserEdit from "./pages/common/UserEdit";
+import ChatList from "./pages/common/ChatList";
+import ChatRoom from "./pages/common/ChatRoom"
 import ManagerSchedule from "./pages/manager/schedule/ManagerSchedule";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./styles/theme";
@@ -18,17 +23,16 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route
-              path="/store/register/staff"
-              element={<StaffRegisterStore />}
-            />
-            <Route
-              path="/store/register/manager"
-              element={<ManagerRegisterStore />}
-            />
+            <Route path="/store/register/staff" element={<StaffRegisterStore />} />
+            <Route path="/store/register/manager" element={<ManagerRegisterStore />} />
             <Route path="/schedule/manager" element={<ManagerSchedule />} />
             <Route path="/notice" element={<Notice />} />
             <Route path="/shop-list" element={<ShopList />} />
+            <Route path="/user/staff" element={<StaffUser />} />
+            <Route path="/user/manager" element={<ManagerUser />} />
+            <Route path="/user/edit" element={<UserEdit />} />
+            <Route path="/chats" element={<ChatList />} />
+            <Route path="/chats/:id" element={<ChatRoom />} />
           </Routes>
         </Layout>
       </ThemeProvider>

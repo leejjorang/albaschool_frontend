@@ -28,6 +28,7 @@ const HeaderStyle = styled.div`
   padding: 0.7rem 0.9rem;
   position: fixed;
   width: 100%;
+  z-index: 10;
 `
 
 const Title = styled.h1`
