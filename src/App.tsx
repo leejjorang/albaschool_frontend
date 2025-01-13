@@ -1,13 +1,13 @@
 import { GlobalStyle } from "./styles/global";
 import Layout from "./components/layout/Layout";
-import MangerSignUp from "./pages/manager/ManagerSignUp";
+import ManagerEduList from "./pages/manager/ManagerEduList";
 
 function App() {
   return (
     <>
       <GlobalStyle />
       <Layout>
-        <MangerSignUp />
+        <ManagerEduList />
       </Layout>
     </>
   )

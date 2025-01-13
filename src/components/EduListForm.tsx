@@ -14,8 +14,12 @@ const list: eduProps[] = [
   { title: "🧹 매장 청소 및 정리 방법", date: "2025-01-08" },
 ];
 const shopName = "솥뚜껑 삼겹살";
+ 
+interface FormProps {
+  type: "staff" | "business";
+}
 
-function EduList() {
+function EduListForm({ type }: FormProps) {
   return (
     <EduListStyle>
       <Box
@@ -46,7 +50,7 @@ function EduList() {
           />
           {shopName}
         </Box>
-
+        {type === "business" && (
         <AddCircleIcon
           sx={{
             cursor: "pointer",
@@ -56,6 +60,7 @@ function EduList() {
             },
           }}
         />
+        )}
       </Box>
       {list.map((item, index) => (
         <Box
@@ -90,4 +95,4 @@ const EduListStyle = styled.div`
   margin: 0 auto;
   padding: 10px;
 `;
-export default EduList;
+export default EduListForm;
