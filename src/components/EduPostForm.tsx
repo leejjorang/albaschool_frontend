@@ -13,7 +13,11 @@ const data: postProps = {
 };
 const shopName = "솥뚜껑 삼겹살";
 
-function EduPost() {
+interface FormProps {
+  type: "staff" | "business";
+}
+
+function EduPostForm({ type }: FormProps) {
   return (
     <EduPostStyle>
       <Box
@@ -43,6 +47,7 @@ function EduPost() {
           />
           {shopName}
         </Box>
+        {type === "business" && (
         <Box>
           <Button
             variant="contained"
@@ -72,6 +77,7 @@ function EduPost() {
             수정
           </Button>
         </Box>
+        )}
       </Box>
       <Box
         sx={{
@@ -104,4 +110,4 @@ const EduPostStyle = styled.div`
   justify-content: flex-start;
   margin: 20px auto;
 `;
-export default EduPost;
+export default EduPostForm;
