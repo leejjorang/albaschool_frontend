@@ -3,20 +3,29 @@ import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import Textarea from '@mui/joy/Textarea';
 import ChatBox from '../../components/chat/ChatBox';
+import ChatMenu from '../../components/chat/ChatMenu';
+import { useState } from 'react';
 
 const ChatRoom = () => {
   const storeTitle: string = '솥뚜껑 삼겹살';
   const headCount: number = 7;
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  }
+
   return (
     <div>
       <ChatRoomHeaderStyle>
+        {menuOpen && <ChatMenu toggleMenu={toggleMenu} />}
+
         <ArrowBackIosOutlinedIcon />
         <span>
           <p>{storeTitle}</p>
           <p style={{color: '#7E7E7E'}}>{headCount}</p>
         </span>
-        <MenuOutlinedIcon sx={{ fontSize: 28 }} />
+        <MenuOutlinedIcon sx={{ fontSize: 28 }} onClick={toggleMenu} />
       </ChatRoomHeaderStyle>
       <ChatBox />
       <ChatInputBoxStyle>
