@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import styled from "styled-components";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 interface postProps {
   title: string;
@@ -11,6 +11,7 @@ const data: postProps = {
   title: "👪 고객 응대 메뉴얼",
   content: "인사 친절하게 잘 해주세요!!",
 };
+const shopName = "솥뚜껑 삼겹살";
 
 function EduPost() {
   return (
@@ -19,23 +20,48 @@ function EduPost() {
         sx={{
           padding: "10px",
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom:1
         }}
       >
-        <ArrowBackIcon sx={{
-          fontSize: "30px",
-          cursor:"pointer",
-          "&:hover": {
-            color: "#FFD400",
-          }
-        }}/>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "bold",
+          }}
+        >
+          <ArrowBackIosIcon
+            sx={{
+              fontSize: "30px",
+              cursor: "pointer",
+              "&:hover": {
+                color: "#FFD400",
+              },
+            }}
+          />
+          {shopName}
+        </Box>
         <Box>
           <Button
             variant="contained"
+            size="small"
             sx={{
-              marginRight:"20px",
-              width: "10%",
+              marginRight: "20px",
+              color: "black",
+              background: "#E9E9E9",
+              "&:hover": {
+                backgroundColor: "#B9B9B9",
+              },
+            }}
+          >
+            삭제
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
               color: "black",
               background: "#FAED7D",
               "&:hover": {
@@ -45,19 +71,6 @@ function EduPost() {
           >
             수정
           </Button>
-          <Button
-            variant="contained"
-            sx={{
-              width: "10%",
-              color: "black",
-              background: "#FAED7D",
-              "&:hover": {
-                backgroundColor: "#FFD400",
-              },
-            }}
-          >
-            삭제
-          </Button>
         </Box>
       </Box>
       <Box
@@ -65,7 +78,8 @@ function EduPost() {
           backgroundColor: "#f7f6f6",
           border: "1px solid #dbcdcd",
           borderRadius: "20px",
-          padding: "20px",
+          padding: "15px",
+          margin:"0 10px"
         }}
       >
         <p

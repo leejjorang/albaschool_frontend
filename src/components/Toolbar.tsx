@@ -11,7 +11,8 @@ import { FaImage } from "react-icons/fa6";
 const ToolbarContainer = styled(Box)({
   display: "flex",
   alignItems: "center",
-  gap: "6px",
+  justifyContent:"center",
+  gap: "5px",
   padding: "8px",
   borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
 });

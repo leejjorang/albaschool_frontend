@@ -2,12 +2,15 @@ import { Box, Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Tiptap from "../../components/Tiptap";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 
 interface postProps {
   title: string;
   content: string;
   image?: number;
 }
+// 임시 데이터 
+const shopName = "솥뚜껑 삼겹살";
 function WritePost() {
   const {
     register,
@@ -22,6 +25,50 @@ function WritePost() {
   return (
     <WritePostStyle>
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
+      <Box
+        sx={{
+          width:"100%",
+          padding: "10px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "bold",
+          }}
+        >
+          <ArrowBackIosIcon
+            sx={{
+              fontSize: "30px",
+              cursor: "pointer",
+              "&:hover": {
+                color: "#FFD400",
+              },
+            }}
+          />
+          {shopName}
+        </Box>
+        <Box>
+          <Button
+            type="submit"
+            variant="contained"
+            size="small"
+            sx={{
+              color: "black",
+              background: "#FAED7D",
+              "&:hover": {
+                backgroundColor: "#FFD400",
+              },
+            }}
+          >
+            등록
+          </Button>
+        </Box>
+      </Box>
         <TextField
           {...register("title", {
             required: "제목을 작성해주세요",
@@ -46,28 +93,6 @@ function WritePost() {
           }}
         />
          <Tiptap />
-        <Box sx={{marginTop:"15px"}}>
-          <Button
-            size="medium"
-            variant="contained"
-            sx={{
-              ...buttonStyle,
-              marginRight: 5,
-            }}
-          >
-            취소
-          </Button>
-          <Button
-            size="medium" 
-            type="submit"
-            variant="contained"
-            sx={{
-              ...buttonStyle,
-            }}
-          >
-            완료
-          </Button>
-        </Box>
       </StyledForm>
     </WritePostStyle>
   );
@@ -92,14 +117,5 @@ const StyledForm = styled.form`
   align-items: center;
   padding: 10px;
 `;
-
-const buttonStyle = {
-  width: "30%",
-  color: "black",
-  background: "#FAED7D",
-  "&:hover": {
-    backgroundColor: "#FFD400",
-  },
-};
 
 export default WritePost;
