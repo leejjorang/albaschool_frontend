@@ -2,32 +2,38 @@ import styled from 'styled-components';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import Textarea from '@mui/joy/Textarea';
-import ChatBox from '../../components/chat/ChatBox';
+import ChatContainer from '../../components/chat/ChatContainer';
 import ChatMenu from '../../components/chat/ChatMenu';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChatRoom = () => {
-  const storeTitle: string = '솥뚜껑 삼겹살';
-  const headCount: number = 7;
+  const navigate = useNavigate();
+  const goToChatList = () => {
+    navigate('/chats');
+  }
 
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   }
 
+  const storeTitle: string = '솥뚜껑 삼겹살';
+  const headCount: number = 7;
+
   return (
     <div>
       <ChatRoomHeaderStyle>
         {menuOpen && <ChatMenu toggleMenu={toggleMenu} />}
 
-        <ArrowBackIosOutlinedIcon />
+        <ArrowBackIosOutlinedIcon onClick={goToChatList}/>
         <span>
           <p>{storeTitle}</p>
           <p style={{color: '#7E7E7E'}}>{headCount}</p>
         </span>
         <MenuOutlinedIcon sx={{ fontSize: 28 }} onClick={toggleMenu} />
       </ChatRoomHeaderStyle>
-      <ChatBox />
+      <ChatContainer />
       <ChatInputBoxStyle>
         <Textarea 
           name="Outlined"

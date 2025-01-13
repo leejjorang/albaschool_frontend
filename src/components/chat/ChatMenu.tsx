@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import Profile from "./Profile";
+import ProfileBox from "./ProfileBox";
 
 const ChatMenu = ({toggleMenu}: {toggleMenu: () => void}) => {
   return (
@@ -11,10 +11,10 @@ const ChatMenu = ({toggleMenu}: {toggleMenu: () => void}) => {
           <ClearOutlinedIcon onClick={toggleMenu} />
         </MenuHeaderStyle>
         <div>
-          <Profile name="이직원" my={true} />
-          <Profile name="김사장" profile="https://picsum.photos/id/49/200/300.jpg" />
-          <Profile name="이알바" />
-          <Profile name="김알바" />
+          <ProfileBox name="이직원" my={true} />
+          <ProfileBox name="김사장" profile="https://picsum.photos/id/49/200/300.jpg" />
+          <ProfileBox name="이알바" />
+          <ProfileBox name="김알바" />
         </div>
       </ChatMenuStyle>
     </BackgroundStyle>

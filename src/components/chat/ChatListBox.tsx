@@ -13,12 +13,12 @@ interface ChatListBoxProps {
 
 const ChatListBox: React.FC<ChatListBoxProps> = ({id, storeName, headCount, lastMessage, time, badge}) => {
   const navigate = useNavigate();
-  const handleClick = () => {
+  const goToChatRoom = () => {
     navigate(`/chats/${id}`);
   }
 
   return (
-    <ChatListBoxStyle onClick={handleClick}>
+    <ChatListBoxStyle onClick={goToChatRoom}>
       <div style={{maxWidth: '60%'}}>
         <span>
           <p>{storeName}</p>

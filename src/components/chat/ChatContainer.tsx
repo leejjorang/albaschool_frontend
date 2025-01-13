@@ -3,7 +3,7 @@ import AlertChat from "./AlertChat";
 import YourChat from "./YourChat";
 import MyChat from "./MyChat";
 
-const ChatBox = () => {
+const ChatContainer = () => {
   return (
     <ChatBoxStyle>
       <AlertChat message="2025년 1월 14일" />
@@ -24,7 +24,7 @@ const ChatBox = () => {
   );
 }
 
-export default ChatBox;
+export default ChatContainer;
 
 
 const ChatBoxStyle = styled.div`

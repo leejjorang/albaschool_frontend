@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 import Avatar from '@mui/material/Avatar';
+import Badge from '../Badge';
 
-interface ProfileProps {
+interface ProfileBoxProps {
   name: string;
   profile?: string;
   my?: boolean;
 }
 
-const Profile: React.FC<ProfileProps> = ({name, profile, my}) => {
+const ProfileBox: React.FC<ProfileBoxProps> = ({name, profile, my}) => {
   return (
     <ProfileBoxStyle>
       <ProfileStyle>  
@@ -15,12 +16,12 @@ const Profile: React.FC<ProfileProps> = ({name, profile, my}) => {
         <p>{name}</p>
       </ProfileStyle>
       
-      {my && <span>나</span>}
+      {my && <Badge message={'나'} />}
     </ProfileBoxStyle>
   );
 }
 
-export default Profile;
+export default ProfileBox;
 
 
 const ProfileBoxStyle = styled.div`
@@ -28,13 +29,6 @@ const ProfileBoxStyle = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0.7rem;
-
-  span {
-    background-color: #FF9D3C;
-    padding: 0.4rem;
-    border-radius: 50%;
-    font-size: 0.8rem
-  }
 ` 
 
 const ProfileStyle = styled.div`

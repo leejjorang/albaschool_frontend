@@ -24,4 +24,5 @@ const BadgeStyle = styled.div`
   border-radius: 50%;
   width: 1.3rem;
   height: 1.3rem;
+  font-size: 0.8rem
 `
