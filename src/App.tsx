@@ -31,26 +31,31 @@ function App() {
       <ThemeProvider theme={theme}>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<ManagerSchedule />} />
+
             <Route path="/login" element={<Login />} />
-            <Route path="/user/changepwd" element={<ChangePwd />} />
-            <Route path="/staff/signup" element={<StaffSignUp />} />
-            <Route path="/manager/signup" element={<ManagerSignUp/>} />
-            <Route path="/staff/edulist" element={<StaffEduList />} />
-            <Route path="/manager/edulist" element={<ManagerEduList/>} />
-            <Route path="/staff/edupost" element={<StaffEduPost />} />
-            <Route path="/manager/edupost" element={<ManagerEduPost />} />
-            <Route path="/manager/post" element={<WritePost />} />
-            <Route path="/store/register/staff" element={<StaffRegisterStore />} />
-            <Route path="/store/register/manager" element={<ManagerRegisterStore />} />
-            <Route path="/schedule/manager" element={<ManagerSchedule />} />
-            <Route path="/notice" element={<Notice />} />
-            <Route path="/shop-list" element={<ShopList />} />
+            <Route path="/signup/staff" element={<StaffSignUp />} />
+            <Route path="/signup/manager" element={<ManagerSignUp/>} />
+
+            <Route path="/shop/register/staff" element={<StaffRegisterStore />} />
+            <Route path="/shop/register/manager" element={<ManagerRegisterStore />} />
+
             <Route path="/user/staff" element={<StaffUser />} />
             <Route path="/user/manager" element={<ManagerUser />} />
             <Route path="/user/edit" element={<UserEdit />} />
+            <Route path="/user/changepwd" element={<ChangePwd />} />
+
+            <Route path="/shoplist" element={<ShopList />} />
+            <Route path="/edulist/staff" element={<StaffEduList />} />
+            <Route path="/edulist/manager" element={<ManagerEduList/>} />
+            <Route path="/edupost/staff" element={<StaffEduPost />} />
+            <Route path="/edupost/manager" element={<ManagerEduPost />} />
+            <Route path="/post/manager" element={<WritePost />} />
+
             <Route path="/chats" element={<ChatList />} />
             <Route path="/chats/:id" element={<ChatRoom />} />
+
+            <Route path="/notice" element={<Notice />} />
           </Routes>
         </Layout>
       </ThemeProvider>

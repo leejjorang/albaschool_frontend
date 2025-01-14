@@ -14,8 +14,8 @@ const Bottom = () => {
   const [value, setValue] = React.useState('schedule');
   const navigate = useNavigate();
   const routes: {[key: string]: string} = {
-    schedule: '/schedule/manager',
-    store: '/shop-list',
+    schedule: '/',
+    store: '/shoplist',
     chat: '/chats',
     mypage: '/user/manager'
   }
