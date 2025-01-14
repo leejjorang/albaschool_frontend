@@ -57,7 +57,7 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           <CloseIcon />
         </IconButton>
         <Box>
-          <FormControl fullWidth margin="normal" sx={{ mt: "3rem" }}>
+          <FormControl fullWidth margin="normal" sx={{ mt: "2.5rem" }}>
             <Typography variant="caption">이름</Typography>
             <Select value={worker} onChange={(e) => setWorker(e.target.value)}>
               <MenuItem value="이알바">이알바</MenuItem>
