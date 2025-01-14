@@ -1,18 +1,33 @@
 import styled from "styled-components";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isSelected, setIsSelected] = useState(false);
 
-  const handleClick = () => {
-    setIsSelected(!isSelected); //클릭 시 색 변경
+  useEffect(() => {
+    if(location.pathname !== "/notice") {
+      setIsSelected(false);
+    }
+  }, [location.pathname])
+
+  const openNotice = () => {
+    if(!isSelected) {
+      setIsSelected(true);
+      navigate("/notice");
+    } else {
+      setIsSelected(false);
+      navigate(-1);
+    }
   };
 
   return (
     <HeaderStyle>
       <Title>알바스쿨</Title>
-      <NotificationsNoneIcon fontSize="large" sx={{ color: isSelected ? '#FF6F00' : 'rgba(0, 0, 0, 0.6)' }} onClick={handleClick}/>
+      <NotificationsNoneIcon fontSize="large" sx={{ color: isSelected ? '#FF6F00' : 'rgba(0, 0, 0, 0.6)' }} onClick={openNotice}/>
     </HeaderStyle>
   )
 }

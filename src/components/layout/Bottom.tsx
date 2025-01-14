@@ -3,17 +3,29 @@ import styled from "styled-components";
 import * as React from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import { useNavigate } from "react-router-dom";
 
 
 const Bottom = () => {
-  const [value, setValue] = React.useState('recents');
+  const [value, setValue] = React.useState('schedule');
+  const navigate = useNavigate();
+  const routes: {[key: string]: string} = {
+    schedule: '/schedule/manager',
+    store: '/shop-list',
+    chat: '/chats',
+    mypage: '/user/manager'
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+    const path = routes[newValue];
+    if (path) {
+      navigate(path);
+    }
   };
 
   return (
@@ -22,7 +34,7 @@ const Bottom = () => {
         <BottomNavigationAction
           label="스케줄"
           value="schedule"
-          icon={<HomeOutlinedIcon fontSize="large" />}
+          icon={<ScheduleOutlinedIcon fontSize="large" />}
           sx={{'&.Mui-selected': { color: '#FF6F00' }}}
         />
         <BottomNavigationAction
@@ -56,5 +68,6 @@ const BottomStyle = styled.div`
   padding: 0.2rem;
   position: fixed;
   bottom: 0;
-  width: 100%
+  width: 100%;
+  z-index: 10;
 `
