@@ -18,10 +18,10 @@ const RegisterStore = () => {
     <RegisterStoreStyle>
       <h1>내 가게 등록하기</h1>
       <InputStyle>
-        <InputBox title='사업자 번호' message='사업자 번호를 입력해주세요' />
+        <InputBox id='storeNumber' title='사업자 번호' type='number' placeholder='사업자 번호를 입력해주세요' required={true} titleWidth={25} width={70} />
         <DropBoxStyle>
           <p>카테고리</p>
-          <FormControl variant="standard" sx={{ m: 1, minWidth: '65%', margin: '0' }}>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: '70%', margin: '0' }}>
             <InputLabel id="demo-simple-select-standard-label">업종</InputLabel>
             <Select
               labelId="demo-simple-select-standard-label"
@@ -37,8 +37,8 @@ const RegisterStore = () => {
             </Select>
           </FormControl>
         </DropBoxStyle>
-        <InputBox title='가게 이름' message='가게 이름를 입력해주세요' />
-        <InputBox title='비밀번호' message='비밀번호를 입력해주세요' />
+        <InputBox id='storeName' title='가게 이름' type='text' placeholder='가게 이름을 입력해주세요' required={true} titleWidth={25} width={70} />
+        <InputBox id='storePassword' title='비밀번호' type='password' placeholder='비밀번호를 입력해주세요' required={true} titleWidth={25} width={70} />
       </InputStyle>
       <Button message='등록하기' />
     </RegisterStoreStyle>

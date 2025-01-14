@@ -1,7 +1,6 @@
 import Avatar from '@mui/material/Avatar';
-import Input from '@mui/joy/Input';
 import styled from 'styled-components';
-import { WideInputBox } from '../../components/InputBox';
+import { Input, InputBox } from '../../components/InputBox';
 import { Button, NegativeButton } from '../../components/Button';
 
 const UserEdit = () => {
@@ -16,19 +15,14 @@ const UserEdit = () => {
       </ProfileBoxStyle>
 
       <InputStyle>
-        <WideInputBox title='아이디' message='email123@email.com' disabled={true}/>
+        <InputBox id='id' title='아이디' type='email' placeholder='email123@email.com' disabled={true} titleWidth={20} width={75} />
         <InputBoxStyle>
           <p>비밀번호</p>
-          <Input
-            disabled={false}
-            placeholder="비밀번호를 입력해주세요"
-            variant="outlined"
-            sx={{ overflowY: 'hidden', width: '55%' }}
-          />
+          <Input id='password' type='password' placeholder='비밀번호를 입력해주세요' width={55} />
           <button>변경</button>
         </InputBoxStyle>
-        <WideInputBox title='이름' message='홍길동'/>
-        <WideInputBox title='전화번호' message='010-5160-3705'/>
+        <InputBox id='name' title='이름' type='text' placeholder='홍길동' titleWidth={20} width={75} />
+        <InputBox id='phone' title='전화번호' type='tel' placeholder='010-1234-5678' titleWidth={20} width={75} />
       </InputStyle>
 
       <ButtonBoxStyle>

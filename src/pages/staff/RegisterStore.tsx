@@ -7,8 +7,8 @@ const RegisterStore = () => {
     <RegisterStoreStyle>
       <h1>가게 등록하기</h1>
       <InputStyle>
-        <InputBox title='가게 코드' message='가게 코드를 입력해주세요' />
-        <InputBox title='비밀번호' message='비밀번호를 입력해주세요' />
+        <InputBox id='storeCode' title='가게 코드' type='text' placeholder='가게 코드를 입력해주세요' required={true} titleWidth={25} width={70} />
+        <InputBox id='storePassword' title='비밀번호' type='password' placeholder='비밀번호를 입력해주세요' required={true} titleWidth={25} width={70} />
       </InputStyle>
       <Button message='등록하기' />
     </RegisterStoreStyle>

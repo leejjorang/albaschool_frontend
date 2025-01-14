@@ -1,40 +1,59 @@
 import styled from 'styled-components';
-import Input from '@mui/joy/Input';
 
-interface InputBoxProps {
-  title: string;
-  message?: string;
+interface InputProps {
+  id: string;
+  type: 'text'|'number'|'password'|'email'|'tel';
+  placeholder?: string;
   disabled?: boolean;
+  required?: boolean;
+  width?: number;
 }
 
-export const InputBox: React.FC<InputBoxProps> = ({title, message, disabled}) => {
+interface InputBoxProps extends InputProps {
+  title: string;
+  titleWidth?: number;
+}
+
+export const Input: React.FC<InputProps> = ({id, type, placeholder, disabled, required, width}) => {
+  return(
+    <InputStyle style={{width: `${width}%`}}
+      id={id}
+      type={type}
+      placeholder={placeholder}
+      disabled={disabled}
+      required={required}
+    />
+  )
+}
+
+export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, id, type, placeholder, disabled, required, width}) => {
   return (
     <InputBoxStyle>
-      <p style={{width: '25%'}}>{title}</p>
+      <p style={{width: `${titleWidth}%`}}>{title}</p>
       <Input
+        id={id}
+        type={type}
+        placeholder={placeholder}
         disabled={disabled}
-        placeholder={message}
-        variant="outlined"
-        sx={{ overflowY: 'hidden', width: '65%' }}
+        required={required}
+        width={width}
       />
     </InputBoxStyle>  
   )
 }
 
-export const WideInputBox: React.FC<InputBoxProps> = ({title, message, disabled}) => {
-  return (
-    <InputBoxStyle>
-      <p style={{width: '20%'}}>{title}</p>
-      <Input
-        disabled={disabled}
-        placeholder={message}
-        variant="outlined"
-        sx={{ overflowY: 'hidden', width: '75%' }}
-      />
-    </InputBoxStyle>  
-  )
-}
 
+const InputStyle = styled.input`
+  font-size: 1rem;
+  padding: 0.6rem 0.5rem;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+
+  &:focus {
+    outline: none;
+    border: 1px solid #FFD400;
+  }
+`
 
 const InputBoxStyle = styled.div`
   display: flex;
