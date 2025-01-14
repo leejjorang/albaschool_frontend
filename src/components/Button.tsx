@@ -12,7 +12,13 @@ export const Button: React.FC<ButtonProps> = ({message}) => {
   )
 }
 
-export default Button;
+export const NegativeButton: React.FC<ButtonProps> = ({message}) => {
+  return (
+    <NagativeButtonStyle>
+      {message}
+    </NagativeButtonStyle>
+  )
+}
 
 
 const ButtonStyle = styled.button`
@@ -26,5 +32,19 @@ const ButtonStyle = styled.button`
 
   &:focus, &:hover {
     background-color: #FFD400;
+  }
+` 
+
+const NagativeButtonStyle = styled.button`
+  background-color: #F3F3F3;
+  border: 1px solid #CDCDCD;
+  border-radius: 15px;
+  padding: 0.7rem 1.1rem;
+  text-align: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  &:focus, &:hover {
+    background-color: #FF9D3C;
   }
 ` 

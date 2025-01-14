@@ -1,61 +1,39 @@
 import Avatar from '@mui/material/Avatar';
 import Input from '@mui/joy/Input';
 import styled from 'styled-components';
+import { WideInputBox } from '../../components/InputBox';
+import { Button, NegativeButton } from '../../components/Button';
 
 const UserEdit = () => {
   return (
     <div>
       <ProfileBoxStyle>
         <Avatar src="/broken-image.jpg" sx={{ width: '7.5rem', height: '7.5rem' }}/>
-        <span>
-          <ButtonStyle>사진 수정</ButtonStyle>
-          <ButtonStyle style={{backgroundColor: '#B9B9B9'}}>사진 삭제</ButtonStyle>
-        </span>
+        <ButtonBoxStyle>
+          <Button message="사진 수정" />
+          <NegativeButton message='사진 삭제' />        
+        </ButtonBoxStyle>
       </ProfileBoxStyle>
 
-      <div>
-        <InputBoxStyle>
-          <p>아이디</p>
-          <Input
-            disabled={true}
-            placeholder="email123@email.com"
-            variant="outlined"
-            sx={{ overflowY: 'hidden', width: '67%' }}
-          />
-        </InputBoxStyle>
+      <InputStyle>
+        <WideInputBox title='아이디' message='email123@email.com' disabled={true}/>
         <InputBoxStyle>
           <p>비밀번호</p>
           <Input
             disabled={false}
             placeholder="비밀번호를 입력해주세요"
             variant="outlined"
-            sx={{ overflowY: 'hidden', width: '50%' }}
+            sx={{ overflowY: 'hidden', width: '55%' }}
           />
-          <MiniButtonStyle>변경</MiniButtonStyle>
+          <button>변경</button>
         </InputBoxStyle>
-        <InputBoxStyle>
-          <p>이름</p>
-          <Input
-            disabled={true}
-            placeholder="김알바"
-            variant="outlined"
-            sx={{ overflowY: 'hidden', width: '67%' }}
-          />
-        </InputBoxStyle>
-        <InputBoxStyle>
-          <p>전화번호</p>
-          <Input
-            disabled={false}
-            placeholder="010-1234-5678"
-            variant="outlined"
-            sx={{ overflowY: 'hidden', width: '67%' }}
-          />
-        </InputBoxStyle>
-      </div>
+        <WideInputBox title='이름' message='홍길동'/>
+        <WideInputBox title='전화번호' message='010-5160-3705'/>
+      </InputStyle>
 
       <ButtonBoxStyle>
-        <ButtonStyle>로그아웃</ButtonStyle>
-        <ButtonStyle style={{backgroundColor: '#B9B9B9'}}>회원탈퇴</ButtonStyle>
+        <Button message="로그아웃" />
+        <NegativeButton message='회원탈퇴' />      
       </ButtonBoxStyle>
     </div>
   );
@@ -63,58 +41,53 @@ const UserEdit = () => {
 
 export default UserEdit;
 
+
 const ProfileBoxStyle = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 2.5rem;
-  margin: 4rem 0 3rem 0;
+  gap: 0.5rem;
+  margin: 4rem 0 2.5rem 0;
+`
+
+const InputStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; 
+  gap: 1rem;
+  margin: 2.5rem 0 4rem;
 `
 
 const InputBoxStyle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 1.2rem 0;
-  width: 100%;
+  width: 90%;
   gap: 0.8rem;
 
   p {
-    width: 16%;
+    width: 20%;
     text-align: end;
   }
-`
 
-const MiniButtonStyle = styled.button`
-  font-size: 1rem;
-  padding: 0.4rem 0.6rem;
-  background-color: #FAED7D;
-  border: 1px solid #DBCDCD;
-  border-radius: 10px;
+  button {
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem;
+    background-color: #FAED7D;
+    border: 1px solid #DBCDCD;
+    border-radius: 10px;
 
-  &:focus, &:hover {
-    background-color: #FFD400;
+    &:focus, &:hover {
+      background-color: #FFD400;
+    }
   }
 `
 
-const ButtonStyle = styled.button`
-  background-color: #FAED7D;
-  border: 1px solid #DBCDCD;
-  border-radius: 15px;
-  padding: 0.7rem 1.1rem;
-  margin: 0 0.5rem;
-  text-align: center;
-  font-size: 1.2rem;
-  cursor: pointer;
-
-  &:focus, &:hover {
-    background-color: #FFD400;
-  }
-` 
-
-const ButtonBoxStyle = styled.div`
+const ButtonBoxStyle = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 3rem 0;
+  margin: 2rem 0;
+  gap: 1rem;
 `

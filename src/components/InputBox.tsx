@@ -4,14 +4,15 @@ import Input from '@mui/joy/Input';
 interface InputBoxProps {
   title: string;
   message?: string;
+  disabled?: boolean;
 }
 
-export const InputBox: React.FC<InputBoxProps> = ({title, message}) => {
+export const InputBox: React.FC<InputBoxProps> = ({title, message, disabled}) => {
   return (
     <InputBoxStyle>
-      <p>{title}</p>
+      <p style={{width: '25%'}}>{title}</p>
       <Input
-        disabled={false}
+        disabled={disabled}
         placeholder={message}
         variant="outlined"
         sx={{ overflowY: 'hidden', width: '65%' }}
@@ -20,7 +21,19 @@ export const InputBox: React.FC<InputBoxProps> = ({title, message}) => {
   )
 }
 
-export default InputBox;
+export const WideInputBox: React.FC<InputBoxProps> = ({title, message, disabled}) => {
+  return (
+    <InputBoxStyle>
+      <p style={{width: '20%'}}>{title}</p>
+      <Input
+        disabled={disabled}
+        placeholder={message}
+        variant="outlined"
+        sx={{ overflowY: 'hidden', width: '75%' }}
+      />
+    </InputBoxStyle>  
+  )
+}
 
 
 const InputBoxStyle = styled.div`
@@ -31,7 +44,6 @@ const InputBoxStyle = styled.div`
   gap: 0.8rem;
 
   p {
-    width: 25%;
     text-align: end;
   }
 `
