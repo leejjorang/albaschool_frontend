@@ -82,7 +82,6 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           <FormControl fullWidth margin="normal">
             <Typography variant="caption">시작시간</Typography>
             <TimePick
-              label=""
               onChange={(newValue: string | null) =>
                 handleStartTimeChange(newValue)
               }
@@ -92,10 +91,10 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           <FormControl fullWidth margin="normal">
             <Typography variant="caption">종료시간</Typography>
             <TimePick
-              label=""
               onChange={(newValue: string | null) =>
                 handleEndTimeChange(newValue)
               }
+              startTime={startTime as string}
             />
           </FormControl>
         </Box>
