@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import InputBox from '../../components/InputBox';
-import Button from '../../components/Button';
+import { InputBox } from '../../components/InputBox';
+import { Button } from '../../components/Button';
 
 const RegisterStore = () => {
   return (
