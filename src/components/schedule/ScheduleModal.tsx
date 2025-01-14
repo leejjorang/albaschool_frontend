@@ -69,13 +69,13 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           <FormControl fullWidth margin="normal">
             <Typography variant="caption">요일</Typography>
             <Select value={day} onChange={(e) => setDay(e.target.value)}>
+              <MenuItem value="일요일">일요일</MenuItem>
               <MenuItem value="월요일">월요일</MenuItem>
               <MenuItem value="화요일">화요일</MenuItem>
               <MenuItem value="수요일">수요일</MenuItem>
               <MenuItem value="목요일">목요일</MenuItem>
               <MenuItem value="금요일">금요일</MenuItem>
               <MenuItem value="토요일">토요일</MenuItem>
-              <MenuItem value="일요일">일요일</MenuItem>
             </Select>
           </FormControl>
 
