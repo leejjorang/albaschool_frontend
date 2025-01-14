@@ -10,3 +10,11 @@ export const theme = createTheme({
     },
   },
 });
+
+export const timePickerTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#FFD400",
+    },
+  },
+});

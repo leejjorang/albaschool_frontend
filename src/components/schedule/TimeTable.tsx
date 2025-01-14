@@ -128,10 +128,10 @@ const TimeTable = () => {
         />
       </Box>
       <ScheduleModal open={modalOpen} onClose={handleClose}>
-        <Button variant="contained">수정</Button>
         <Button variant="contained" sx={{ backgroundColor: "grey.400" }}>
           삭제
         </Button>
+        <Button variant="contained">수정</Button>
       </ScheduleModal>
     </div>
   );

@@ -3,10 +3,10 @@ import {
   Modal,
   Box,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import TimePick from "./TimePick";
@@ -58,12 +58,8 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
         </IconButton>
         <Box>
           <FormControl fullWidth margin="normal" sx={{ mt: "3rem" }}>
-            <InputLabel id="worker-label">알바생</InputLabel>
-            <Select
-              labelId="worker-label"
-              value={worker}
-              onChange={(e) => setWorker(e.target.value)}
-            >
+            <Typography variant="caption">이름</Typography>
+            <Select value={worker} onChange={(e) => setWorker(e.target.value)}>
               <MenuItem value="이알바">이알바</MenuItem>
               <MenuItem value="김알바">김알바</MenuItem>
               <MenuItem value="박알바">박알바</MenuItem>
@@ -71,12 +67,8 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel id="day-label">요일</InputLabel>
-            <Select
-              labelId="day-label"
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-            >
+            <Typography variant="caption">요일</Typography>
+            <Select value={day} onChange={(e) => setDay(e.target.value)}>
               <MenuItem value="월요일">월요일</MenuItem>
               <MenuItem value="화요일">화요일</MenuItem>
               <MenuItem value="수요일">수요일</MenuItem>
@@ -88,8 +80,9 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
+            <Typography variant="caption">시작시간</Typography>
             <TimePick
-              label="시작 시간"
+              label=""
               onChange={(newValue: string | null) =>
                 handleStartTimeChange(newValue)
               }
@@ -97,8 +90,9 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
+            <Typography variant="caption">종료시간</Typography>
             <TimePick
-              label="종료 시간"
+              label=""
               onChange={(newValue: string | null) =>
                 handleEndTimeChange(newValue)
               }
