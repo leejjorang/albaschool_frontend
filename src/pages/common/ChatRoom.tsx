@@ -34,8 +34,8 @@ const ChatRoom = () => {
 
         <ArrowBackIosOutlinedIcon onClick={goToChatList}/>
         <span>
-          <p>{storeTitle}</p>
-          <p style={{color: '#7E7E7E'}}>{headCount}</p>
+          <h6>{storeTitle}</h6>
+          <h6 style={{color: '#7E7E7E'}}>{headCount}</h6>
         </span>
         <MenuOutlinedIcon sx={{ fontSize: 28 }} onClick={toggleMenu} />
       </ChatRoomHeaderStyle>
@@ -69,11 +69,13 @@ const ChatRoomHeaderStyle = styled.div`
   
   span {
     display: inline-flex;
+    align-items: flex-end;
     gap: 0.5rem;
   }
 
-  p {
-    font-size: 1.4rem;
+  h6 {
+    font-size: 1.2rem;
+    font-weight: 100;
   }
 `
 
@@ -94,13 +96,13 @@ const ChatInputBoxStyle = styled.div`
     border-radius: 10px;
     padding: 0.55rem 0.8rem;
     font-size: 1.1rem;
-    width: 80%;
+    width: 81%;
     overflow-y: hidden;
     max-height: 4.4rem;
   }
 
   button {
-    font-size: 1.1rem;
+    font-size: 1rem;
     padding: 0.55rem 1rem;
     background-color: #FAED7D;
     border: 1px solid #CDCDCD;

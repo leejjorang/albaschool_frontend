@@ -40,7 +40,7 @@ export default ChatListBox;
 const ChatListBoxStyle = styled.div`
   display: flex;
   justify-content: space-between;
-  border: 1px solid #CDCDCD;
+  border: 1px solid #000000;
   width: 93%;
   padding: 0.7rem 1rem;
   border-radius: 10px;
@@ -48,11 +48,16 @@ const ChatListBoxStyle = styled.div`
   span {
     display: inline-flex;
     gap: 0.5rem;
-    font-size: 1.4rem;
     margin-bottom: 0.3rem;
+
+    p {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
   }
 
   p {
+    font-size: 1rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
