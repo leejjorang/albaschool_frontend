@@ -7,7 +7,7 @@ const ChatMenu = ({toggleMenu}: {toggleMenu: () => void}) => {
     <BackgroundStyle>
       <ChatMenuStyle>
         <MenuHeaderStyle>
-          <p>참여 직원</p>
+          <h6>참여 직원</h6>
           <ClearOutlinedIcon onClick={toggleMenu} />
         </MenuHeaderStyle>
         <div>
@@ -45,6 +45,6 @@ const MenuHeaderStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.9rem;
+  padding: 0.8rem;
   border-bottom: 1px solid #CDCDCD;
 `

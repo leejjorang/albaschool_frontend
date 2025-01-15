@@ -6,7 +6,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import UserProfile from '../../components/user/UserProfile';
-import { StoreCard, StaffCard } from '../../components/user/ManagerCard';
+import { ManagerStoreCard, ManagerStaffCard } from '../../components/user/Card';
+import { Link } from 'react-router-dom';
 
 const User = () => {
   const [category, setCategory] = React.useState('');
@@ -21,12 +22,12 @@ const User = () => {
       <WorkplaceBoxStyle>
         <span>
           <h2>가게 관리</h2>
-          <ControlPointIcon />
+          <Link to={'/store/register/manager'}><ControlPointIcon /></Link>
         </span>
         <CardBoxStyle>
-          <StoreCard storeName='솥뚜껑 삼겹살' storeCode='1Q22WA' />
-          <StoreCard storeName='서브웨이' storeCode='2D3CA2' />
-          <StoreCard storeName='CU 편의점' storeCode='3QWER12' />
+          <ManagerStoreCard storeName='솥뚜껑 삼겹살' storeCode='1Q22WA' />
+          <ManagerStoreCard storeName='서브웨이' storeCode='2D3CA2' />
+          <ManagerStoreCard storeName='CU 편의점' storeCode='3QWER12' />
         </CardBoxStyle>
       </WorkplaceBoxStyle>
       <StaffBoxStyle>
@@ -48,9 +49,9 @@ const User = () => {
           </FormControl>
         </span>
         <CardBoxStyle>
-          <StaffCard staffName='김알바' staffPhone='010-1234-5678' />
-          <StaffCard staffName='이알바' staffPhone='010-1234-5678' />
-          <StaffCard staffName='김새로이' staffPhone='010-1234-5678' />
+          <ManagerStaffCard staffName='김알바' staffPhone='010-1234-5678' />
+          <ManagerStaffCard staffName='이알바' staffPhone='010-1234-5678' />
+          <ManagerStaffCard staffName='김새로이' staffPhone='010-1234-5678' />
         </CardBoxStyle>
       </StaffBoxStyle>
     </div>
@@ -68,10 +69,15 @@ const WorkplaceBoxStyle = styled.div`
     align-items: center;
     gap: 0.3rem;
   }
+
+  a {
+    display: flex;
+    color: #000000;
+  }
 `
 
 const StaffBoxStyle = styled.div`
-  margin: 2rem 1.5rem;
+  margin: 1.5rem 1.5rem;
 
   span {
     display: flex;

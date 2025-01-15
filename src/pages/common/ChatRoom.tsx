@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import Textarea from '@mui/joy/Textarea';
 import ChatContainer from '../../components/chat/ChatContainer';
 import ChatMenu from '../../components/chat/ChatMenu';
 import { useState } from 'react';
@@ -21,6 +20,13 @@ const ChatRoom = () => {
   const storeTitle: string = '솥뚜껑 삼겹살';
   const headCount: number = 7;
 
+  const autoResize = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = event.target;
+
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
   return (
     <div>
       <ChatRoomHeaderStyle>
@@ -28,19 +34,19 @@ const ChatRoom = () => {
 
         <ArrowBackIosOutlinedIcon onClick={goToChatList}/>
         <span>
-          <p>{storeTitle}</p>
-          <p style={{color: '#7E7E7E'}}>{headCount}</p>
+          <h6>{storeTitle}</h6>
+          <h6 style={{color: '#7E7E7E'}}>{headCount}</h6>
         </span>
         <MenuOutlinedIcon sx={{ fontSize: 28 }} onClick={toggleMenu} />
       </ChatRoomHeaderStyle>
       <ChatContainer />
       <ChatInputBoxStyle>
-        <Textarea 
-          name="Outlined"
-          variant="outlined" 
-          maxRows={3}
-          sx={{ overflowY: 'hidden', width: '81%' }}
-        />
+        <textarea
+          id="message" 
+          rows={1}
+          onInput={autoResize}
+        >
+        </textarea>
         <button>전송</button>
       </ChatInputBoxStyle>
     </div>
@@ -63,18 +69,20 @@ const ChatRoomHeaderStyle = styled.div`
   
   span {
     display: inline-flex;
+    align-items: flex-end;
     gap: 0.5rem;
   }
 
-  p {
-    font-size: 1.4rem;
+  h6 {
+    font-size: 1.2rem;
+    font-weight: 100;
   }
 `
 
 const ChatInputBoxStyle = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   position: fixed;
   padding: 0.5rem 0.6rem;
   border-top: 1px solid #CDCDCD;
@@ -82,9 +90,20 @@ const ChatInputBoxStyle = styled.div`
   width: 100%;
   bottom: 3.9rem;
 
-  button {
-    font-size: 1.1rem;
+  textarea {
+    resize: none;
+    border: 1px solid #CDCDCD;
+    border-radius: 10px;
     padding: 0.55rem 0.8rem;
+    font-size: 1.1rem;
+    width: 81%;
+    overflow-y: hidden;
+    max-height: 4.4rem;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 0.55rem 1rem;
     background-color: #FAED7D;
     border: 1px solid #CDCDCD;
     border-radius: 10px;

@@ -13,16 +13,32 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 700;
     font-style: normal;
   }
+  @font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SUIT-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
 
   * {
     padding: 0;
     margin: 0;
     overflow-x: hidden;
     box-sizing: border-box;
-    font-family: 'MangoDdobak-B';
+    font-family: 'GmarketSansMedium';
   }
 
   h1 {
     font-family: 'HakgyoansimDunggeunmisoTTF-B';
-  }  
+  } 
+  
+  p {
+    font-family: 'SUIT-Regular';
+  }
 `

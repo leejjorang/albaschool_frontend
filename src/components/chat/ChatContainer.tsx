@@ -28,11 +28,11 @@ export default ChatContainer;
 
 
 const ChatBoxStyle = styled.div`
-  min-height: 73.1vh;
+  min-height: 72.5vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin: 3.4rem 0 3.3rem;
+  margin-top: 3.5rem;
   padding: 0.5rem 0;
   gap: 0.5rem;
 `
