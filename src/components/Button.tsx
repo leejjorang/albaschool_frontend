@@ -1,20 +1,22 @@
 import styled from 'styled-components';
 
 interface ButtonProps {
+  type?: 'submit'|'reset';
   message: string;
+  width?: number;
 }
 
-export const Button: React.FC<ButtonProps> = ({message}) => {
+export const Button: React.FC<ButtonProps> = ({type, message, width}) => {
   return (
-    <ButtonStyle>
+    <ButtonStyle type={type} style={{width: `${width}%`}}>
       {message}
     </ButtonStyle>
   )
 }
 
-export const NegativeButton: React.FC<ButtonProps> = ({message}) => {
+export const NegativeButton: React.FC<ButtonProps> = ({message, width}) => {
   return (
-    <NagativeButtonStyle>
+    <NagativeButtonStyle style={{width: `${width}%`}}>
       {message}
     </NagativeButtonStyle>
   )

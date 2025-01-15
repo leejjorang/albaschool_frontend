@@ -37,8 +37,8 @@ function App() {
             <Route path="/signup/staff" element={<StaffSignUp />} />
             <Route path="/signup/manager" element={<ManagerSignUp/>} />
 
-            <Route path="/shop/register/staff" element={<StaffRegisterStore />} />
-            <Route path="/shop/register/manager" element={<ManagerRegisterStore />} />
+            <Route path="/store/register/staff" element={<StaffRegisterStore />} />
+            <Route path="/store/register/manager" element={<ManagerRegisterStore />} />
 
             <Route path="/user/staff" element={<StaffUser />} />
             <Route path="/user/manager" element={<ManagerUser />} />

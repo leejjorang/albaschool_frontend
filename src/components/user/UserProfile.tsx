@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Avatar from '@mui/material/Avatar';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Link } from 'react-router-dom';
 
 interface UserProfileProps {
   userName: string;
@@ -13,10 +14,10 @@ const UserProfile: React.FC<UserProfileProps> = ({userName, profile}) => {
       <Avatar src={profile} sx={{ width: '6.5rem', height: '6.5rem' }} />
       <div>
         <h3>{userName} 님</h3>
-        <span>
+        <Link to={'/user/edit'}>
           <SettingsIcon sx={{ color: '#5F6368' }}/>
           <p>회원 정보</p>
-        </span>
+        </Link>
       </div>
     </UserProfileStyle>
   )
@@ -29,21 +30,22 @@ const UserProfileStyle = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin: 1.5rem 1.5rem 3.5rem 1.5rem;
+  margin: 1.5rem 1.5rem 2.5rem 1.5rem;
 
   h3 {
-    font-size: 1.8rem;
-    margin-bottom: 0.4rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.1rem;
   }
 
   p {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     color: #5F6368;
   }
 
-  span {
+  a {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.1rem;
+    text-decoration: none;
   }
 `

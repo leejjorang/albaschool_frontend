@@ -9,25 +9,25 @@ const UserEdit = () => {
       <ProfileBoxStyle>
         <Avatar src="/broken-image.jpg" sx={{ width: '7.5rem', height: '7.5rem' }}/>
         <ButtonBoxStyle>
-          <Button message="사진 수정" />
-          <NegativeButton message='사진 삭제' />        
+          <Button message="사진 수정" width={35}/>
+          <NegativeButton message='사진 삭제' width={35} />        
         </ButtonBoxStyle>
       </ProfileBoxStyle>
 
       <InputStyle>
-        <InputBox id='id' title='아이디' type='email' placeholder='email123@email.com' disabled={true} titleWidth={20} width={75} />
+        <InputBox id='id' title='아이디' type='email' placeholder='email123@email.com' disabled={true} titleWidth={18} width={75} />
         <InputBoxStyle>
           <p>비밀번호</p>
           <Input id='password' type='password' placeholder='비밀번호를 입력해주세요' width={55} />
           <button>변경</button>
         </InputBoxStyle>
-        <InputBox id='name' title='이름' type='text' placeholder='홍길동' titleWidth={20} width={75} />
-        <InputBox id='phone' title='전화번호' type='tel' placeholder='010-1234-5678' titleWidth={20} width={75} />
+        <InputBox id='name' title='이름' type='text' placeholder='홍길동' titleWidth={18} width={75} />
+        <InputBox id='phone' title='전화번호' type='tel' placeholder='010-1234-5678' titleWidth={18} width={75} />
       </InputStyle>
 
       <ButtonBoxStyle>
-        <Button message="로그아웃" />
-        <NegativeButton message='회원탈퇴' />      
+        <Button message="로그아웃" width={35} />
+        <NegativeButton message='회원탈퇴' width={35} />      
       </ButtonBoxStyle>
     </div>
   );
@@ -40,8 +40,7 @@ const ProfileBoxStyle = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 0.5rem;
-  margin: 4rem 0 2.5rem 0;
+  margin-top: 3.5rem;
 `
 
 const InputStyle = styled.div`
@@ -50,7 +49,7 @@ const InputStyle = styled.div`
   align-items: center;
   width: 100%; 
   gap: 1rem;
-  margin: 2.5rem 0 4rem;
+  margin: 2rem 0 4rem;
 `
 
 const InputBoxStyle = styled.div`
@@ -61,7 +60,7 @@ const InputBoxStyle = styled.div`
   gap: 0.8rem;
 
   p {
-    width: 20%;
+    width: 18%;
     text-align: end;
   }
 
@@ -83,5 +82,6 @@ const ButtonBoxStyle = styled.span`
   align-items: center;
   justify-content: center;
   margin: 2rem 0;
-  gap: 1rem;
+  gap: 0.7rem;
+  width: 100%;
 `

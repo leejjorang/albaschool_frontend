@@ -16,7 +16,7 @@ const RegisterStore = () => {
 
   return (
     <RegisterStoreStyle>
-      <h1>내 가게 등록하기</h1>
+      <h2>내 가게 등록하기</h2>
       <InputStyle>
         <InputBox id='storeNumber' title='사업자 번호' type='number' placeholder='사업자 번호를 입력해주세요' required={true} titleWidth={25} width={70} />
         <DropBoxStyle>
@@ -53,7 +53,11 @@ const RegisterStoreStyle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 3.5rem - 4rem);
+  height: calc(100vh - 7.5rem);
+
+  h2 {
+    font-size: 2rem;
+  }
 `
 
 const InputStyle = styled.div`
@@ -61,7 +65,7 @@ const InputStyle = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 5.5rem 0 4rem;  
+  margin: 4rem 0 3rem;  
   gap: 1rem;
 `
 

@@ -2,8 +2,11 @@ import styled from "styled-components";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-interface StordCardProps {
+interface storeCardProps {
   storeName: string;
+}
+
+interface managerStoreCardProps extends storeCardProps {
   storeCode: string;
 }
 
@@ -12,39 +15,58 @@ interface StaffCardProps {
   staffPhone: string;
 }
 
-export const StoreCard: React.FC<StordCardProps> = ({storeName, storeCode}) => {
+export const StaffStoreCard: React.FC<storeCardProps> = ({storeName}) => {
   return (
-    <CardStyle>
+    <StaffCardStyle>
+      <p>{storeName}</p>
+    </StaffCardStyle>
+  )
+}
+
+export const ManagerStoreCard: React.FC<managerStoreCardProps> = ({storeName, storeCode}) => {
+  return (
+    <ManagerCardStyle>
       <span>
         <p>{storeName}</p>
         <p style={{color: '#7E7E7E'}}>{storeCode}</p>
       </span>
       <EditOutlinedIcon />
       <RemoveIcon sx={{ color: 'red' }}/>
-    </CardStyle>
+    </ManagerCardStyle>
   )
 }
 
-export const StaffCard: React.FC<StaffCardProps> = ({staffName, staffPhone}) => {
+export const ManagerStaffCard: React.FC<StaffCardProps> = ({staffName, staffPhone}) => {
   return (
-    <CardStyle>
+    <ManagerCardStyle>
       <p style={{width: '26%'}}>{staffName}</p>
       <p>{staffPhone}</p>
       <RemoveIcon sx={{ color: 'red' }}/>
-    </CardStyle>
+    </ManagerCardStyle>
   )
 }
 
-
-const CardStyle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #F6F6F6;
+const StaffCardStyle = styled.div`
   border: 1px solid #CDCDCD;
   border-radius: 10px;
   width: 100%;
-  padding: 0.9rem 0.8rem;
+  padding: 0.8rem 0.8rem;
+  font-size: 1.3rem;
+  text-align: center;
+
+  &:focus, &:hover { 
+    background-color: #FAED7D;
+  }
+`
+
+const ManagerCardStyle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  width: 100%;
+  padding: 0.8rem 0.8rem;
   font-size: 1.3rem;
 
   &:focus, &:hover { 

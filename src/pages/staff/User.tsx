@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import UserProfile from '../../components/user/UserProfile';
-import {StoreCard} from '../../components/user/StaffCard';
+import { StaffStoreCard } from '../../components/user/Card';
+import { Link } from 'react-router-dom';
 
 const User = () => {
   return (
@@ -10,12 +11,12 @@ const User = () => {
       <WorkplaceBoxStyle>
         <span>
           <h2>나의 근무지</h2>
-          <ControlPointIcon />
+          <Link to={'/store/register/staff'}><ControlPointIcon /></Link>
         </span>
         <CardBoxStyle>
-          <StoreCard storeName='솥뚜껑 삼겹살' />
-          <StoreCard storeName='서브웨이' />
-          <StoreCard storeName='CU 편의점' />
+          <StaffStoreCard storeName='솥뚜껑 삼겹살' />
+          <StaffStoreCard storeName='서브웨이' />
+          <StaffStoreCard storeName='CU 편의점' />
         </CardBoxStyle>
       </WorkplaceBoxStyle>
     </div>
@@ -32,6 +33,11 @@ const WorkplaceBoxStyle = styled.div`
     display: flex;
     align-items: center;
     gap: 0.3rem;
+  }
+  
+  a {
+    display: flex;
+    color: #000000;
   }
 `
 
