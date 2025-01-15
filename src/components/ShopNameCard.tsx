@@ -1,21 +1,40 @@
 import React from "react";
-import { Paper, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-const ShopNameCard = () => {
+interface ShopCardProps {
+  storeName: string;
+  storeLink: string;
+}
+
+const ShopNameCard: React.FC<ShopCardProps> = ({storeName, storeLink}) => {
+  const navigate = useNavigate();
+  const goToStoreEdu = () => {
+    navigate(`${storeLink}`);
+  }
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 2,
-        borderRadius: "16px",
-        border: "1px solid black",
-      }}
-    >
-      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-        솥뚜껑 삼겹살
-      </Typography>
-    </Paper>
+    <ShopCardStyle onClick={goToStoreEdu}>
+      <p>{storeName}</p>
+    </ShopCardStyle>
   );
 };
 
 export default ShopNameCard;
+
+
+const ShopCardStyle = styled.div`
+  border: 1px solid #000000;
+  width: 93%;
+  padding: 1.1rem 1rem;
+  border-radius: 10px;
+
+  p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  &:focus, &:hover {
+    background-color: #FFD400;
+  }
+`
