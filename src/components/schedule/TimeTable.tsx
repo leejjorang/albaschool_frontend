@@ -34,16 +34,26 @@ const BoxStyle = {
   },
   "& .rbc-label": {
     //시간 폰트사이즈
-    fontSize: "0.95rem",
+    fontSize: "0.8rem",
   },
   "& .rbc-events-container": {
     margin: "0",
   },
+  "& .rbc-event-content": {
+    //padding: "0.1rem",
+  },
   "& .rbc-event-content div": {
     overflow: "hidden",
+    pt: "0.3rem",
   },
   "& .rbc-current-time-indicator": {
     opacity: "0",
+  },
+  "& .rbc-day-slot": {
+    overflow: "hidden",
+  },
+  "& .rbc-time-gutter": {
+    overflow: "hidden",
   },
 };
 

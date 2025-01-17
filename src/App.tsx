@@ -4,6 +4,7 @@ import StaffRegisterStore from "./pages/staff/RegisterStore";
 import ManagerRegisterStore from "./pages/manager/RegisterStore";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Home from "./pages/common/Home";
 import StaffUser from "./pages/staff/User";
 import ManagerUser from "./pages/manager/User";
@@ -30,6 +31,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <GlobalStyle />
         <ThemeProvider theme={theme}>
