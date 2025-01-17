@@ -39,9 +39,6 @@ const BoxStyle = {
   "& .rbc-events-container": {
     margin: "0",
   },
-  "& .rbc-event-content": {
-    //padding: "0.1rem",
-  },
   "& .rbc-event-content div": {
     overflow: "hidden",
     pt: "0.3rem",
