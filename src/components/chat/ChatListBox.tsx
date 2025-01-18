@@ -3,7 +3,7 @@ import Badge from "../Badge";
 import { useNavigate } from "react-router-dom";
 
 interface ChatListBoxProps {
-  id: number;
+  id: string;
   storeName: string;
   headCount: number;
   lastMessage: string;
@@ -14,7 +14,12 @@ interface ChatListBoxProps {
 const ChatListBox: React.FC<ChatListBoxProps> = ({id, storeName, headCount, lastMessage, time, badge}) => {
   const navigate = useNavigate();
   const goToChatRoom = () => {
-    navigate(`/chats/${id}`);
+    navigate(`/chats/${id}`, {
+      state: {
+        storeName,
+        headCount
+      }
+    });
   }
 
   return (

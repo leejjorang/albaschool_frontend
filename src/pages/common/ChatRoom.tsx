@@ -3,22 +3,98 @@ import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import ChatContainer from '../../components/chat/ChatContainer';
 import ChatMenu from '../../components/chat/ChatMenu';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import { io, Socket } from "socket.io-client";
+import { getMessages } from '../../services/chatService';
+import { Message } from '../../types/chat';
+
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedToken {
+  id: string;
+  name: string;
+}
 
 const ChatRoom = () => {
+  const roomId = useParams().id;
   const navigate = useNavigate();
+  const location = useLocation();
+  const { storeName="Unknown Store", headCount=0 } = location.state || {};
+  const [inputMessage, setInputMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const socketRef = useRef<Socket>();
+
+  const token = import.meta.env.VITE_BACKEND_TOKEN;
+  const decoded = jwtDecode<DecodedToken>(token);
+
+
+  useEffect(() => {
+    socketRef.current = io(import.meta.env.VITE_BACKEND_URL,
+      {
+        path: '/socket.io/',
+        transports: ['websocket'],
+        auth: {
+        token: `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`
+      }}
+    );
+
+    const socket = socketRef.current;
+    
+    socket.on("connect", () => {
+      console.log("연결 완료", socket.id);
+    });
+    
+    socket.on("message", (newMessage) => {
+      setMessages(PrevMessages => [...PrevMessages, newMessage]);
+    })
+
+    const fetchMessages = async () => {
+      if (roomId) {
+        const fetchedMessages = await getMessages(roomId);
+        setMessages(fetchedMessages.chatRoomDetail.messages);
+      }
+    }
+
+    fetchMessages();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [roomId])
+
+  const sendMessage = () => {
+    if(!inputMessage.trim() || !socketRef.current) return;
+
+    socketRef.current.emit("sendMessage", { content: inputMessage, roomId: roomId}, (response: Message) => {
+      //setMessages((prevMessages) => [...prevMessages, response]);
+
+      console.log(response);
+    });
+    setMessages((prevMessages) => [...prevMessages, {
+      content: inputMessage,
+      createdAt: new Date().toISOString(),
+      id: 'id',
+      name: decoded.name,
+      senderId: decoded.id
+    }]);
+    setInputMessage("");
+  }
+
+  const inputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputMessage(e.target.value);
+  };
+
   const goToChatList = () => {
     navigate('/chats');
   }
 
-  const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   }
-
-  const storeTitle: string = '솥뚜껑 삼겹살';
-  const headCount: number = 7;
 
   const autoResize = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = event.target;
@@ -34,20 +110,22 @@ const ChatRoom = () => {
 
         <ArrowBackIosOutlinedIcon onClick={goToChatList}/>
         <span>
-          <h6>{storeTitle}</h6>
+          <h6>{storeName}</h6>
           <h6 style={{color: '#7E7E7E'}}>{headCount}</h6>
         </span>
         <MenuOutlinedIcon sx={{ fontSize: 28 }} onClick={toggleMenu} />
       </ChatRoomHeaderStyle>
-      <ChatContainer />
+      <ChatContainer messages={messages} />
       <ChatInputBoxStyle>
         <textarea
           id="message" 
           rows={1}
           onInput={autoResize}
+          value={inputMessage}
+          onChange={inputChange}
         >
         </textarea>
-        <button>전송</button>
+        <button onClick={sendMessage}>전송</button>
       </ChatInputBoxStyle>
     </div>
   );

@@ -3,23 +3,57 @@ import AlertChat from "./AlertChat";
 import YourChat from "./YourChat";
 import MyChat from "./MyChat";
 
-const ChatContainer = () => {
+import { jwtDecode } from 'jwt-decode';
+import { formatDate, formatTime } from "../../utils/time";
+import { Messages } from '../../types/chat';
+import React, { useEffect, useRef } from "react";
+
+interface DecodedToken {
+  id: string;
+  name: string;
+}
+
+const ChatContainer = ({messages}: Messages) => {
+  const token = import.meta.env.VITE_BACKEND_TOKEN;
+  const decoded = jwtDecode<DecodedToken>(token);
+
+  let lastDate = 0;
+
+  const chatBoxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+    console.log(chatBoxRef.current?.scrollHeight);
+  }, [messages]);
+
   return (
-    <ChatBoxStyle>
-      <AlertChat message="2025년 1월 14일" />
-      <YourChat 
-        senderName="김사장" 
-        profile="https://picsum.photos/id/49/200/300.jpg"
-        message="안녕"
-        time="오전 11:00"
-      />
-      <YourChat 
-        senderName="이알바" 
-        message="안녕하세요 처음뵙겠습니다! 잘 부탁드립니다~"
-        time="오전 11:00"
-      />
-      <MyChat message="안녕하세요" time="오전 11:03" />
-      <MyChat message="안녕하세요 긴 텍스트 테스트용으로 길게 작성" time="오전 11:03" />
+    <ChatBoxStyle ref={chatBoxRef}>
+      {messages.map((message, i) => {
+        const checkDate = lastDate !== formatDate(message.createdAt)[1];
+        if(checkDate) {
+          lastDate = Number(formatDate(message.createdAt)[1]);
+        }
+
+        return (
+          <React.Fragment key={message.id || i}>
+            {checkDate && (
+              <AlertChat message={String(formatDate(message.createdAt)[0])} />
+            )}
+            {message.senderId === decoded.id ? (
+              <MyChat message={message.content} time={formatTime(message.createdAt)} />
+            ) : (
+              <YourChat
+                senderName={message.name}
+                profile="https://picsum.photos/id/49/200/300.jpg"
+                message={message.content}
+                time={formatTime(message.createdAt)}
+              />
+            )}
+          </React.Fragment>
+        ) 
+      })}
     </ChatBoxStyle>
   );
 }
@@ -32,7 +66,10 @@ const ChatBoxStyle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-top: 3.5rem;
+  position: relative;
+  top: 3.5rem;
+  margin-bottom: 7rem;
   padding: 0.5rem 0;
   gap: 0.5rem;
+  overflow-y: auto;
 `

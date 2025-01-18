@@ -1,12 +1,51 @@
 import styled from "styled-components";
 import ChatListBox from "../../components/chat/ChatListBox";
+import { useEffect, useState } from "react";
+
+import { EventSourcePolyfill } from "event-source-polyfill";
+
+interface MessageData {
+  id: string;
+  title: string;
+  lastMessage: string;
+  notReadCount: number;
+  memberCount: number;
+}
 
 const ChatList = () => {
+  const [messages, setMessages] = useState<MessageData[]>([]);
+  const token = import.meta.env.VITE_BACKEND_TOKEN;
+
+  useEffect(() => {
+    const eventSource = new EventSourcePolyfill(
+      `${import.meta.env.VITE_BACKEND_URL}/notifications`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+
+    eventSource.addEventListener("chatRoomInitialize", (event) => {
+      try {
+        const jsonData: MessageData[] = JSON.parse((event as MessageEvent).data);
+        setMessages(jsonData); // 데이터 덮어쓰기
+      } catch (error) {
+        console.error("JSON 파싱 실패:", error);
+      }
+    });
+
+    return () => {
+      eventSource.close();
+    };
+
+  }, [token]);
+
   return (
     <ChatListStyle>
-      <ChatListBox id={1} storeName="솥뚜껑 삼겹살" headCount={7} lastMessage="오늘도 화이팅!" time="오전 11:00" />
-      <ChatListBox id={2} storeName="서브웨이" headCount={5} lastMessage="청소 깨끗이 부탁드립니다." time="오전 11:03" badge={5} />
-      <ChatListBox id={3} storeName="CU 편의점" headCount={3} lastMessage="마감 잘 해주세요. 저번부터 청소가 미흡하네요." time="오후 12:01" badge={1} />
+      {messages.map((message) => {
+        return <ChatListBox key={message.id} id={message.id} storeName={message.title} headCount={message.memberCount} lastMessage={message.lastMessage||'메세지가 없습니다.'} time="오전 11:00" />
+      })}
     </ChatListStyle>
   );
 }
