@@ -4,11 +4,12 @@ interface ButtonProps {
   type?: 'submit'|'reset';
   message: string;
   width?: number;
+  onClick?: () => void;
 }
 
-export const Button: React.FC<ButtonProps> = ({type, message, width}) => {
+export const Button: React.FC<ButtonProps> = ({type, message, width, onClick}) => {
   return (
-    <ButtonStyle type={type} style={{width: `${width}%`}}>
+    <ButtonStyle type={type} style={{width: `${width}%`}} onClick={onClick} >
       {message}
     </ButtonStyle>
   )
