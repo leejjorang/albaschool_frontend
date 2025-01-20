@@ -2,8 +2,9 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Button } from "./Button";
 import { useMutation } from "@tanstack/react-query";
-import { validateEmail } from "../services/authService";
+import { sendCode, signUp, validateEmail } from "../services/authService";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface SignUpProps {
   // 알바생
@@ -13,6 +14,7 @@ export interface SignUpProps {
   password: string;
   checkPassword: string;
   name: string;
+  role: string;
 }
 
 export interface BusinessSignUpProps extends SignUpProps {
@@ -20,7 +22,7 @@ export interface BusinessSignUpProps extends SignUpProps {
   businessNum: string;
 }
 
-type SignUpType = "staff" | "business";
+type SignUpType = "staff" | "manager";
 interface SignUpFormProps {
   type: SignUpType;
 }
@@ -34,18 +36,40 @@ function SignUpForm({ type }: SignUpFormProps) {
   } = useForm<BusinessSignUpProps>();
 
   const email = watch("email"); // 현재 입력된 이메일 값 감시
-  const [isEmailVerified, setIsEmailVerified] = useState(false); // 인증 버튼 상태
+  const code = watch("verification"); // 현재 입력된 코드 감시
   const password = watch("password");
+  const navigate = useNavigate();
 
+  const role = type==="staff" ? "staff" : "manager";
+
+  const [isCodeSent, setIsCodeSent] = useState(false); // 전송 버튼 상태
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // 인증 버튼 상태
+
+  // 이메일이 변경될 때만 초기화
   useEffect(() => {
+    setIsCodeSent(false);
     setIsEmailVerified(false);
   }, [email]);
 
-  const emailValidation = useMutation({
-    mutationFn: validateEmail,
+  const sendVerificationCode = useMutation({
+    mutationFn: sendCode,
     onSuccess: (data) => {
       console.log(data);
-      alert("이메일 인증 성공!");
+      alert("인증번호가 발송되었습니다.");
+      setIsCodeSent(true);
+    },
+    onError: () => {
+      alert("인증번호 발송 실패!");
+      setIsCodeSent(false);
+    },
+  });
+
+  const EmailValidation = useMutation({
+    mutationFn: (data: { email: string; code: string }) =>
+      validateEmail(data.email, data.code),
+    onSuccess: (data) => {
+      console.log(data);
+      alert("이메일 인증 완료!");
       setIsEmailVerified(true);
     },
     onError: () => {
@@ -54,8 +78,24 @@ function SignUpForm({ type }: SignUpFormProps) {
     },
   });
 
+  const signUpMutation = useMutation({
+    mutationFn: (data: SignUpProps) =>
+      signUp({
+        ...data,
+        role: role,
+      }),
+    onSuccess: () => {
+      alert("회원가입 성공!");
+      navigate("/login");
+    },
+    onError: (error) => {
+      alert("회원가입 실패!");
+      console.error(error);
+    },
+  });
+
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-  const handleEmailValidation = () => {
+  const handleSendingCode = () => {
     if (!email) {
       alert("이메일을 입력해주세요.");
       return;
@@ -67,17 +107,33 @@ function SignUpForm({ type }: SignUpFormProps) {
     }
 
     // 유효성 검사 통과 후 이메일 인증 요청
-    emailValidation.mutate(email);
+    sendVerificationCode.mutate(email);
   };
 
-  const onSubmit = async (data: BusinessSignUpProps | SignUpProps) => {
-    if (type === "business") {
-      // 사업자 회원가입 처리
-      const businessData = data as BusinessSignUpProps;
-    } else {
-      // 일반 회원가입 처리
-      const staffData = data as SignUpProps;
+  const handleVerifyCode = () => {
+    EmailValidation.mutate({
+      email: email, // 현재 입력된 이메일
+      code: code, // 사용자가 입력한 인증코드
+    });
+  };
+
+  // const onSubmit = async (data: BusinessSignUpProps | SignUpProps) => {
+  //   if (type === "business") {
+  //     // 사업자 회원가입 처리
+  //     const businessData = data as BusinessSignUpProps;
+  //   } else {
+  //     // 일반 회원가입 처리
+  //     const staffData = data as SignUpProps;
+  //   }
+  // };
+
+  const onSubmit = async (data: SignUpProps) => {
+    if (!isEmailVerified) {
+      alert("이메일 인증이 필요합니다");
+      return;
     }
+
+    signUpMutation.mutate(data);
   };
 
   return (
@@ -104,16 +160,16 @@ function SignUpForm({ type }: SignUpFormProps) {
               />
               <button
                 type="button"
-                onClick={handleEmailValidation}
+                onClick={handleSendingCode}
                 disabled={
-                  !email || emailValidation.isPending || isEmailVerified
+                  !email || sendVerificationCode.isPending || isCodeSent
                 }
               >
-                {emailValidation.isPending
-                  ? "검증중..."
-                  : isEmailVerified
-                  ? "인증됨"
-                  : "인증"}
+                {sendVerificationCode.isPending
+                  ? "전송중..."
+                  : isCodeSent
+                  ? "전송됨"
+                  : "전송"}
               </button>
             </div>
             {errors.email && (
@@ -132,8 +188,19 @@ function SignUpForm({ type }: SignUpFormProps) {
                   required: "인증번호를 입력하세요",
                 })}
                 placeholder="인증번호 입력"
+                disabled={!isCodeSent || email === "" || isEmailVerified}
               />
-              <button>확인</button>
+              <button
+                type="button"
+                onClick={handleVerifyCode}
+                disabled={!code || EmailValidation.isPending || isEmailVerified}
+              >
+                {EmailValidation.isPending
+                  ? "인증중..."
+                  : isEmailVerified
+                  ? "인증됨"
+                  : "인증"}
+              </button>
             </div>
             {errors.verification && (
               <p className="error-text">{errors.verification.message}</p>
@@ -156,7 +223,11 @@ function SignUpForm({ type }: SignUpFormProps) {
 
           <InputBoxStyle>
             <div>
-              <p>비밀번호 확인</p>
+              <p>
+                비밀번호
+                <br />
+                확인
+              </p>
               <input
                 className="inputBox"
                 type="password"
@@ -199,7 +270,7 @@ function SignUpForm({ type }: SignUpFormProps) {
             )}
           </InputBoxStyle>
 
-          {type === "business" && (
+          {type === "manager" && (
             <InputBoxStyle>
               <div>
                 <p>사업자번호</p>
@@ -237,6 +308,7 @@ const FormStyle = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0.5rem;
 
   h2 {
     font-size: 2.3rem;
@@ -245,6 +317,7 @@ const FormStyle = styled.form`
 
 const InputWrapperStyler = styled.div`
   width: 90%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -253,11 +326,15 @@ const InputWrapperStyler = styled.div`
 
 const InputBoxStyle = styled.div`
   width: 100%;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
 
-  p {
+  .error-text {
     color: red;
-    margin-left: 6.5rem;
+    position: absolute;
+    left: 28%;
+    padding-left: 0.8rem;
+    margin-top: 0.2em;
+    font-size: 0.8rem;
   }
 
   div {
@@ -283,6 +360,12 @@ const InputBoxStyle = styled.div`
         outline: none;
         border: 1px solid #ffd400;
       }
+    }
+
+    input:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+      opacity: 0.7;
     }
 
     button {
