@@ -13,7 +13,9 @@ export const useSSEStore = create<SSEState>((set) => ({
   setChatRoomInitializeData: (data) =>
     set(() => ({ chatRoomInitializeData: data })),
   addChatNotification: (data) =>
-    set((state) => ({ chatNotifications: [data, ...state.chatNotifications] })),
+    set((state) => ({
+      chatNotifications: [...data, ...state.chatNotifications],
+    })),
   setEventSource: (source) => set(() => ({ eventSource: source })),
   clearEventSource: () => set(() => ({ eventSource: null })),
 }));

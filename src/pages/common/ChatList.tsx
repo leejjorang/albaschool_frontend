@@ -19,7 +19,6 @@ const ChatList = () => {
   useEffect(() => {
     if (chatNotifications.length > 0) {
       setDisplayData(chatNotifications.slice(0, roomNum));
-      console.log(chatNotifications);
     }
   }, [chatNotifications, roomNum]);
 
@@ -34,6 +33,7 @@ const ChatList = () => {
             headCount={message.memberCount}
             lastMessage={message.lastMessage || "메세지가 없습니다."}
             time="오전 11:00"
+            badge={message.notReadCount}
           />
         );
       })}

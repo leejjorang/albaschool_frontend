@@ -23,7 +23,7 @@ export interface SSEState {
   setInitializeData: (data: Notification[]) => void;
   addNotification: (data: Notification) => void;
   setChatRoomInitializeData: (data: ChatNotification[]) => void;
-  addChatNotification: (data: ChatNotification) => void;
+  addChatNotification: (data: ChatNotification[]) => void;
   eventSource: EventSource | null;
   setEventSource: (source: EventSource | null) => void;
   clearEventSource: () => void;
