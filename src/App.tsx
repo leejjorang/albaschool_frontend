@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { GlobalStyle } from "./styles/global";
 import Layout from "./components/layout/Layout";
 import StaffRegisterStore from "./pages/staff/RegisterStore";
@@ -24,10 +25,26 @@ import ChangePwd from "./pages/common/ChangePwd";
 import StaffEduPost from "./pages/staff/StaffEduPost";
 import ManagerEduPost from "./pages/manager/ManagerEduPost";
 import WritePost from "./pages/manager/WritePost";
+import SelectRole from "./pages/common/SelectRole";
+import { useSSEStore } from "./stores/sseStore";
+import { connectSSE } from "./services/sseService";
 
 const queryClient = new QueryClient();
 
 function App() {
+  const eventSource = useSSEStore((state) => state.eventSource);
+
+  useEffect(() => {
+    if (!eventSource) {
+      connectSSE();
+    }
+
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
+  }, [eventSource]);
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
@@ -39,6 +56,7 @@ function App() {
               <Route path="/" element={<ManagerSchedule />} />
 
               <Route path="/login" element={<Login />} />
+              <Route path="/signup/role" element={<SelectRole />} />
               <Route path="/signup/staff" element={<StaffSignUp />} />
               <Route path="/signup/manager" element={<ManagerSignUp />} />
 
