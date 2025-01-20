@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:second": "vite --port 3001 --mode second",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
