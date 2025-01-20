@@ -6,7 +6,6 @@ import ManagerRegisterStore from "./pages/manager/RegisterStore";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Home from "./pages/common/Home";
 import StaffUser from "./pages/staff/User";
 import ManagerUser from "./pages/manager/User";
 import UserEdit from "./pages/common/UserEdit";
@@ -26,6 +25,7 @@ import ChangePwd from "./pages/common/ChangePwd";
 import StaffEduPost from "./pages/staff/StaffEduPost";
 import ManagerEduPost from "./pages/manager/ManagerEduPost";
 import WritePost from "./pages/manager/WritePost";
+import SelectRole from "./pages/common/SelectRole";
 import { useSSEStore } from "./stores/sseStore";
 import { connectSSE } from "./services/sseService";
 
@@ -56,6 +56,7 @@ function App() {
               <Route path="/" element={<ManagerSchedule />} />
 
               <Route path="/login" element={<Login />} />
+              <Route path="/signup/role" element={<SelectRole />} />
               <Route path="/signup/staff" element={<StaffSignUp />} />
               <Route path="/signup/manager" element={<ManagerSignUp />} />
 
