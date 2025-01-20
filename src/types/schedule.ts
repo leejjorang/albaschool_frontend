@@ -5,3 +5,12 @@ export interface ISchedule {
   end: Date;
   color?: string;
 }
+
+export interface IScheduleApi {
+  id: string;
+  title: string;
+  content: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
