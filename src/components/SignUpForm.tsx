@@ -35,12 +35,12 @@ function SignUpForm({ type }: SignUpFormProps) {
   const password = watch("password");
   const navigate = useNavigate();
 
-  const role = type==="staff" ? "staff" : "manager";
+  const role = type === "staff" ? "staff" : "manager";
 
   const [isCodeSent, setIsCodeSent] = useState(false); // 전송 버튼 상태
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 인증 버튼 상태
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState("");
 
   // 이메일이 변경될 때만 초기화
   useEffect(() => {
@@ -89,7 +89,7 @@ function SignUpForm({ type }: SignUpFormProps) {
       setToastMessage("✅ 회원가입 성공!");
       setShowToast(true);
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 800);
     },
     onError: (error) => {
@@ -163,11 +163,7 @@ function SignUpForm({ type }: SignUpFormProps) {
                   !email || sendVerificationCode.isPending || isCodeSent
                 }
               >
-                {sendVerificationCode.isPending
-                  ? "전송중..."
-                  : isCodeSent
-                  ? "전송됨"
-                  : "전송"}
+                전송
               </button>
             </div>
             {errors.email && (
@@ -193,11 +189,7 @@ function SignUpForm({ type }: SignUpFormProps) {
                 onClick={handleVerifyCode}
                 disabled={!code || EmailValidation.isPending || isEmailVerified}
               >
-                {EmailValidation.isPending
-                  ? "인증중..."
-                  : isEmailVerified
-                  ? "인증됨"
-                  : "인증"}
+                인증
               </button>
             </div>
             {errors.verification && (
@@ -272,8 +264,8 @@ function SignUpForm({ type }: SignUpFormProps) {
       </FormStyle>
       {showToast && (
         <ToastPopup
-          message={toastMessage} 
-          setToast={setShowToast} 
+          message={toastMessage}
+          setToast={setShowToast}
           position="top"
         />
       )}
@@ -283,11 +275,12 @@ function SignUpForm({ type }: SignUpFormProps) {
 
 const SignUpFormStyle = styled.div`
   width: 100%;
-  height: calc(100vh - 8rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
+  padding: 1rem 0;
 `;
 
 const FormStyle = styled.form`
@@ -297,8 +290,9 @@ const FormStyle = styled.form`
   align-items: center;
   padding: 0.5rem;
 
-  h2 {
+ h2 {
     font-size: 2.3rem;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -308,7 +302,6 @@ const InputWrapperStyler = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 2rem 0 2.5rem;
 `;
 
 const InputBoxStyle = styled.div`
