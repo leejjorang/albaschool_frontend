@@ -6,6 +6,8 @@ import { Button } from "../../components/Button";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../../services/authService";
 import { useAuthStore } from "../../stores/authStore";
+import { useState } from "react";
+import ToastPopup from "../../components/ToastPopup";
 
 export interface LoginProps {
   email: string;
@@ -28,16 +30,24 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
   const navigate = useNavigate();
+  
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      // 상태 변화
-      alert("로그인 성공!");
-      storeLogin(data.token);
-      navigate('/');
+      setToastMessage("✅ 로그인 성공!");
+      setShowToast(true);
+      storeLogin(data.token); // 상태 변화
+
+      setTimeout(() => {
+        navigate('/');
+      }, 800);
     },
     onError: (error) => {
+      setToastMessage("❎ 로그인 실패!");
+      setShowToast(true);
       console.error(error);
     }
   });
@@ -88,6 +98,13 @@ const Login = () => {
         <p>계정이 없으신가요?</p>
         <Link to="/signup/role">회원가입</Link>
       </span>
+      {showToast && (
+        <ToastPopup
+          message={toastMessage} 
+          setToast={setShowToast} 
+          position="top"
+        />
+      )}
     </LoginStyle>
   );
 };

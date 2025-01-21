@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendCode, signUp, validateEmail } from "../services/authService";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ToastPopup from "./ToastPopup";
 
 export interface SignUpProps {
   email: string;
@@ -38,6 +39,8 @@ function SignUpForm({ type }: SignUpFormProps) {
 
   const [isCodeSent, setIsCodeSent] = useState(false); // 전송 버튼 상태
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 인증 버튼 상태
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // 이메일이 변경될 때만 초기화
   useEffect(() => {
@@ -49,11 +52,13 @@ function SignUpForm({ type }: SignUpFormProps) {
     mutationFn: sendCode,
     onSuccess: (data) => {
       console.log(data);
-      alert("인증번호가 발송되었습니다.");
+      setToastMessage("인증번호 발송 완료!");
+      setShowToast(true);
       setIsCodeSent(true);
     },
     onError: () => {
-      alert("인증번호 발송 실패!");
+      setToastMessage("인증번호 발송 실패!");
+      setShowToast(true);
       setIsCodeSent(false);
     },
   });
@@ -63,11 +68,13 @@ function SignUpForm({ type }: SignUpFormProps) {
       validateEmail(data.email, data.code),
     onSuccess: (data) => {
       console.log(data);
-      alert("이메일 인증 완료!");
+      setToastMessage("이메일 인증 완료!");
+      setShowToast(true);
       setIsEmailVerified(true);
     },
     onError: () => {
-      alert("이메일 인증 실패!");
+      setToastMessage("이메일 인증 실패!");
+      setShowToast(true);
       setIsEmailVerified(false);
     },
   });
@@ -79,11 +86,15 @@ function SignUpForm({ type }: SignUpFormProps) {
         role: role,
       }),
     onSuccess: () => {
-      alert("회원가입 성공!");
-      navigate("/login");
+      setToastMessage("회원가입 성공!");
+      setShowToast(true);
+      setTimeout(() => {
+        navigate('/login');
+      }, 800);
     },
     onError: (error) => {
-      alert("회원가입 실패!");
+      setToastMessage("회원가입 실패!");
+      setShowToast(true);
       console.error(error);
     },
   });
@@ -91,12 +102,14 @@ function SignUpForm({ type }: SignUpFormProps) {
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   const handleSendingCode = () => {
     if (!email) {
-      alert("이메일을 입력해주세요.");
+      setToastMessage("이메일을 입력해주세요.");
+      setShowToast(true);
       return;
     }
 
     if (!emailRegex.test(email)) {
-      alert("올바른 이메일 형식이 아닙니다.");
+      setToastMessage("올바른 이메일 형식이 아닙니다.");
+      setShowToast(true);
       return;
     }
 
@@ -113,7 +126,8 @@ function SignUpForm({ type }: SignUpFormProps) {
 
   const onSubmit = async (data: SignUpProps) => {
     if (!isEmailVerified) {
-      alert("이메일 인증이 필요합니다");
+      setToastMessage("이메일 인증이 필요합니다.");
+      setShowToast(true);
       return;
     }
 
@@ -256,6 +270,13 @@ function SignUpForm({ type }: SignUpFormProps) {
         </InputWrapperStyler>
         <Button type="submit" message="회원가입" width={40} />
       </FormStyle>
+      {showToast && (
+        <ToastPopup
+          message={toastMessage} 
+          setToast={setShowToast} 
+          position="top"
+        />
+      )}
     </SignUpFormStyle>
   );
 }
