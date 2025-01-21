@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface SignUpProps {
-  // 알바생
   email: string;
   verification: string;
   phone: string;
@@ -15,11 +14,6 @@ export interface SignUpProps {
   checkPassword: string;
   name: string;
   role: string;
-}
-
-export interface BusinessSignUpProps extends SignUpProps {
-  // 사업자
-  businessNum: string;
 }
 
 type SignUpType = "staff" | "manager";
@@ -33,7 +27,7 @@ function SignUpForm({ type }: SignUpFormProps) {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<BusinessSignUpProps>();
+  } = useForm<SignUpProps>();
 
   const email = watch("email"); // 현재 입력된 이메일 값 감시
   const code = watch("verification"); // 현재 입력된 코드 감시
@@ -116,16 +110,6 @@ function SignUpForm({ type }: SignUpFormProps) {
       code: code, // 사용자가 입력한 인증코드
     });
   };
-
-  // const onSubmit = async (data: BusinessSignUpProps | SignUpProps) => {
-  //   if (type === "business") {
-  //     // 사업자 회원가입 처리
-  //     const businessData = data as BusinessSignUpProps;
-  //   } else {
-  //     // 일반 회원가입 처리
-  //     const staffData = data as SignUpProps;
-  //   }
-  // };
 
   const onSubmit = async (data: SignUpProps) => {
     if (!isEmailVerified) {
@@ -269,24 +253,6 @@ function SignUpForm({ type }: SignUpFormProps) {
               <p className="error-text">{errors.phone.message}</p>
             )}
           </InputBoxStyle>
-
-          {type === "manager" && (
-            <InputBoxStyle>
-              <div>
-                <p>사업자번호</p>
-                <input
-                  className="inputBox"
-                  type="text"
-                  {...register("businessNum", {
-                    required: "사업자번호를 입력하세요",
-                  })}
-                />
-              </div>
-              {errors.businessNum && (
-                <p className="error-text">{errors.businessNum.message}</p>
-              )}
-            </InputBoxStyle>
-          )}
         </InputWrapperStyler>
         <Button type="submit" message="회원가입" width={40} />
       </FormStyle>

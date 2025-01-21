@@ -1,4 +1,5 @@
-import { BusinessSignUpProps, SignUpProps } from "../components/SignUpForm";
+import { SignUpProps } from "../components/SignUpForm";
+import { LoginProps } from "../pages/common/Login";
 import axiosInstance from "./AxiosInstance";
 
 export const sendCode = async (email: string) => {
@@ -29,14 +30,11 @@ export const signUp = async (data: SignUpProps) => {
   return response.data;
 }
 
-// export const signupManager = async (data: BusinessSignUpProps) => {
-//   const response = await axiosInstance.post("/auth/register",{
-//     name: data.name,
-//     email: data.email,
-//     role: "manager",
-//     password: data.password,
-//     contact:data.phone
-//   });
+export const login= async (data: LoginProps) => {
+  const response = await axiosInstance.post("/auth/login",{
+    email: data.email,
+    password: data.password
+  });
 
-//   return response.data;
-// }
+  return response.data;
+}

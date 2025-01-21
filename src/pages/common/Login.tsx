@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import { TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../../services/authService";
+import { useAuthStore } from "../../stores/authStore";
 
-interface LoginProps {
+export interface LoginProps {
   email: string;
   password: string;
 }
@@ -17,14 +20,30 @@ const commonTextFieldStyle = {
 };
 
 const Login = () => {
+  const {storeLogin} = useAuthStore();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginProps>();
+  const navigate = useNavigate();
 
-  const onSubmit = async () => {
-    //백엔드에 데이터 전송
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      // 상태 변화
+      alert("로그인 성공!");
+      storeLogin(data.token);
+      navigate('/');
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  });
+
+  const onSubmit = async (data: LoginProps) => {
+    loginMutation.mutate(data);
   };
 
   return (
@@ -47,7 +66,7 @@ const Login = () => {
             helperText={errors.email?.message}
             sx={{
               ...commonTextFieldStyle,
-              marginBottom: 2
+              marginBottom: 2,
             }}
           />
           <TextField
@@ -59,7 +78,7 @@ const Login = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
             sx={{
-              ...commonTextFieldStyle
+              ...commonTextFieldStyle,
             }}
           />
         </TextFieldWrapperStyle>
@@ -67,14 +86,13 @@ const Login = () => {
       </FormStyle>
       <span>
         <p>계정이 없으신가요?</p>
-        <Link to='/signup/staff'>회원가입</Link>
+        <Link to="/signup/role">회원가입</Link>
       </span>
     </LoginStyle>
   );
-}
+};
 
 export default Login;
-
 
 const LoginStyle = styled.div`
   display: flex;
@@ -91,7 +109,7 @@ const LoginStyle = styled.div`
     a {
       cursor: pointer;
       text-decoration: none;
-      color: #FFD400;
+      color: #ffd400;
 
       &:hover: {
         text-decoration: underline;
@@ -115,4 +133,4 @@ const FormStyle = styled.form`
 const TextFieldWrapperStyle = styled.div`
   width: 90%;
   margin: 4rem 0 4rem;
-`
+`;
