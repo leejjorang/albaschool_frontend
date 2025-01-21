@@ -1,15 +1,16 @@
-import { BusinessSignUpProps, SignUpProps } from "../components/SignUpForm";
+import { SignUpProps } from "../components/SignUpForm";
+import { LoginProps } from "../pages/common/Login";
 import axiosInstance from "./AxiosInstance";
 
-export const validateEmail = async (email: string) => {
+export const sendCode = async (email: string) => {
   const response = await axiosInstance.post("/auth/email" , {
     email: email
   });
   return response.data;
 };
 
-export const checkCode = async (email: string, code: string) => { 
-  const response = await axiosInstance.post("/auth/email" , {
+export const validateEmail = async (email: string, code: string) => { 
+  const response = await axiosInstance.post("/auth/email/verify" , {
     email: email,
     code: code
   });
@@ -17,25 +18,22 @@ export const checkCode = async (email: string, code: string) => {
   return response.data;
 }
 
-export const signupStaff = async (data: SignUpProps) => {
+export const signUp = async (data: SignUpProps) => {
   const response = await axiosInstance.post("/auth/register",{
     name: data.name,
     email: data.email,
-    role: "staff",
     password: data.password,
-    contact:data.phone
+    contact:data.phone,
+    role: data.role
   });
 
   return response.data;
 }
 
-export const signupManager = async (data: BusinessSignUpProps) => {
-  const response = await axiosInstance.post("/auth/register",{
-    name: data.name,
+export const login= async (data: LoginProps) => {
+  const response = await axiosInstance.post("/auth/login",{
     email: data.email,
-    role: "manager",
-    password: data.password,
-    contact:data.phone
+    password: data.password
   });
 
   return response.data;
