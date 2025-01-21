@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface InputProps {
-  id: string;
+  name: string;
   type: 'text'|'number'|'password'|'email'|'tel';
   placeholder?: string;
   disabled?: boolean;
@@ -14,10 +14,10 @@ interface InputBoxProps extends InputProps {
   titleWidth?: number;
 }
 
-export const Input: React.FC<InputProps> = ({id, type, placeholder, disabled, required, width}) => {
+export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, required, width}) => {
   return(
     <InputStyle style={{width: `${width}%`}}
-      id={id}
+      name={name}
       type={type}
       placeholder={placeholder}
       disabled={disabled}
@@ -26,12 +26,12 @@ export const Input: React.FC<InputProps> = ({id, type, placeholder, disabled, re
   )
 }
 
-export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, id, type, placeholder, disabled, required, width}) => {
+export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type, placeholder, disabled, required, width}) => {
   return (
     <InputBoxStyle>
       <p style={{width: `${titleWidth}%`}}>{title}</p>
       <Input
-        id={id}
+        name={name}
         type={type}
         placeholder={placeholder}
         disabled={disabled}
