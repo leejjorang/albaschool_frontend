@@ -52,12 +52,12 @@ function SignUpForm({ type }: SignUpFormProps) {
     mutationFn: sendCode,
     onSuccess: (data) => {
       console.log(data);
-      setToastMessage("인증번호 발송 완료!");
+      setToastMessage("✅ 인증번호 발송 완료!");
       setShowToast(true);
       setIsCodeSent(true);
     },
     onError: () => {
-      setToastMessage("인증번호 발송 실패!");
+      setToastMessage("❌ 인증번호 발송 실패!");
       setShowToast(true);
       setIsCodeSent(false);
     },
@@ -68,12 +68,12 @@ function SignUpForm({ type }: SignUpFormProps) {
       validateEmail(data.email, data.code),
     onSuccess: (data) => {
       console.log(data);
-      setToastMessage("이메일 인증 완료!");
+      setToastMessage("✅ 이메일 인증 완료!");
       setShowToast(true);
       setIsEmailVerified(true);
     },
     onError: () => {
-      setToastMessage("이메일 인증 실패!");
+      setToastMessage("❌ 이메일 인증 실패!");
       setShowToast(true);
       setIsEmailVerified(false);
     },
@@ -86,14 +86,14 @@ function SignUpForm({ type }: SignUpFormProps) {
         role: role,
       }),
     onSuccess: () => {
-      setToastMessage("회원가입 성공!");
+      setToastMessage("✅ 회원가입 성공!");
       setShowToast(true);
       setTimeout(() => {
         navigate('/login');
       }, 800);
     },
     onError: (error) => {
-      setToastMessage("회원가입 실패!");
+      setToastMessage("❌ 회원가입 실패!");
       setShowToast(true);
       console.error(error);
     },
@@ -108,7 +108,7 @@ function SignUpForm({ type }: SignUpFormProps) {
     }
 
     if (!emailRegex.test(email)) {
-      setToastMessage("올바른 이메일 형식이 아닙니다.");
+      setToastMessage("⚠️ 올바른 이메일 형식이 아닙니다.");
       setShowToast(true);
       return;
     }
@@ -126,7 +126,7 @@ function SignUpForm({ type }: SignUpFormProps) {
 
   const onSubmit = async (data: SignUpProps) => {
     if (!isEmailVerified) {
-      setToastMessage("이메일 인증이 필요합니다.");
+      setToastMessage("⚠️ 이메일 인증이 필요합니다.");
       setShowToast(true);
       return;
     }

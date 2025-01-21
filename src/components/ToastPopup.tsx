@@ -39,7 +39,7 @@ const ToastPopupStyle = styled.div<ToastProps>`
   justify-content: center;
   border-radius: 1rem;
   background-color:#FAF4C0;
-  opacity: 90%;
+  opacity: 97%;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
 
   ${props => props.$position === "top" ? `

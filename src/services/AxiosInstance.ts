@@ -26,12 +26,9 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) { // 토큰 만료 등 인증 실패
       removeToken();
+      alert("인증 실패!");
       window.location.href="/login";
       return;
-    }
-    if (error.response?.status === 404) { // 로그인 실패
-      window.location.href="/login";
-      return Promise.reject(error);
     }
     return Promise.reject(error);
   }
