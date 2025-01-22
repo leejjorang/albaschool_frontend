@@ -22,7 +22,7 @@ const ChatRoom = () => {
   const socketRef = useRef<Socket>();
 
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_BACKEND_URL, {
+    socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/room`, {
       path: "/socket.io/",
       transports: ["websocket"],
       auth: {
@@ -31,20 +31,24 @@ const ChatRoom = () => {
     });
 
     const socket = socketRef.current;
+    if (!socket || !roomId) return;
 
     socket.on("connect", () => {
       console.log("연결 완료", socket.id);
-      socket.emit("joinRoom", { roomId: roomId }); // roomId 객체로 전달
+      socket.emit("joinRoom", { roomId: roomId });
     });
 
-    socket.on("message", (newMessage) => {
-      setMessages(prevMessages => [...prevMessages, {
-        content: newMessage.content,
-        createdAt: new Date().toISOString(),
-        id: newMessage.messageId,
-        senderId: newMessage.userId,  // userId를 senderId로 사용
-        name: newMessage.name
-      }]);
+    socket.on("broadcast", (newMessage) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          content: newMessage.content,
+          createdAt: new Date().toISOString(),
+          id: newMessage.messageId,
+          senderId: newMessage.senderId,
+          name: newMessage.name,
+        },
+      ]);
     });
 
     const fetchMessages = async () => {
@@ -57,21 +61,20 @@ const ChatRoom = () => {
     fetchMessages();
 
     return () => {
-      socket.emit("leaveRoom", { roomId: roomId }); // roomId 객체로 전달
+      socket.emit("leaveRoom", { roomId: roomId });
       socket.disconnect();
     };
   }, [roomId]);
 
   const sendMessage = () => {
-    if(!inputMessage.trim() || !socketRef.current) return;
-  
-    // 서버 형식에 맞게 전송
-    socketRef.current.emit("sendMessage", {
+    if (!inputMessage.trim() || !socketRef.current) return;
+
+    socketRef.current.emit("broadcast", {
       content: inputMessage,
-      roomId: roomId
+      roomId: roomId,
     });
     setInputMessage("");
-  }
+  };
 
   const inputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputMessage(e.target.value);
