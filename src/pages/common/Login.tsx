@@ -1,10 +1,15 @@
 import styled from "styled-components";
 import { TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../../services/authService";
+import { useAuthStore } from "../../stores/authStore";
+import { useState } from "react";
+import ToastPopup from "../../components/ToastPopup";
 
-interface LoginProps {
+export interface LoginProps {
   email: string;
   password: string;
 }
@@ -17,14 +22,38 @@ const commonTextFieldStyle = {
 };
 
 const Login = () => {
+  const {storeLogin} = useAuthStore();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginProps>();
+  const navigate = useNavigate();
+  
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  const onSubmit = async () => {
-    //백엔드에 데이터 전송
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      setToastMessage("✅ 로그인 성공!");
+      setShowToast(true);
+      storeLogin(data.token); // 상태 변화
+
+      setTimeout(() => {
+        navigate('/');
+      }, 800);
+    },
+    onError: (error) => {
+      setToastMessage("아이디 또는 비밀번호를 확인해주세요.");
+      setShowToast(true);
+      console.error(error);
+    }
+  });
+
+  const onSubmit = async (data: LoginProps) => {
+    loginMutation.mutate(data);
   };
 
   return (
@@ -47,7 +76,7 @@ const Login = () => {
             helperText={errors.email?.message}
             sx={{
               ...commonTextFieldStyle,
-              marginBottom: 2
+              marginBottom: 2,
             }}
           />
           <TextField
@@ -59,7 +88,7 @@ const Login = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
             sx={{
-              ...commonTextFieldStyle
+              ...commonTextFieldStyle,
             }}
           />
         </TextFieldWrapperStyle>
@@ -67,14 +96,20 @@ const Login = () => {
       </FormStyle>
       <span>
         <p>계정이 없으신가요?</p>
-        <Link to='/signup/staff'>회원가입</Link>
+        <Link to="/signup/role">회원가입</Link>
       </span>
+      {showToast && (
+        <ToastPopup
+          message={toastMessage} 
+          setToast={setShowToast} 
+          position="top"
+        />
+      )}
     </LoginStyle>
   );
-}
+};
 
 export default Login;
-
 
 const LoginStyle = styled.div`
   display: flex;
@@ -91,7 +126,7 @@ const LoginStyle = styled.div`
     a {
       cursor: pointer;
       text-decoration: none;
-      color: #FFD400;
+      color: #ffd400;
 
       &:hover: {
         text-decoration: underline;
@@ -115,4 +150,4 @@ const FormStyle = styled.form`
 const TextFieldWrapperStyle = styled.div`
   width: 90%;
   margin: 4rem 0 4rem;
-`
+`;
