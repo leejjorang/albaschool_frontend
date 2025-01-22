@@ -47,9 +47,7 @@ const ManagerSchedule = () => {
         >
           추가하기
         </Button>
-        <ScheduleModal open={modalOpen} onClose={handleClose}>
-          <Button variant="contained">추가</Button>
-        </ScheduleModal>
+        <ScheduleModal open={modalOpen} onClose={handleClose} mode="add" />
       </Box>
       <TimeTable />
     </Box>

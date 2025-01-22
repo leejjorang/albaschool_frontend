@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import moment from "moment";
 import { ISchedule } from "../../types/schedule";
 import ScheduleModal from "./ScheduleModal";
@@ -108,12 +108,7 @@ const TimeTable = () => {
           onSelectEvent={handelSelectEvent}
         />
       </Box>
-      <ScheduleModal open={modalOpen} onClose={handleClose}>
-        <Button variant="contained" sx={{ backgroundColor: "grey.400" }}>
-          삭제
-        </Button>
-        <Button variant="contained">수정</Button>
-      </ScheduleModal>
+      <ScheduleModal open={modalOpen} onClose={handleClose} mode="edit" />
     </div>
   );
 };

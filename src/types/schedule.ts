@@ -6,9 +6,18 @@ export interface ISchedule {
   color?: string;
 }
 
-export interface IScheduleApi {
+export interface IGetSchedule {
   id: string;
   title: string;
+  content: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface IPostSchedule {
+  userId: string;
+  storeId: string;
   content: string;
   dayOfWeek: number;
   startTime: string;

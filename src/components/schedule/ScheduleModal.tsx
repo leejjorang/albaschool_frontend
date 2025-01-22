@@ -7,14 +7,17 @@ import {
   Select,
   IconButton,
   Typography,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import TimePick from "./TimePick";
+import { useMutation } from "@tanstack/react-query";
+import { postSchedules } from "../../services/ScheduleService";
 
 interface ScheduleModalProps {
   open: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  mode: "add" | "edit";
 }
 
 const style = {
@@ -29,7 +32,7 @@ const style = {
   borderRadius: 2,
 };
 
-const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
+const ScheduleModal = ({ open, onClose, mode }: ScheduleModalProps) => {
   const [worker, setWorker] = useState("이알바");
   const [day, setDay] = useState("월요일");
   const [startTime, setStartTime] = useState<string | null>(null);
@@ -41,6 +44,10 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
 
   const handleEndTimeChange = (newValue: string | null) => {
     setEndTime(newValue);
+  };
+  const addMutation = useMutation({ mutationFn: postSchedules });
+  const addHandler = () => {
+    //addMutation.mutate({});
   };
   return (
     <Modal open={open} onClose={onClose}>
@@ -107,7 +114,19 @@ const ScheduleModal = ({ open, onClose, children }: ScheduleModalProps) => {
             padding: "0.4rem",
           }}
         >
-          {children}
+          {mode === "add" && (
+            <Button variant="contained" onClick={addHandler}>
+              추가
+            </Button>
+          )}
+          {mode === "edit" && (
+            <>
+              <Button variant="contained" sx={{ backgroundColor: "grey.400" }}>
+                삭제
+              </Button>
+              <Button variant="contained">수정</Button>
+            </>
+          )}
         </Box>
       </Box>
     </Modal>

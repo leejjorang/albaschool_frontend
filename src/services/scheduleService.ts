@@ -1,4 +1,4 @@
-import { IScheduleApi } from "../types/schedule";
+import { IPostSchedule, IGetSchedule } from "../types/schedule";
 import axiosInstance from "./AxiosInstance";
 
 export const getSchedules = async () => {
@@ -6,7 +6,7 @@ export const getSchedules = async () => {
   return response.data;
 };
 
-export const postSchedules = async (schedule: IScheduleApi) => {
+export const postSchedules = async (schedule: IPostSchedule) => {
   const response = await axiosInstance.post("/schedules", schedule);
   return response.data;
 };
@@ -17,7 +17,7 @@ export const getShopSchedules = async (storeId: string) => {
 };
 
 export const putSchedules = async (
-  schedule: IScheduleApi, //인터페이스 수정?
+  schedule: IGetSchedule, //인터페이스 수정?
   scheduleId: string
 ) => {
   const response = await axiosInstance.put(
