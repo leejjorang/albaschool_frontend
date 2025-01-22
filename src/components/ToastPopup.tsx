@@ -41,6 +41,8 @@ const ToastPopupStyle = styled.div<ToastProps>`
   background-color:#FAF4C0;
   opacity: 97%;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
+  left: 50%;
+  transform: translateX(-50%);
 
   ${props => props.$position === "top" ? `
     top: 4rem;
@@ -59,19 +61,23 @@ const ToastMessage = styled.p`
 
 const toastTopAnimation = keyframes`
   from {
-    transform: translateY(-100%);
+    transform: translate(-50%, -100%);
+    opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
+    opacity: 1;
   }
 `;
 
 const toastBottomAnimation = keyframes`
   from {
-    transform: translateY(100%);
+    transform: translate(-50%, 100%);
+    opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
+    opacity: 1;
   }
 `;
 
