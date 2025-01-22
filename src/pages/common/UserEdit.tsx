@@ -48,7 +48,7 @@ const UserEdit = () => {
 
       <InputStyle>
         <InputBox
-          id="id"
+          name="id"
           title="아이디"
           type="email"
           placeholder="email123@email.com"
@@ -59,7 +59,7 @@ const UserEdit = () => {
         <InputBoxStyle>
           <p>비밀번호</p>
           <Input
-            id="password"
+            name="password"
             type="password"
             placeholder="비밀번호를 입력해주세요"
             width={55}
@@ -69,7 +69,7 @@ const UserEdit = () => {
           <button onClick={handleValidatePassword}>변경</button>
         </InputBoxStyle>
         <InputBox
-          id="name"
+          name="name"
           title="이름"
           type="text"
           placeholder="홍길동"
@@ -77,7 +77,7 @@ const UserEdit = () => {
           width={75}
         />
         <InputBox
-          id="phone"
+          name="phone"
           title="전화번호"
           type="tel"
           placeholder="010-1234-5678"
