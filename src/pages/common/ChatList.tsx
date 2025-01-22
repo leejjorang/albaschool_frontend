@@ -1,57 +1,61 @@
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ChatListBox from "../../components/chat/ChatListBox";
-import { useEffect, useState } from "react";
-
-import { EventSourcePolyfill } from "event-source-polyfill";
-
-interface MessageData {
-  id: string;
-  title: string;
-  lastMessage: string;
-  notReadCount: number;
-  memberCount: number;
-}
+import { io, Socket } from "socket.io-client";
+import { IChatRoom } from "../../types/chat";
 
 const ChatList = () => {
-  const [messages, setMessages] = useState<MessageData[]>([]);
-  const token = import.meta.env.VITE_BACKEND_TOKEN;
+  const [displayData, setDisplayData] = useState<IChatRoom[]>([]);
+  const socketRef = useRef<Socket>();
 
   useEffect(() => {
-    const eventSource = new EventSourcePolyfill(
-      `${import.meta.env.VITE_BACKEND_URL}/notifications`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/chat`, {
+      path: "/socket.io/",
+      transports: ["websocket"],
+      auth: {
+        token: `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`,
+      },
+    });
 
-    eventSource.addEventListener("chatRoomInitialize", (event) => {
-      try {
-        const jsonData: MessageData[] = JSON.parse((event as MessageEvent).data);
-        setMessages(jsonData); // 데이터 덮어쓰기
-      } catch (error) {
-        console.error("JSON 파싱 실패:", error);
-      }
+    const socket = socketRef.current;
+
+    socket.on("connect", () => {
+      console.log("연결 완료", socket.id);
+    });
+
+    socket.on("initialize", (initialData) => {
+      console.log("Initial chat data:", initialData);
+      setDisplayData(initialData.data);
+    });
+
+    socket.on("chatLists", (updatedChatLists) => {
+      console.log("Updated chat lists:", updatedChatLists);
+      setDisplayData(updatedChatLists.data);
     });
 
     return () => {
-      eventSource.close();
+      socket.disconnect();
     };
-
-  }, [token]);
-
+  }, [socketRef]);
+  console.log("displayData", displayData);
   return (
     <ChatListStyle>
-      {messages.map((message) => {
-        return <ChatListBox key={message.id} id={message.id} storeName={message.title} headCount={message.memberCount} lastMessage={message.lastMessage||'메세지가 없습니다.'} time="오전 11:00" />
-      })}
+      {displayData.map((message) => (
+        <ChatListBox
+          key={message.id}
+          id={message.id}
+          storeName={message.title}
+          headCount={message.memberCount}
+          lastMessage={message.lastMessage || "메세지가 없습니다."}
+          time="오전 11:00"
+          badge={message.notReadCount}
+        />
+      ))}
     </ChatListStyle>
   );
-}
+};
 
 export default ChatList;
-
 
 const ChatListStyle = styled.div`
   display: flex;
@@ -59,4 +63,4 @@ const ChatListStyle = styled.div`
   align-items: center;
   gap: 0.7rem;
   margin-top: 1rem;
-`
+`;

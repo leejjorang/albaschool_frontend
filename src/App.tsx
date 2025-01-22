@@ -40,7 +40,7 @@ function App() {
               <Route path="/" element={<ManagerSchedule />} />
 
               <Route path="/login" element={<Login />} />
-              <Route path="/signup/role" element={<SelectRole />} /> 
+              <Route path="/signup/role" element={<SelectRole />} />
               <Route path="/signup/staff" element={<StaffSignUp />} />
               <Route path="/signup/manager" element={<ManagerSignUp />} />
 
