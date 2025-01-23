@@ -25,6 +25,7 @@ const UserEdit = () => {
     },
     onError: () => {
       setToastMessage("❌ 비밀번호 확인 실패!");
+      setPassword('');
       setShowToast(true);
     },
   });
