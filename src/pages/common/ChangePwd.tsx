@@ -1,9 +1,13 @@
 import { Button, TextField, Typography } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { fixPassword } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ToastPopup from "../../components/ToastPopup";
 
 interface ChangePwdProps {
-  password: string;
   newPassword: string;
   checkPassword: string;
 }
@@ -38,8 +42,27 @@ function ChangePwd() {
     formState: { errors },
   } = useForm<ChangePwdProps>();
 
-  const onSubmit = async () => {
-    //백엔드에 데이터 전송
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const navigate = useNavigate();
+
+  const changePassword = useMutation({
+    mutationFn: fixPassword,
+    onSuccess: () => {
+      setToastMessage("✅ 비밀번호 변경 완료!");
+      setShowToast(true);
+      setTimeout(() => {
+        navigate("/login");
+      }, 800);
+    },
+    onError: () => {
+      setToastMessage("❌ 비밀번호 변경 실패!");
+      setShowToast(true);
+    },
+  });
+
+  const onSubmit = async (data:ChangePwdProps) => {
+    changePassword.mutate(data.newPassword);
   };
 
   const newPwd = watch("newPassword"); // newPassword 필드의 값을 실시간으로 감시
@@ -59,19 +82,6 @@ function ChangePwd() {
         >
           비밀번호 변경
         </Typography>
-        <TextField
-          fullWidth
-          variant="standard"
-          type="password"
-          label="비밀번호"
-          {...register("password", { required: "비밀번호를 입력하세요" })}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-          sx={{
-            ...commonTextFieldStyle,
-            marginBottom: 2,
-          }}
-        />
         <TextField
           fullWidth
           variant="standard"
@@ -120,6 +130,13 @@ function ChangePwd() {
           변경
         </Button>
       </StyledForm>
+      {showToast && (
+        <ToastPopup
+          message={toastMessage}
+          setToast={setShowToast}
+          position="top"
+        />
+      )}
     </ChangePwdStyle>
   );
 }

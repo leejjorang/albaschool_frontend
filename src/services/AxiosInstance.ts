@@ -4,11 +4,11 @@ import { getToken, removeToken } from "../stores/authStore";
 const DEFAULT_TIMEOUT = 30000;
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
-  timeout:DEFAULT_TIMEOUT,
+  timeout: DEFAULT_TIMEOUT,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  withCredentials: true
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -24,10 +24,14 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) { // 토큰 만료 등 인증 실패
+    if (
+      error.response?.status === 401 &&
+      !error.config.url.includes("/auth/checkPassword")
+    ) {
+      // 토큰 만료 등 인증 실패
       removeToken();
       alert("인증 실패!");
-      window.location.href="/login";
+      window.location.href = "/login";
       return;
     }
     return Promise.reject(error);
