@@ -9,16 +9,29 @@ import {
 } from "@mui/material";
 import TimeTable from "../../../components/schedule/TimeTable";
 import ScheduleModal from "../../../components/schedule/ScheduleModal";
+import { getStore } from "../../../services/storeService";
+import { useQuery } from "@tanstack/react-query";
+import { IStore } from "../../../types/store";
 
 const ManagerSchedule = () => {
-  const [shopId, setShopId] = useState("1");
+  const {
+    data: stores,
+    error: storesError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["stores"],
+    queryFn: getStore,
+  });
+  if (!isLoading) console.log(stores, storesError);
+
+  const [storeId, setStoreId] = useState<string>(stores[0].id);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
 
   const handleShopChange = (event: SelectChangeEvent) => {
-    setShopId(event.target.value);
+    setStoreId(event.target.value);
   };
 
   return (
@@ -32,12 +45,13 @@ const ManagerSchedule = () => {
       >
         <FormControl sx={{ height: "3rem", width: "12rem" }}>
           <Select
-            value={shopId}
+            value={storeId}
             onChange={handleShopChange}
             sx={{ overflow: "hidden" }}
           >
-            <MenuItem value="1">솥뚜껑 삼겹살</MenuItem>
-            <MenuItem value="2">롯데리아</MenuItem>
+            {stores.map((data: IStore) => (
+              <MenuItem value={data.id}>{data.title}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <Button
@@ -47,7 +61,12 @@ const ManagerSchedule = () => {
         >
           추가하기
         </Button>
-        <ScheduleModal open={modalOpen} onClose={handleClose} mode="add" />
+        <ScheduleModal
+          open={modalOpen}
+          onClose={handleClose}
+          mode="add"
+          storeId={storeId}
+        />
       </Box>
       <TimeTable />
     </Box>

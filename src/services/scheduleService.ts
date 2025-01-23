@@ -2,7 +2,7 @@ import { IPostSchedule, IGetSchedule } from "../types/schedule";
 import axiosInstance from "./AxiosInstance";
 
 export const getSchedules = async () => {
-  const response = await axiosInstance.get("/chat");
+  const response = await axiosInstance.get("/schedules");
   return response.data;
 };
 

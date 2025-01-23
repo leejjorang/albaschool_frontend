@@ -24,12 +24,10 @@ const ChatList = () => {
     });
 
     socket.on("initialize", (initialData) => {
-      console.log("Initial chat data:", initialData);
       setDisplayData(initialData.data);
     });
 
     socket.on("chatLists", (updatedChatLists) => {
-      console.log("Updated chat lists:", updatedChatLists);
       setDisplayData(updatedChatLists.data);
     });
 
@@ -37,7 +35,7 @@ const ChatList = () => {
       socket.disconnect();
     };
   }, [socketRef]);
-  console.log("displayData", displayData);
+
   return (
     <ChatListStyle>
       {displayData.map((message) => (
