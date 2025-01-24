@@ -7,6 +7,7 @@ interface InputProps {
   disabled?: boolean;
   required?: boolean;
   width?: number;
+  register?: any;
 }
 
 interface InputBoxProps extends InputProps {
@@ -14,9 +15,10 @@ interface InputBoxProps extends InputProps {
   titleWidth?: number;
 }
 
-export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, required, width}) => {
+export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, required, width, register}) => {
   return(
     <InputStyle style={{width: `${width}%`}}
+      {...register}
       name={name}
       type={type}
       placeholder={placeholder}
@@ -26,7 +28,7 @@ export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, 
   )
 }
 
-export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type, placeholder, disabled, required, width}) => {
+export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type, placeholder, disabled, required, width, register}) => {
   return (
     <InputBoxStyle>
       <p style={{width: `${titleWidth}%`}}>{title}</p>
@@ -37,6 +39,7 @@ export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type
         disabled={disabled}
         required={required}
         width={width}
+        register={register}
       />
     </InputBoxStyle>  
   )
