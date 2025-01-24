@@ -8,6 +8,8 @@ interface InputProps {
   required?: boolean;
   width?: number;
   register?: any;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface InputBoxProps extends InputProps {
@@ -15,7 +17,7 @@ interface InputBoxProps extends InputProps {
   titleWidth?: number;
 }
 
-export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, required, width, register}) => {
+export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, required, width, value, onChange, register}) => {
   return(
     <InputStyle style={{width: `${width}%`}}
       {...register}
@@ -24,6 +26,8 @@ export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, 
       placeholder={placeholder}
       disabled={disabled}
       required={required}
+      value= {value}
+      onChange={onChange}
     />
   )
 }

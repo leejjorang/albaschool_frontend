@@ -38,3 +38,19 @@ export const login= async (data: LoginProps) => {
 
   return response.data;
 }
+
+export const checkPassword = async (data: string) => {
+  const response = await axiosInstance.post("/auth/checkPassword",{
+    password: data
+  });
+
+  return response.data;
+}
+
+export const fixPassword = async(data: string) => {
+  const response = await axiosInstance.put("/auth/fixPassword",{
+    password: data
+  });
+
+  return response.data;
+}
