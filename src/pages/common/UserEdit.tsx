@@ -15,14 +15,14 @@ const UserEdit = () => {
       </ProfileBoxStyle>
 
       <InputStyle>
-        <InputBox id='id' title='아이디' type='email' placeholder='email123@email.com' disabled={true} titleWidth={18} width={75} />
+        <InputBox name='id' title='아이디' type='email' placeholder='email123@email.com' disabled={true} titleWidth={18} width={75} />
         <InputBoxStyle>
           <p>비밀번호</p>
-          <Input id='password' type='password' placeholder='비밀번호를 입력해주세요' width={55} />
+          <Input name='password' type='password' placeholder='비밀번호를 입력해주세요' width={55} />
           <button>변경</button>
         </InputBoxStyle>
-        <InputBox id='name' title='이름' type='text' placeholder='홍길동' titleWidth={18} width={75} />
-        <InputBox id='phone' title='전화번호' type='tel' placeholder='010-1234-5678' titleWidth={18} width={75} />
+        <InputBox name='name' title='이름' type='text' placeholder='홍길동' titleWidth={18} width={75} />
+        <InputBox name='phone' title='전화번호' type='tel' placeholder='010-1234-5678' titleWidth={18} width={75} />
       </InputStyle>
 
       <ButtonBoxStyle>
