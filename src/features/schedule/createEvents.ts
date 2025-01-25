@@ -1,4 +1,4 @@
-import { ISchedule } from "../../types/schedule";
+import { IGetSchedule, ISchedule } from "../../types/schedule";
 
 const nameColorMap: Record<string, string> = {};
 
@@ -11,26 +11,38 @@ const getColorForName = (name: string): string => {
   return nameColorMap[name];
 };
 
-export const createEvents = () => {
+export const createEvents = (schedules: IGetSchedule[],  type: 'mine' | 'store' = 'store') => {
   const today = new Date();
   const monday = new Date(today.setDate(today.getDate() - today.getDay() + 1));
 
-  const events: ISchedule[] = [
-    {
-      id: "1",
-      title: "김알바",
-      start: new Date(monday.setHours(9, 0, 0)),
-      end: new Date(monday.setHours(10, 30, 0)),
-      color: getColorForName("김알바"),
-    },
-    {
-      id: "2",
-      title: "이알바",
-      start: new Date(monday.setHours(11, 0, 0)),
-      end: new Date(monday.setHours(12, 30, 0)),
-      color: getColorForName("이알바"),
-    },
-  ];
+  const events: ISchedule[] = schedules.map(schedule => {
+    const scheduleDate = new Date(monday);
+    scheduleDate.setDate(monday.getDate() + (schedule.dayOfWeek - 1));
+    
+    const start = new Date(scheduleDate);
+    start.setHours(
+      parseInt(schedule.startTime.split(':')[0]),
+      parseInt(schedule.startTime.split(':')[1]),
+      0
+    );
+
+    const end = new Date(scheduleDate);
+    end.setHours(
+      parseInt(schedule.endTime.split(':')[0]), 
+      parseInt(schedule.endTime.split(':')[1]),
+      0
+    );
+
+    return {
+      id: schedule.id,
+      title: type === 'mine' ? schedule.title : schedule.name,
+      start: start,
+      end: end,
+      color: getColorForName(type === 'mine' ? schedule.title : schedule.name)
+    };
+  });
 
   return events;
 };
+
+

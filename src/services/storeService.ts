@@ -25,14 +25,9 @@ export const createStoreStaff = async (storeId: string, password: string) => {
   return response.data;
 };
 
-// export const getStore = async () => {
-//   const response = await axiosInstance.get("/stores/me");
-//   return response.data;
-// };
 export const getStore = async () => {
   try {
     const response = await axiosInstance.get("/stores/me");
-    console.log("response: " + JSON.stringify(response));
     return response.data;
   } catch (error) {
     console.error("getStore API Error:", error);

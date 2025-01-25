@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -24,8 +24,18 @@ const ManagerSchedule = () => {
   });
   if (!isLoading) console.log(stores, storesError);
 
-  const [storeId, setStoreId] = useState<string>(stores[0].id);
+  const [storeId, setStoreId] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (stores?.length > 0) {
+      setStoreId(stores[0].id);
+    }
+  }, [stores]);
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (storesError) return <div>에러가 발생했습니다</div>;
+  if (!stores?.length) return <div>매장 정보가 없습니다</div>;
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);

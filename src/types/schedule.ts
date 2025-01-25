@@ -9,6 +9,7 @@ export interface ISchedule {
 export interface IGetSchedule {
   id: string;
   title: string;
+  name: string;
   content: string;
   dayOfWeek: number;
   startTime: string;
