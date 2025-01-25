@@ -54,3 +54,8 @@ export const fixPassword = async(data: string) => {
 
   return response.data;
 }
+
+export const getUserInfo = async () => {
+  const response = await axiosInstance.get("/auth/me");
+  return response.data;
+}
