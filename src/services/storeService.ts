@@ -5,6 +5,11 @@ export const getStores = async () => {
   return response.data;
 };
 
+export const validateBizRegistrationNum = async (bizRegistrationNum: string) => {
+  const response = await axiosInstance.post("/validate/biz-registration-number", {bizRegistrationNum});
+  return response.data;
+}
+
 export const createStoreManager = async (storeData: {
   title: string;
   location: string;
