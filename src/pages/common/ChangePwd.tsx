@@ -52,7 +52,7 @@ function ChangePwd() {
       setToastMessage("✅ 비밀번호 변경 완료!");
       setShowToast(true);
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 800);
     },
     onError: () => {

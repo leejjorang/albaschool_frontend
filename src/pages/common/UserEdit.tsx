@@ -82,9 +82,10 @@ const UserEdit = () => {
     storeLogout();
     setToastMessage("✅ 로그아웃 되었습니다.");
     setShowToast(true);
+    localStorage.removeItem('role');
 
     setTimeout(() => {
-      navigate("/login");
+      navigate("/");
     }, 800);
   };
 

@@ -13,11 +13,13 @@ import { useNavigate } from "react-router-dom";
 const Bottom = () => {
   const [value, setValue] = React.useState('schedule');
   const navigate = useNavigate();
+  const role = localStorage.getItem('role');
+
   const routes: {[key: string]: string} = {
-    schedule: '/',
+    schedule: role ==='manager' ? '/manager': '/staff',
     store: '/shoplist',
     chat: '/chats',
-    mypage: '/user/manager'
+    mypage: role ==='manager'? '/user/manager' : '/user/staff'
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {

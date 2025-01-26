@@ -89,7 +89,7 @@ function SignUpForm({ type }: SignUpFormProps) {
       setToastMessage("✅ 회원가입 성공!");
       setShowToast(true);
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 800);
     },
     onError: (error) => {

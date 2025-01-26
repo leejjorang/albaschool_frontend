@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
       // 토큰 만료 등 인증 실패
       removeToken();
       alert("인증 실패!");
-      window.location.href = "/login";
+      window.location.href = "/";
       return;
     }
     return Promise.reject(error);

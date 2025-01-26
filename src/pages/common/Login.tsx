@@ -22,7 +22,7 @@ const commonTextFieldStyle = {
 };
 
 const Login = () => {
-  const {storeLogin} = useAuthStore();
+  const { storeLogin } = useAuthStore();
 
   const {
     register,
@@ -30,9 +30,9 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
   const navigate = useNavigate();
-  
+
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState("");
 
   const loginMutation = useMutation({
     mutationFn: login,
@@ -41,15 +41,21 @@ const Login = () => {
       setShowToast(true);
       storeLogin(data.token); // 상태 변화
 
+      localStorage.setItem("role", data.role); // 역할 저장
+
       setTimeout(() => {
-        navigate('/');
+        if (data.role === "staff") {
+          navigate("/staff");
+        } else if (data.role === "manager") {
+          navigate("/manager");
+        }
       }, 800);
     },
     onError: (error) => {
       setToastMessage("아이디 또는 비밀번호를 확인해주세요.");
       setShowToast(true);
       console.error(error);
-    }
+    },
   });
 
   const onSubmit = async (data: LoginProps) => {
@@ -100,8 +106,8 @@ const Login = () => {
       </span>
       {showToast && (
         <ToastPopup
-          message={toastMessage} 
-          setToast={setShowToast} 
+          message={toastMessage}
+          setToast={setShowToast}
           position="top"
         />
       )}
