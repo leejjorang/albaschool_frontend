@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,16 +9,39 @@ import {
 } from "@mui/material";
 import TimeTable from "../../../components/schedule/TimeTable";
 import ScheduleModal from "../../../components/schedule/ScheduleModal";
+import { getStore } from "../../../services/storeService";
+import { useQuery } from "@tanstack/react-query";
+import { IStore } from "../../../types/store";
 
 const ManagerSchedule = () => {
-  const [shopId, setShopId] = useState("1");
+  const {
+    data: stores,
+    error: storesError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["stores"],
+    queryFn: getStore,
+  });
+  if (!isLoading) console.log(stores, storesError);
+
+  const [storeId, setStoreId] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (stores?.length > 0) {
+      setStoreId(stores[0].id);
+    }
+  }, [stores]);
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (storesError) return <div>에러가 발생했습니다</div>;
+  if (!stores?.length) return <div>매장 정보가 없습니다</div>;
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
 
   const handleShopChange = (event: SelectChangeEvent) => {
-    setShopId(event.target.value);
+    setStoreId(event.target.value);
   };
 
   return (
@@ -32,12 +55,13 @@ const ManagerSchedule = () => {
       >
         <FormControl sx={{ height: "3rem", width: "12rem" }}>
           <Select
-            value={shopId}
+            value={storeId}
             onChange={handleShopChange}
             sx={{ overflow: "hidden" }}
           >
-            <MenuItem value="1">솥뚜껑 삼겹살</MenuItem>
-            <MenuItem value="2">롯데리아</MenuItem>
+            {stores.map((data: IStore) => (
+              <MenuItem value={data.id}>{data.title}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <Button
@@ -47,7 +71,12 @@ const ManagerSchedule = () => {
         >
           추가하기
         </Button>
-        <ScheduleModal open={modalOpen} onClose={handleClose} mode="add" />
+        <ScheduleModal
+          open={modalOpen}
+          onClose={handleClose}
+          mode="add"
+          storeId={storeId}
+        />
       </Box>
       <TimeTable />
     </Box>

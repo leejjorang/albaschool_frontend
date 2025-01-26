@@ -4,8 +4,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Box } from "@mui/material";
 import moment from "moment";
 import { ISchedule } from "../../types/schedule";
-import ScheduleModal from "./ScheduleModal";
-import { createEvents } from "../../features/schedule/createEvents";
 
 const localizer = momentLocalizer(moment);
 
@@ -54,8 +52,11 @@ const BoxStyle = {
   },
 };
 
-const TimeTable = () => {
-  const [events] = useState<ISchedule[]>(createEvents());
+interface TimeTableProps {
+  events: ISchedule[];
+}
+
+const TimeTable = ({ events }: TimeTableProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpen = () => setModalOpen(true);
@@ -108,7 +109,6 @@ const TimeTable = () => {
           onSelectEvent={handelSelectEvent}
         />
       </Box>
-      <ScheduleModal open={modalOpen} onClose={handleClose} mode="edit" />
     </div>
   );
 };

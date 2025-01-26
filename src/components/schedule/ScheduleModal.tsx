@@ -12,12 +12,13 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import TimePick from "./TimePick";
 import { useMutation } from "@tanstack/react-query";
-import { postSchedules } from "../../services/ScheduleService";
+import { postSchedules } from "../../services/scheduleService";
 
 interface ScheduleModalProps {
   open: boolean;
   onClose: () => void;
   mode: "add" | "edit";
+  storeId: string;
 }
 
 const style = {
@@ -32,7 +33,12 @@ const style = {
   borderRadius: 2,
 };
 
-const ScheduleModal = ({ open, onClose, mode }: ScheduleModalProps) => {
+const ScheduleModal = ({
+  open,
+  onClose,
+  mode,
+  storeId,
+}: ScheduleModalProps) => {
   const [worker, setWorker] = useState("이알바");
   const [day, setDay] = useState("월요일");
   const [startTime, setStartTime] = useState<string | null>(null);

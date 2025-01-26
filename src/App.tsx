@@ -25,6 +25,7 @@ import StaffEduPost from "./pages/staff/StaffEduPost";
 import ManagerEduPost from "./pages/manager/ManagerEduPost";
 import WritePost from "./pages/manager/WritePost";
 import SelectRole from "./pages/common/SelectRole";
+import StaffSchedule from "./pages/staff/schedule/StaffSchedule";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +38,8 @@ function App() {
         <ThemeProvider theme={theme}>
           <Layout>
             <Routes>
-              <Route path="/" element={<ManagerSchedule />} />
+              <Route path="/manager" element={<ManagerSchedule />} />
+              <Route path="/staff" element={<StaffSchedule />} />
 
               <Route path="/login" element={<Login />} />
               <Route path="/signup/role" element={<SelectRole />} />
