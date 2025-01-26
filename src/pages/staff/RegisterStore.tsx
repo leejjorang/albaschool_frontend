@@ -2,31 +2,92 @@ import styled from 'styled-components';
 import { InputBox } from '../../components/InputBox';
 import { Button } from '../../components/Button';
 import { createStoreStaff } from '../../services/storeService';
+import { useForm } from "react-hook-form";
+import { useState } from 'react';
+import ToastPopup from '../../components/ToastPopup';
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+
+interface createStoreStaffProps {
+  storeId: string;
+  password: string;
+}
 
 const RegisterStore = () => {
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const storeId = formData.get('storeId') as string;
-    const password = formData.get('password') as string;
+  const { register, handleSubmit, formState: {errors} } = useForm<createStoreStaffProps>();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const navigate = useNavigate();
 
-    try{
+  const onSubmit = async (data: createStoreStaffProps) => {
+    const {storeId, password} = data;
+
+    try {
       await createStoreStaff(storeId, password); 
-      alert("가게에 추가되었습니다.");
+      setToastMessage("✅ 가게 추가 완료!");
+      setShowToast(true);
+
+      setTimeout(() => {
+        navigate('/shoplist');
+      }, 800);
     } catch(error) {
-      alert("가게 추가에 실패했습니다.")
-      console.log(error);
+      if(error instanceof AxiosError) {
+        if(error.response?.data?.message) {
+          setToastMessage(`❌ ${error.response.data.message}`);
+          setShowToast(true);
+        } else {
+          setToastMessage("❌ 가게 추가 실패!");
+          setShowToast(true);
+          console.log(error);
+        }
+      } else {
+        setToastMessage("❌ 가게 추가 실패!");
+        setShowToast(true);
+        console.log(error);
+      }
     }
   }
 
   return (
-    <RegisterStoreStyle onSubmit={onSubmit}>
+    <RegisterStoreStyle onSubmit={handleSubmit(onSubmit)}>
       <h2>가게 등록하기</h2>
       <InputStyle>
-        <InputBox name='storeId' title='가게 코드' type='text' placeholder='가게 코드를 입력해주세요' required={true} titleWidth={25} width={70} />
-        <InputBox name='password' title='비밀번호' type='password' placeholder='비밀번호를 입력해주세요' required={true} titleWidth={25} width={70} />
+        <InputBox 
+          name='storeId' 
+          title='가게 코드' 
+          type='text' 
+          placeholder='가게 코드를 입력해주세요' 
+          required={true} 
+          titleWidth={25} 
+          width={70} 
+          register={register('storeId', {
+            pattern: {
+              value: /^[^ㄱ-ㅎ가-힣]{8}$/,
+              message: '한글을 제외한 8자의 글자만 입력 가능합니다.'
+            }
+          })}
+        />
+        {errors.storeId && errors.storeId.message && <ErrorText>{errors.storeId.message.toString()}</ErrorText>}
+        <InputBox 
+          name='password' 
+          title='비밀번호' 
+          type='password' 
+          placeholder='비밀번호를 입력해주세요' 
+          required={true} 
+          titleWidth={25} 
+          width={70}
+          register={register('password')}
+        />
       </InputStyle>
       <Button message='등록하기'/>
+
+      {showToast && (
+        <ToastPopup
+          message={toastMessage}
+          setToast={setShowToast}
+          position="top"
+        />
+      )}
     </RegisterStoreStyle>
   );
 }
@@ -54,3 +115,9 @@ const InputStyle = styled.div`
   margin: 4rem 0 3rem;  
   gap: 1rem;
 `
+
+const ErrorText = styled.p`
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+`;
