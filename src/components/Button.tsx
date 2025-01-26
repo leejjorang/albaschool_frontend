@@ -15,9 +15,9 @@ export const Button: React.FC<ButtonProps> = ({type, message, width, onClick}) =
   )
 }
 
-export const NegativeButton: React.FC<ButtonProps> = ({message, width}) => {
+export const NegativeButton: React.FC<ButtonProps> = ({message, width, onClick}) => {
   return (
-    <NagativeButtonStyle style={{width: `${width}%`}}>
+    <NagativeButtonStyle style={{width: `${width}%`}} onClick={onClick}>
       {message}
     </NagativeButtonStyle>
   )

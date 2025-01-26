@@ -26,10 +26,28 @@ import ManagerEduPost from "./pages/manager/ManagerEduPost";
 import WritePost from "./pages/manager/WritePost";
 import SelectRole from "./pages/common/SelectRole";
 import StaffSchedule from "./pages/staff/schedule/StaffSchedule";
+import ProtectedRoute from "./components/RouteProtection/ProtectedRoute";
+import AuthProtected from "./components/RouteProtection/AuthProtected";
 
 const queryClient = new QueryClient();
 
 function App() {
+  const managerRoutes = [
+    { path: "/manager", element: <ManagerSchedule /> },
+    { path: "/store/register/manager", element: <ManagerRegisterStore /> },
+    { path: "/user/manager", element: <ManagerUser /> },
+    { path: "/edulist/manager", element: <ManagerEduList /> },
+    { path: "/edupost/manager", element: <ManagerEduPost /> },
+    { path: "/post/manager", element: <WritePost /> },
+  ];
+
+  const staffRoutes = [
+    { path: "/staff", element: <StaffSchedule /> },
+    { path: "/store/register/staff", element: <StaffRegisterStore /> },
+    { path: "/user/staff", element: <StaffUser /> },
+    { path: "/edulist/staff", element: <StaffEduList /> },
+    { path: "/edupost/staff", element: <StaffEduPost /> },
+  ];
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
@@ -38,39 +56,46 @@ function App() {
         <ThemeProvider theme={theme}>
           <Layout>
             <Routes>
-              <Route path="/manager" element={<ManagerSchedule />} />
-              <Route path="/staff" element={<StaffSchedule />} />
-
-              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Login />} />
               <Route path="/signup/role" element={<SelectRole />} />
-              <Route path="/signup/staff" element={<StaffSignUp />} />
               <Route path="/signup/manager" element={<ManagerSignUp />} />
+              <Route path="/signup/staff" element={<StaffSignUp />} />
+              
+              {/* 로그인이 필요한 경우 */}
+              <Route element={<AuthProtected />}>
+                <Route path="/user/edit" element={<UserEdit />} />
+                <Route path="/user/changepwd" element={<ChangePwd />} />
+                <Route path="/chats" element={<ChatList />} />
+                <Route path="/chats/:id" element={<ChatRoom />} />
+                <Route path="/notice" element={<Notice />} />
+                <Route path="/shoplist" element={<ShopList />} />
 
-              <Route
-                path="/store/register/staff"
-                element={<StaffRegisterStore />}
-              />
-              <Route
-                path="/store/register/manager"
-                element={<ManagerRegisterStore />}
-              />
+                {/* Manager Routes */}
+                {managerRoutes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <ProtectedRoute role="manager">
+                        {route.element}
+                      </ProtectedRoute>
+                    }
+                  />
+                ))}
 
-              <Route path="/user/staff" element={<StaffUser />} />
-              <Route path="/user/manager" element={<ManagerUser />} />
-              <Route path="/user/edit" element={<UserEdit />} />
-              <Route path="/user/changepwd" element={<ChangePwd />} />
-
-              <Route path="/shoplist" element={<ShopList />} />
-              <Route path="/edulist/staff" element={<StaffEduList />} />
-              <Route path="/edulist/manager" element={<ManagerEduList />} />
-              <Route path="/edupost/staff" element={<StaffEduPost />} />
-              <Route path="/edupost/manager" element={<ManagerEduPost />} />
-              <Route path="/post/manager" element={<WritePost />} />
-
-              <Route path="/chats" element={<ChatList />} />
-              <Route path="/chats/:id" element={<ChatRoom />} />
-
-              <Route path="/notice" element={<Notice />} />
+                {/* Staff Routes */}
+                {staffRoutes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <ProtectedRoute role="staff">
+                        {route.element}
+                      </ProtectedRoute>
+                    }
+                  />
+                ))}
+              </Route>
             </Routes>
           </Layout>
         </ThemeProvider>

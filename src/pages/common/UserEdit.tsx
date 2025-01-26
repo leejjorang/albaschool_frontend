@@ -2,17 +2,44 @@ import Avatar from "@mui/material/Avatar";
 import styled from "styled-components";
 import { Input, InputBox } from "../../components/InputBox";
 import { Button, NegativeButton } from "../../components/Button";
-import { useMutation } from "@tanstack/react-query";
-import { checkPassword } from "../../services/authService";
-import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { checkPassword, getUserInfo } from "../../services/authService";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ToastPopup from "../../components/ToastPopup";
+import { useAuthStore } from "../../stores/authStore";
+import { Box } from "@mui/material";
 
 const UserEdit = () => {
   const [password, setPassword] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+  });
+
+  const { storeLogout } = useAuthStore();
   const navigate = useNavigate();
+
+  const {
+    data: userData,
+    error: userDataError,
+    isLoading: userDataLoading,
+  } = useQuery({
+    queryKey: ["userData"],
+    queryFn: getUserInfo,
+  });
+
+  useEffect(() => {
+    if (userData) {
+      setFormData({
+        name: userData.name || "",
+        contact: userData.contact || "",
+      });
+    }
+  }, [userData]);
 
   const validatePassword = useMutation({
     mutationFn: checkPassword,
@@ -25,14 +52,64 @@ const UserEdit = () => {
     },
     onError: () => {
       setToastMessage("❌ 비밀번호 확인 실패!");
-      setPassword('');
+      setPassword("");
       setShowToast(true);
     },
+  });
+
+  // 수정 완료 핸들러
+  const updateUserInfo = useMutation({
+    // mutationFn: (updateData) => {
+    //   // API 호출 함수 필요
+    //   return updateUserInfo(updateData);
+    // },
+    // onSuccess: () => {
+    //   setToastMessage("✅ 회원정보가 수정되었습니다!");
+    //   setShowToast(true);
+    //   setIsEditing(false);
+    // },
+    // onError: () => {
+    //   setToastMessage("❌ 회원정보 수정에 실패했습니다!");
+    //   setShowToast(true);
+    // },
   });
 
   const handleValidatePassword = () => {
     validatePassword.mutate(password);
   };
+
+  const handleLogout = () => {
+    storeLogout();
+    setToastMessage("✅ 로그아웃 되었습니다.");
+    setShowToast(true);
+    localStorage.removeItem('role');
+
+    setTimeout(() => {
+      navigate("/");
+    }, 800);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleCancel = () => {
+    if (userData) {
+      setFormData({
+        name: userData.name || "",
+        contact: userData.contact || "",
+      });
+    }
+    setIsEditing(false);
+  };
+
+  // 로딩 상태 처리
+  if (userDataLoading) return <div>로딩중...</div>;
+  if (userDataError) return <div>사용자 정보를 불러오는데 실패했습니다</div>;
 
   return (
     <div>
@@ -52,7 +129,7 @@ const UserEdit = () => {
           name="id"
           title="아이디"
           type="email"
-          placeholder="email123@email.com"
+          value={userData?.email}
           disabled={true}
           titleWidth={18}
           width={75}
@@ -73,7 +150,9 @@ const UserEdit = () => {
           name="name"
           title="이름"
           type="text"
-          placeholder="홍길동"
+          value={formData.name}
+          onChange={handleChange}
+          disabled={!isEditing}
           titleWidth={18}
           width={75}
         />
@@ -81,16 +160,38 @@ const UserEdit = () => {
           name="phone"
           title="전화번호"
           type="tel"
-          placeholder="010-1234-5678"
+          value={formData.contact}
+          onChange={handleChange}
+          disabled={!isEditing}
           titleWidth={18}
           width={75}
         />
       </InputStyle>
 
       <ButtonBoxStyle>
-        <Button message="로그아웃" width={35} />
-        <NegativeButton message="회원탈퇴" width={35} />
+        {isEditing ? (
+          <>
+            <Button
+              message="수정 완료"
+              width={35}
+              // onClick={() => updateUserInfo.mutate(formData)}
+            />
+            <NegativeButton message="취소" width={35} onClick={handleCancel} />
+          </>
+        ) : (
+          <>
+            <Button
+              message="수정하기"
+              width={35}
+              onClick={() => setIsEditing(true)}
+            />
+            <Button message="로그아웃" width={35} onClick={handleLogout} />
+          </>
+        )}
       </ButtonBoxStyle>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <NegativeButton message="회원탈퇴" width={35} />
+      </Box>
       {showToast && (
         <ToastPopup
           message={toastMessage}

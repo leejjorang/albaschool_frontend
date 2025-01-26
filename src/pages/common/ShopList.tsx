@@ -2,11 +2,12 @@ import styled from "styled-components";
 import ShopNameCard from "../../components/ShopNameCard";
 
 const ShopList = () => {
+  const role = localStorage.getItem('role');
   return (
     <ShopListStyle>
-      <ShopNameCard storeName="솥뚜껑 삼겹살" storeLink="/edulist/staff" />
-      <ShopNameCard storeName="서브웨이" storeLink="/edulist/staff" />
-      <ShopNameCard storeName="CU 편의점" storeLink="/edulist/manager" />
+      <ShopNameCard storeName="솥뚜껑 삼겹살" storeLink={`/edulist/${role}`} />
+      <ShopNameCard storeName="서브웨이" storeLink={`/edulist/${role}`} />
+      <ShopNameCard storeName="CU 편의점" storeLink={`/edulist/${role}`} />
     </ShopListStyle>
   );
 };
