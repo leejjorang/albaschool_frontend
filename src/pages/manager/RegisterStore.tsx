@@ -232,7 +232,7 @@ const RegisterStoreStyle = styled.form`
   }
 `
 
-const InputStyle = styled.div`
+export const InputStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -241,7 +241,7 @@ const InputStyle = styled.div`
   gap: 1rem;
 `
 
-const InputBoxStyle = styled.div`
+export const InputBoxStyle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

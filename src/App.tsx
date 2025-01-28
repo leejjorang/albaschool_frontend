@@ -28,6 +28,7 @@ import SelectRole from "./pages/common/SelectRole";
 import StaffSchedule from "./pages/staff/schedule/StaffSchedule";
 import ProtectedRoute from "./components/RouteProtection/ProtectedRoute";
 import AuthProtected from "./components/RouteProtection/AuthProtected";
+import UpdateStore from "./pages/manager/UpdateStore";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function App() {
   const managerRoutes = [
     { path: "/manager", element: <ManagerSchedule /> },
     { path: "/store/register/manager", element: <ManagerRegisterStore /> },
+    { path: "/store/update/manager", element: <UpdateStore /> },
     { path: "/user/manager", element: <ManagerUser /> },
     { path: "/edulist/manager", element: <ManagerEduList /> },
     { path: "/edupost/manager", element: <ManagerEduPost /> },
