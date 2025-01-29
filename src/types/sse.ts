@@ -7,12 +7,19 @@ interface Notification {
   createdAt: string;
 }
 
-interface ChatNotification {
-  id: string;
-  title: string;
-  lastMessage: string;
-  notReadCount: number;
-  memberCount: number;
+interface UnreadChats {
+  isNewMessage: boolean;
+}
+
+interface UnreadNotifications {
+  hasUnreadNotification: boolean;
+}
+
+export interface NotificationsSSE {
+  onInitialize?: (data: boolean) => void;
+  onNotification?: (data: boolean) => void;
+  onChatRoomInitialize?: (data: boolean) => void;
+  onChatNotification?: (data: boolean) => void;
 }
 
 export interface SSEState {

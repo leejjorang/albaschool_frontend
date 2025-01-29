@@ -3,17 +3,19 @@ import styled from "styled-components";
 import ChatListBox from "../../components/chat/ChatListBox";
 import { io, Socket } from "socket.io-client";
 import { IChatRoom } from "../../types/chat";
+import { getToken } from "../../stores/authStore";
 
 const ChatList = () => {
   const [displayData, setDisplayData] = useState<IChatRoom[]>([]);
   const socketRef = useRef<Socket>();
+  const token = getToken();
 
   useEffect(() => {
     socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/chat`, {
       path: "/socket.io/",
       transports: ["websocket"],
       auth: {
-        token: `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`,
+        token: `Bearer ${token}`,
       },
     });
 
@@ -34,7 +36,7 @@ const ChatList = () => {
     return () => {
       socket.disconnect();
     };
-  }, [socketRef]);
+  }, [socketRef, token]);
 
   return (
     <ChatListStyle>

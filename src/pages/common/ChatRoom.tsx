@@ -5,10 +5,10 @@ import ChatContainer from "../../components/chat/ChatContainer";
 import ChatMenu from "../../components/chat/ChatMenu";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-
 import { io, Socket } from "socket.io-client";
 import { getMessages } from "../../services/chatService";
 import { Message } from "../../types/chat";
+import { getToken } from "../../stores/authStore";
 
 const ChatRoom = () => {
   const roomId = useParams().id;
@@ -18,6 +18,7 @@ const ChatRoom = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const token = getToken();
 
   const socketRef = useRef<Socket>();
 
@@ -26,7 +27,7 @@ const ChatRoom = () => {
       path: "/socket.io/",
       transports: ["websocket"],
       auth: {
-        token: `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`,
+        token: `Bearer ${token}`,
       },
     });
 
