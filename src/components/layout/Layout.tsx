@@ -3,32 +3,36 @@ import Bottom from "./Bottom";
 import Header from "./Header";
 import { useEffect, useState } from "react";
 import { connectSSE } from "../../services/sseService";
+import { chatNotificationStore } from "../../stores/chatNotificationStore";
 
 export interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const [unreadChats, setUnreadChats] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(false);
+  const unreadMessages = chatNotificationStore((state) => state.unreadMessages);
+  const setUnreadMessages = chatNotificationStore(
+    (state) => state.setUnreadMessages
+  );
 
   useEffect(() => {
     const eventSource = connectSSE({
       onInitialize: (data) => {
         console.log("Initialize Data:", data);
-        setUnreadNotifications(data);
+        //setUnreadNotifications(data);
       },
       onNotification: (data) => {
         console.log("New Notification:", data);
-        setUnreadNotifications(data);
+        //setUnreadNotifications(data);
       },
       onChatRoomInitialize: (data) => {
         console.log("Chat Room Initialize Data:", data);
-        setUnreadChats(data);
+        setUnreadMessages(data);
       },
       onChatNotification: (data) => {
         console.log("New Chat Notification:", data);
-        setUnreadChats(data);
+        setUnreadMessages(true);
       },
     });
     return () => {
@@ -39,7 +43,7 @@ const Layout = ({ children }: LayoutProps) => {
     <LayoutStyle>
       <Header />
       <MainStyle>{children}</MainStyle>
-      <Bottom unread={unreadChats} />
+      <Bottom notification={true} />
     </LayoutStyle>
   );
 };

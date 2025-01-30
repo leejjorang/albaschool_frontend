@@ -11,10 +11,10 @@ import { Badge } from "@mui/material";
 import ChatIcon from "./ChatIcon";
 
 interface BottomProps {
-  unread: boolean;
+  notification: boolean;
 }
 
-const Bottom = ({ unread }: BottomProps) => {
+const Bottom = ({ notification }: BottomProps) => {
   const [value, setValue] = React.useState("schedule");
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
@@ -56,14 +56,16 @@ const Bottom = ({ unread }: BottomProps) => {
         <BottomNavigationAction
           label="채팅"
           value="chat"
-          icon={<ChatIcon notification={true} />}
+          icon={<ChatIcon notification={notification} />}
           sx={{ "&.Mui-selected": { color: "#FF6F00" } }}
         />
         <BottomNavigationAction
           label="마이페이지"
           value="mypage"
           icon={<PersonOutlineOutlinedIcon fontSize="large" />}
-          sx={{ "&.Mui-selected": { color: "#FF6F00" } }}
+          sx={{
+            "&.Mui-selected": { color: "#FF6F00" },
+          }}
         />
       </BottomNavigation>
     </BottomStyle>

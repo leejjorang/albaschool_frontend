@@ -9,6 +9,7 @@ import { io, Socket } from "socket.io-client";
 import { getMessages } from "../../services/chatService";
 import { Message } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
+import { chatNotificationStore } from "../../stores/chatNotificationStore";
 
 const ChatRoom = () => {
   const roomId = useParams().id;
@@ -19,6 +20,9 @@ const ChatRoom = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const token = getToken();
+  const setUnreadMessages = chatNotificationStore(
+    (state) => state.setUnreadMessages
+  );
 
   const socketRef = useRef<Socket>();
 
@@ -37,6 +41,11 @@ const ChatRoom = () => {
     socket.on("connect", () => {
       console.log("연결 완료", socket.id);
       socket.emit("joinRoom", { roomId: roomId });
+    });
+
+    socket.on("newMessage", (data) => {
+      console.log(data);
+      setUnreadMessages(true);
     });
 
     socket.on("broadcast", (newMessage) => {

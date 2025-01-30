@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { Badge } from "@mui/material";
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
+import { chatNotificationStore } from "../../stores/chatNotificationStore";
 
 const shakeAnimation = keyframes`
   0% { transform: rotate(0); }
@@ -22,6 +23,7 @@ interface ChatIconProps {
 
 const ChatIcon = ({ notification }: ChatIconProps) => {
   const [shake, setShake] = useState(false);
+  const unreadMessages = chatNotificationStore((state) => state.unreadMessages);
 
   useEffect(() => {
     if (notification) {
@@ -31,7 +33,12 @@ const ChatIcon = ({ notification }: ChatIconProps) => {
   }, [notification]);
 
   return (
-    <Badge variant="dot" color="error" invisible={!notification}>
+    <Badge
+      variant="dot"
+      color="error"
+      invisible={!unreadMessages}
+      sx={{ overflow: "hidden" }}
+    >
       <ShakingIcon fontSize="large" $shake={shake} />
     </Badge>
   );

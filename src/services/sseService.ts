@@ -37,8 +37,8 @@ export const connectSSE = ({
 
   eventSource.addEventListener("chatNotification", (event) => {
     const parsedData = JSON.parse((event as MessageEvent).data);
-    console.log("ChatNotification event data:", parsedData);
-    onChatNotification?.(parsedData);
+    console.log("ChatNotification event data:", parsedData.isNewMessage);
+    onChatNotification?.(parsedData.isNewMessage);
   });
 
   eventSource.addEventListener("error", (error) => {
