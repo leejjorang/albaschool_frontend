@@ -10,6 +10,7 @@ import { getMessages } from "../../services/chatService";
 import { Message } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
+import { chatIconStore } from "../../stores/chatIconStore";
 
 const ChatRoom = () => {
   const roomId = useParams().id;
@@ -23,6 +24,7 @@ const ChatRoom = () => {
   const setUnreadMessages = chatNotificationStore(
     (state) => state.setUnreadMessages
   );
+  const setShake = chatIconStore((state) => state.setShake);
 
   const socketRef = useRef<Socket>();
 
@@ -46,6 +48,7 @@ const ChatRoom = () => {
     socket.on("newMessage", (data) => {
       console.log(data);
       setUnreadMessages(true);
+      setShake(true);
     });
 
     socket.on("broadcast", (newMessage) => {

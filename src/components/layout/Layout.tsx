@@ -4,6 +4,7 @@ import Header from "./Header";
 import { useEffect, useState } from "react";
 import { connectSSE } from "../../services/sseService";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
+import { chatIconStore } from "../../stores/chatIconStore";
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ const Layout = ({ children }: LayoutProps) => {
   const setUnreadMessages = chatNotificationStore(
     (state) => state.setUnreadMessages
   );
+  const setShake = chatIconStore((state) => state.setShake);
 
   useEffect(() => {
     const eventSource = connectSSE({
@@ -33,6 +35,7 @@ const Layout = ({ children }: LayoutProps) => {
       onChatNotification: (data) => {
         console.log("New Chat Notification:", data);
         setUnreadMessages(true);
+        setShake(true);
       },
     });
     return () => {

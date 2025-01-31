@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { Badge } from "@mui/material";
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
+import { chatIconStore } from "../../stores/chatIconStore";
 
 const shakeAnimation = keyframes`
   0% { transform: rotate(0); }
@@ -17,20 +18,17 @@ const ShakingIcon = styled(ChatOutlinedIcon)<{ $shake: boolean }>`
     ease-in-out;
 `;
 
-interface ChatIconProps {
-  notification: boolean;
-}
-
-const ChatIcon = ({ notification }: ChatIconProps) => {
-  const [shake, setShake] = useState(false);
+const ChatIcon = () => {
   const unreadMessages = chatNotificationStore((state) => state.unreadMessages);
+  const shake = chatIconStore((state) => state.shake);
+  const setShake = chatIconStore((state) => state.setShake);
 
   useEffect(() => {
-    if (notification) {
-      setShake(true);
-      setTimeout(() => setShake(false), 600);
+    if (shake) {
+      const timeout = setTimeout(() => setShake(false), 600);
+      return () => clearTimeout(timeout);
     }
-  }, [notification]);
+  }, [shake, setShake]);
 
   return (
     <Badge
