@@ -5,7 +5,6 @@ import { io, Socket } from "socket.io-client";
 import { IChatRoom } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
-import { chatIconStore } from "../../stores/chatIconStore";
 
 const ChatList = () => {
   const [displayData, setDisplayData] = useState<IChatRoom[]>([]);
@@ -14,7 +13,6 @@ const ChatList = () => {
   const setUnreadMessages = chatNotificationStore(
     (state) => state.setUnreadMessages
   );
-  const setShake = chatIconStore((state) => state.setShake);
 
   useEffect(() => {
     socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/chat`, {
@@ -37,11 +35,6 @@ const ChatList = () => {
 
     socket.on("chatLists", (updatedChatLists) => {
       setDisplayData(updatedChatLists.data);
-    });
-
-    socket.on("newMessage", (data) => {
-      console.log(data);
-      setShake(true);
     });
 
     return () => {
