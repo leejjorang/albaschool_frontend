@@ -1,9 +1,15 @@
 import { EventSourcePolyfill } from "event-source-polyfill";
-import { useSSEStore } from "../stores/sseStore";
+import { getToken } from "../stores/authStore";
+import { NotificationsSSE } from "../types/sse";
 
-export const connectSSE = () => {
-  const token = import.meta.env.VITE_BACKEND_TOKEN;
-  const url = `${import.meta.env.VITE_BACKEND_URL}/notifications`;
+export const connectSSE = ({
+  onInitialize,
+  onNotification,
+  onChatRoomInitialize,
+  onChatNotification,
+}: NotificationsSSE) => {
+  const token = getToken();
+  const url = `${import.meta.env.VITE_BACKEND_URL}/sse`;
 
   const eventSource = new EventSourcePolyfill(url, {
     headers: {
@@ -11,35 +17,28 @@ export const connectSSE = () => {
     },
   });
 
-  const {
-    setInitializeData,
-    addNotification,
-    setChatRoomInitializeData,
-    addChatNotification,
-  } = useSSEStore.getState();
-
   eventSource.addEventListener("initialize", (event) => {
     const parsedData = JSON.parse((event as MessageEvent).data);
-    console.log("Initialize event data:", parsedData);
-    setInitializeData(parsedData.data); //테스트해보고 수정
+    console.log("Initialize event data:", parsedData.hasUnreadNotification);
+    onInitialize?.(parsedData.hasUnreadNotification);
   });
 
   eventSource.addEventListener("notification", (event) => {
     const parsedData = JSON.parse((event as MessageEvent).data);
-    console.log("Notification event data:", parsedData);
-    addNotification(parsedData);
+    console.log("Notification event data:", parsedData.hasUnreadNotification);
+    onNotification?.(parsedData.hasUnreadNotification);
   });
 
   eventSource.addEventListener("chatRoomInitialize", (event) => {
     const parsedData = JSON.parse((event as MessageEvent).data);
     console.log("ChatRoomInitialize event data:", parsedData);
-    setChatRoomInitializeData(parsedData);
+    onChatRoomInitialize?.(parsedData);
   });
 
   eventSource.addEventListener("chatNotification", (event) => {
     const parsedData = JSON.parse((event as MessageEvent).data);
-    console.log("ChatNotification event data:", parsedData);
-    addChatNotification(parsedData);
+    console.log("ChatNotification event data:", parsedData.isNewMessage);
+    onChatNotification?.(parsedData.isNewMessage);
   });
 
   eventSource.addEventListener("error", (error) => {

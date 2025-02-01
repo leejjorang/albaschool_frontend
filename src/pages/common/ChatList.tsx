@@ -3,17 +3,23 @@ import styled from "styled-components";
 import ChatListBox from "../../components/chat/ChatListBox";
 import { io, Socket } from "socket.io-client";
 import { IChatRoom } from "../../types/chat";
+import { getToken } from "../../stores/authStore";
+import { chatNotificationStore } from "../../stores/chatNotificationStore";
 
 const ChatList = () => {
   const [displayData, setDisplayData] = useState<IChatRoom[]>([]);
   const socketRef = useRef<Socket>();
+  const token = getToken();
+  const setUnreadMessages = chatNotificationStore(
+    (state) => state.setUnreadMessages
+  );
 
   useEffect(() => {
     socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/chat`, {
       path: "/socket.io/",
       transports: ["websocket"],
       auth: {
-        token: `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`,
+        token: `Bearer ${token}`,
       },
     });
 
@@ -31,10 +37,18 @@ const ChatList = () => {
       setDisplayData(updatedChatLists.data);
     });
 
+    socket.on("newMessage", (data) => {
+      console.log(data);
+    });
+
     return () => {
       socket.disconnect();
     };
-  }, [socketRef]);
+  }, [socketRef, token]);
+
+  useEffect(() => {
+    setUnreadMessages(false);
+  }, [setUnreadMessages]);
 
   return (
     <ChatListStyle>
