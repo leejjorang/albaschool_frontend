@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { formatDate, formatTime } from "../../utils/time";
 import { Messages } from '../../types/chat';
 import React, { useEffect, useRef } from "react";
+import { getToken } from "../../stores/authStore";
 
 interface DecodedToken {
   id: string;
@@ -14,8 +15,8 @@ interface DecodedToken {
 }
 
 const ChatContainer = ({messages}: Messages) => {
-  const token = import.meta.env.VITE_BACKEND_TOKEN;
-  const decoded = jwtDecode<DecodedToken>(token);
+  const token = getToken();
+  const decoded = jwtDecode<DecodedToken>(token!);
 
   let lastDate = 0;
 

@@ -28,6 +28,7 @@ const ShopList = () => {
           key={data.id}
           storeName={data.title}
           storeLink={`/edulist/${role}`}
+          storeId={data.id}
         />
       ))}
     </ShopListStyle>

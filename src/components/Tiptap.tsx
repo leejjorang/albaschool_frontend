@@ -5,7 +5,10 @@ import Toolbar from "./Toolbar";
 import styled from "styled-components";
 import Image from "@tiptap/extension-image";
 
-const Tiptap = () => {
+interface TiptapProps {
+  onContentChange: (content: string) => void;
+} 
+const Tiptap = ({ onContentChange }: TiptapProps) => { 
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -14,6 +17,9 @@ const Tiptap = () => {
       }),
     ],
     content: "",
+    onUpdate: ({ editor }) => {
+      onContentChange(editor.getHTML());
+    },
   });
 
   return (
