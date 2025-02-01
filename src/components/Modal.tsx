@@ -34,7 +34,7 @@ const ModalOverlayStyle = styled.div`
   align-items: center;
 `;
 const ModalStyle = styled.div`
-  width: 45%;
+  width: 85%;
   font-size: 17px;
   text-align: center;
   background: white;

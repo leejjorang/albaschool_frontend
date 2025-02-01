@@ -8,15 +8,16 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import UserProfile from "../../components/user/UserProfile";
 import { ManagerStoreCard, ManagerStaffCard } from "../../components/user/Card";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserInfo } from "../../services/authService";
 import {
+  deleteStore,
   deleteStoreMembers,
   getStore,
   getStoreMembers,
 } from "../../services/storeService";
 import { IStore } from "../../types/store";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import ToastPopup from "../../components/ToastPopup";
 
 interface staffProps {
@@ -28,12 +29,16 @@ interface staffProps {
 const User = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  
+  const queryClient = useQueryClient();
+
   // 사용자 정보 가져오기
   const { data: userData } = useQuery({
     queryKey: ["userData"],
     queryFn: getUserInfo,
   });
+
+  // 내 id
+  const myId = userData?.id;
 
   // 내가 속한 가게 조회
   const { data: stores } = useQuery({
@@ -56,10 +61,10 @@ const User = () => {
     enabled: !!category, // category 가 있을 때만 쿼리 실행
     initialData: [],
   });
-  
+
   // 직원 삭제
   const deleteMember = useMutation({
-    mutationFn: (data:{userId: string; storeId: string;}) =>
+    mutationFn: (data: { userId: string; storeId: string }) =>
       deleteStoreMembers(data.userId, data.storeId),
     onSuccess: () => {
       setToastMessage("✅ 직원 삭제 완료!");
@@ -69,13 +74,32 @@ const User = () => {
       setToastMessage("❌ 직원 삭제 실패!");
       setShowToast(true);
     },
-  }); 
+  });
 
-  const handleDelete = (userId: string) => {
-    deleteMember.mutate({ 
-      userId, 
-      storeId: category 
+  // 가게 삭제
+  const deleteStoreById = useMutation({
+    mutationFn: (storeId: string ) =>
+      deleteStore(storeId),
+    onSuccess: () => {
+      setToastMessage("✅ 가게 삭제 완료!");
+      setShowToast(true);
+      queryClient.invalidateQueries({ queryKey: ['stores'] });
+    },
+    onError: () => {
+      setToastMessage("❌ 가게 삭제 실패!");
+      setShowToast(true);
+    },
+  });
+
+  const handleMemberDelete = (userId: string) => {
+    deleteMember.mutate({
+      userId,
+      storeId: category,
     });
+  };
+
+  const handleStoreDelete = (storeId:string) => {
+    deleteStoreById.mutate(storeId);
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -98,8 +122,9 @@ const User = () => {
               key={data.id}
               storeName={data.title}
               storeCode={data.id}
-              openTime = {data.openTime}
+              openTime={data.openTime}
               closeTime={data.closeTime}
+              onDelete={() => handleStoreDelete(data.id)}
             />
           ))}
         </CardBoxStyle>
@@ -130,22 +155,24 @@ const User = () => {
           </FormControl>
         </span>
         <CardBoxStyle>
-          {staffs?.map((data: staffProps) => (
-            <ManagerStaffCard
-              key={data.id}
-              staffName={data.name}
-              staffPhone={data.contact}
-              onDelete={() => handleDelete(data.id)}
-            />
-          ))}
+          {staffs
+            ?.filter((data:staffProps) => myId !== data.id)
+            .map((data: staffProps) => (
+              <ManagerStaffCard
+                key={data.id}
+                staffName={data.name}
+                staffPhone={data.contact}
+                onDelete={() => handleMemberDelete(data.id)}
+              />
+            ))}
         </CardBoxStyle>
         {showToast && (
-        <ToastPopup
-          message={toastMessage}
-          setToast={setShowToast}
-          position="top"
-        />
-      )}
+          <ToastPopup
+            message={toastMessage}
+            setToast={setShowToast}
+            position="top"
+          />
+        )}
       </StaffBoxStyle>
     </div>
   );

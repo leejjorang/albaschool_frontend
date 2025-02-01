@@ -14,6 +14,7 @@ interface managerStoreCardProps extends storeCardProps {
   storeCode: string;
   openTime?:string;
   closeTime?:string;
+  onDelete: () => void;
 }
 
 interface StaffCardProps {
@@ -34,13 +35,19 @@ export const ManagerStoreCard: React.FC<managerStoreCardProps> = ({
   storeName,
   storeCode,
   openTime,
-  closeTime
+  closeTime,
+  onDelete,
 }) => {
   const navigate = useNavigate();
   const handleEditClick = () => {
     navigate('/store/update/manager', {
       state: { storeName: storeName, storeId: storeCode , openTime: openTime , closeTime: closeTime}
     });
+  };
+  const [isOpen, setIsOpen] = useState(false);
+  const handleDelete = () => {
+    onDelete();
+    setIsOpen(false);
   };
 
   return (
@@ -50,7 +57,18 @@ export const ManagerStoreCard: React.FC<managerStoreCardProps> = ({
         <p style={{ color: "#7E7E7E" }}>{storeCode}</p>
       </span>
       <EditOutlinedIcon sx={{ cursor: "pointer" }} onClick={handleEditClick}/>
-      <RemoveIcon sx={{ color: "red" }} />
+      <RemoveIcon sx={{ color: "red" }} onClick={() => setIsOpen(true)}/>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <p>{storeName} 가게를 삭제하시겠습니까?</p>
+        <ButtonStyle>
+          <Button message="삭제" width={30} onClick={handleDelete} />
+          <NegativeButton
+            message="취소"
+            width={30}
+            onClick={() => setIsOpen(false)}
+          />
+        </ButtonStyle>
+      </Modal>
     </ManagerCardStyle>
   );
 };

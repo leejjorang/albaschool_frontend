@@ -52,6 +52,11 @@ export const editStore = async(storeId: string, data:UpdateStoreProps) => {
   return response.data;
 }
 
+export const deleteStore = async(storeId: string) => {
+  const response = await axiosInstance.delete(`/stores/${storeId}`);
+  return response.data;
+}
+
 export const getStoreMembers = async (storeId: string) => {
   const response = await axiosInstance.get(`/stores/${storeId}/members`);
   return response.data;
