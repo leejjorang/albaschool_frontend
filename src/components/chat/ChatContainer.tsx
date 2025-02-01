@@ -20,17 +20,8 @@ const ChatContainer = ({ messages }: Messages) => {
 
   let lastDate = 0;
 
-  const chatBoxRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
-    console.log(chatBoxRef.current?.scrollHeight);
-  }, [messages]);
-
   return (
-    <ChatBoxStyle ref={chatBoxRef}>
+    <ChatBoxStyle>
       {messages.map((message, i) => {
         const checkDate = lastDate !== formatDate(message.createdAt)[1];
         if (checkDate) {
@@ -74,5 +65,4 @@ const ChatBoxStyle = styled.div`
   margin-bottom: 7rem;
   padding: 0.5rem 0;
   gap: 0.5rem;
-  overflow-y: auto;
 `;

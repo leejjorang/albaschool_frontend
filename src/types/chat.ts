@@ -11,9 +11,10 @@ export interface Messages {
 }
 
 export interface IChatRoom {
+  createdAt: string;
   id: string;
-  title: string;
   lastMessage: string;
   notReadCount: number;
   memberCount: number;
+  title: string;
 }

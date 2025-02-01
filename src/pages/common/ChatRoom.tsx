@@ -3,7 +3,7 @@ import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ChatContainer from "../../components/chat/ChatContainer";
 import ChatMenu from "../../components/chat/ChatMenu";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import { getMessages } from "../../services/chatService";
@@ -11,6 +11,7 @@ import { Message } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
 import { chatIconStore } from "../../stores/chatIconStore";
+import { useChatScrollStore } from "../../stores/chatScrollStore";
 
 const ChatRoom = () => {
   const roomId = useParams().id;
@@ -25,8 +26,14 @@ const ChatRoom = () => {
     (state) => state.setUnreadMessages
   );
   const setShake = chatIconStore((state) => state.setShake);
+  const triggerScroll = useChatScrollStore((state) => state.triggerScroll);
 
   const socketRef = useRef<Socket>();
+
+  useEffect(() => {
+    //채팅오면 스크롤 내리기
+    triggerScroll();
+  }, [messages]);
 
   useEffect(() => {
     socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/room`, {
@@ -77,7 +84,7 @@ const ChatRoom = () => {
       socket.emit("leaveRoom", { roomId: roomId });
       socket.disconnect();
     };
-  }, [roomId]);
+  }, [roomId, token]);
 
   const sendMessage = () => {
     if (!inputMessage.trim() || !socketRef.current) return;
