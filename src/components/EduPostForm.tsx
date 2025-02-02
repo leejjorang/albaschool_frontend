@@ -1,23 +1,38 @@
 import { Box, Button } from "@mui/material";
 import styled from "styled-components";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getPost } from "../services/educationService";
+import DOMPurify from "dompurify";
 
-interface postProps {
-  title: string;
-  content: string;
-}
-// 임시 데이터
-const data: postProps = {
-  title: "👪 고객 응대 메뉴얼",
-  content: "인사 친절하게 잘 해주세요!!",
-};
-const shopName = "솥뚜껑 삼겹살";
+// interface postProps {
+//   title: string;
+//   content: string;
+// }
 
 interface FormProps {
   type: "staff" | "business";
 }
 
 function EduPostForm({ type }: FormProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { storeName, storeId, eduId } = location.state;
+  const role = localStorage.getItem('role');
+
+  const {
+    data: edupost,
+    error: edupostError,
+    isLoading: edulpostLoading,
+  } = useQuery({
+    queryKey: ["edupost", storeId, eduId],
+    queryFn: ()=> getPost(storeId, eduId),
+    enabled: !!storeId && !!eduId,
+  });
+
+  const sanitizedHtml = DOMPurify.sanitize(edupost?.content);
+
   return (
     <EduPostStyle>
       <Box
@@ -44,8 +59,11 @@ function EduPostForm({ type }: FormProps) {
                 color: "#FFD400",
               },
             }}
+            onClick={() => navigate(`/edulist/${role}`, {
+              state: { storeName: storeName, storeId: storeId}
+            })}
           />
-          {shopName}
+          {storeName}
         </Box>
         {type === "business" && (
         <Box>
@@ -79,6 +97,13 @@ function EduPostForm({ type }: FormProps) {
         </Box>
         )}
       </Box>
+      {edulpostLoading && <div>글 목록을 불러오는 중...</div>}
+      {!edulpostLoading && edupostError && (
+        <div>글 목록을 가져오는 데 문제가 발생했습니다</div>
+      )}
+      {!edulpostLoading && !edupostError && edupost.length === 0 && (
+        <div>작성된 글이 없습니다</div>
+      )}
       <Box
         sx={{
           backgroundColor: "#f7f6f6",
@@ -95,9 +120,9 @@ function EduPostForm({ type }: FormProps) {
             marginBottom: "20px",
           }}
         >
-          {data.title}
+          {edupost?.title}
         </p>
-        <p>{data.content}</p>
+        <p dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
       </Box>
     </EduPostStyle>
   );
@@ -109,5 +134,22 @@ const EduPostStyle = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   margin: 20px auto;
+
+  
+  img {
+    width: 100%;
+    height: auto; /* 비율 유지하며 높이를 자동 조정 */
+    object-fit: contain; /* 컨테이너 안에 맞게 비율 유지 */
+    margin-bottom: 10px; /* 이미지 아래 여백 추가 */
+  }
+
+  ol,
+  ul {
+    list-style-type: decimal; /* 숫자 리스트 */
+    padding-left: 20px; /* 왼쪽 여백 추가 */
+    margin-left: 0;
+    font-size: 16px; /* 리스트 글자 크기 조정 */
+    line-height: 1.5; /* 줄 간격 조정 */
+  }
 `;
 export default EduPostForm;

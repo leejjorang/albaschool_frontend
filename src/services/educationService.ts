@@ -5,6 +5,10 @@ export const getEdulist = async (storeId: string) => {
   return response.data;
 };
 
+export const getPost = async (storeId: string, eduId: string) => {
+  const response = await axiosInstance.get(`/stores/${storeId}/edu/${eduId}`);
+  return response.data;
+}
 export const posting = async (storeId: string,formData: FormData) => {
   const response = await axiosInstance.post(`/stores/${storeId}/edu`, formData);
   return response.data;

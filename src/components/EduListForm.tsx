@@ -26,6 +26,7 @@ function EduListForm({ type }: FormProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { storeName, storeId } = location.state;
+  const role = localStorage.getItem('role');
 
   // 교육페이지 목록 조회
   const {
@@ -122,6 +123,9 @@ function EduListForm({ type }: FormProps) {
               backgroundColor: "#F7F6F6",
               marginBottom: 1,
             }}
+            onClick={() => navigate(`/edupost/${role}`, {
+              state: { storeName: storeName, storeId: storeId, eduId:data.id }
+            })}
           >
             <span style={{ fontWeight: "bold" }}>{data.title}</span>
             <span>{formatDate(data.createdAt)}</span>
