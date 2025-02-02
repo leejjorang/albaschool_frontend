@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import { IChatRoom } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
+import { chatListTime } from "../../utils/chatListTime";
 
 const ChatList = () => {
   const [displayData, setDisplayData] = useState<IChatRoom[]>([]);
@@ -37,10 +38,6 @@ const ChatList = () => {
       setDisplayData(updatedChatLists.data);
     });
 
-    socket.on("newMessage", (data) => {
-      console.log(data);
-    });
-
     return () => {
       socket.disconnect();
     };
@@ -49,7 +46,6 @@ const ChatList = () => {
   useEffect(() => {
     setUnreadMessages(false);
   }, [setUnreadMessages]);
-
   return (
     <ChatListStyle>
       {displayData.map((message) => (
@@ -59,7 +55,7 @@ const ChatList = () => {
           storeName={message.title}
           headCount={message.memberCount}
           lastMessage={message.lastMessage || "메세지가 없습니다."}
-          time="오전 11:00"
+          time={chatListTime(message.createdAt)}
           badge={message.notReadCount}
         />
       ))}

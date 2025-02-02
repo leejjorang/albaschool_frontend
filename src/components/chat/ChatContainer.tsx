@@ -3,10 +3,10 @@ import AlertChat from "./AlertChat";
 import YourChat from "./YourChat";
 import MyChat from "./MyChat";
 
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import { formatDate, formatTime } from "../../utils/time";
-import { Messages } from '../../types/chat';
-import React, { useEffect, useRef } from "react";
+import { Messages } from "../../types/chat";
+import React from "react";
 import { getToken } from "../../stores/authStore";
 
 interface DecodedToken {
@@ -14,26 +14,17 @@ interface DecodedToken {
   name: string;
 }
 
-const ChatContainer = ({messages}: Messages) => {
+const ChatContainer = ({ messages }: Messages) => {
   const token = getToken();
-  const decoded = jwtDecode<DecodedToken>(token!);
+  const decoded = jwtDecode<DecodedToken>(token as string);
 
   let lastDate = 0;
 
-  const chatBoxRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
-    console.log(chatBoxRef.current?.scrollHeight);
-  }, [messages]);
-
   return (
-    <ChatBoxStyle ref={chatBoxRef}>
+    <ChatBoxStyle>
       {messages.map((message, i) => {
         const checkDate = lastDate !== formatDate(message.createdAt)[1];
-        if(checkDate) {
+        if (checkDate) {
           lastDate = Number(formatDate(message.createdAt)[1]);
         }
 
@@ -43,7 +34,10 @@ const ChatContainer = ({messages}: Messages) => {
               <AlertChat message={String(formatDate(message.createdAt)[0])} />
             )}
             {message.senderId === decoded.id ? (
-              <MyChat message={message.content} time={formatTime(message.createdAt)} />
+              <MyChat
+                message={message.content}
+                time={formatTime(message.createdAt)}
+              />
             ) : (
               <YourChat
                 senderName={message.name}
@@ -53,14 +47,13 @@ const ChatContainer = ({messages}: Messages) => {
               />
             )}
           </React.Fragment>
-        ) 
+        );
       })}
     </ChatBoxStyle>
   );
-}
+};
 
 export default ChatContainer;
-
 
 const ChatBoxStyle = styled.div`
   min-height: 72.5vh;
@@ -72,5 +65,4 @@ const ChatBoxStyle = styled.div`
   margin-bottom: 7rem;
   padding: 0.5rem 0;
   gap: 0.5rem;
-  overflow-y: auto;
-`
+`;

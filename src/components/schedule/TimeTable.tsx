@@ -4,6 +4,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Box } from "@mui/material";
 import moment from "moment";
 import { ISchedule } from "../../types/schedule";
+import ScheduleModal from "./ScheduleModal";
 
 const localizer = momentLocalizer(moment);
 
@@ -54,13 +55,20 @@ const BoxStyle = {
 
 interface TimeTableProps {
   events: ISchedule[];
+  storeId: string;
+  openTime?: string;
+  closeTime?: string;
 }
 
-const TimeTable = ({ events }: TimeTableProps) => {
+const TimeTable = ({ events, openTime='00:00:00', closeTime='23:59:59', storeId }: TimeTableProps) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState<ISchedule|undefined>();
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
+
+  const open = openTime.split(':');
+  const close = closeTime.split(':');
 
   const eventStyleGetter = (event: ISchedule) => {
     return {
@@ -80,7 +88,8 @@ const TimeTable = ({ events }: TimeTableProps) => {
     </div>
   );
 
-  const handelSelectEvent = () => {
+  const handelSelectEvent = (event: ISchedule) => {
+    setSelectedSchedule(event);
     handleOpen();
   };
 
@@ -92,8 +101,8 @@ const TimeTable = ({ events }: TimeTableProps) => {
           events={events}
           defaultView="week"
           views={["week"]}
-          min={new Date(0, 0, 0, 6, 0, 0)} // 오전 9시부터
-          max={new Date(0, 0, 0, 18, 0, 0)} // 오후 6시까지
+          min={new Date(0, 0, 0, +open[0], +open[1], +open[2])} // 오전 9시부터
+          max={new Date(0, 0, 0, +close[0], +close[1], +close[2])} // 오후 6시까지
           step={60}
           timeslots={1}
           eventPropGetter={eventStyleGetter}
@@ -109,6 +118,8 @@ const TimeTable = ({ events }: TimeTableProps) => {
           onSelectEvent={handelSelectEvent}
         />
       </Box>
+      <ScheduleModal open={modalOpen} onClose={handleClose} mode="edit" storeId={storeId} scheduleId={selectedSchedule?.id} selectedMember={selectedSchedule?.title}/>
+
     </div>
   );
 };
