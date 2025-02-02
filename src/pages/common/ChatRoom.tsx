@@ -35,6 +35,12 @@ const ChatRoom = () => {
     triggerScroll();
   }, [messages]);
 
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      triggerScroll();
+    }, 400);
+  }, []);
+
   useEffect(() => {
     socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}/room`, {
       path: "/socket.io/",
