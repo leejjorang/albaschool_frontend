@@ -18,7 +18,13 @@ export interface IGetSchedule {
 
 export interface IPostSchedule {
   userId: string;
-  storeId: string;
+  content: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface IPutSchedule {
   content: string;
   dayOfWeek: number;
   startTime: string;

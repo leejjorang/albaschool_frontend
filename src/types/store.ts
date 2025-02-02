@@ -5,3 +5,9 @@ export interface IStore {
   openTime: string;
   closeTime: string;
 }
+
+export interface IMember {
+  id: string;
+  name: string;
+  contact: string;
+}

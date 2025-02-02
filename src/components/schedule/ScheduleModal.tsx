@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   Box,
@@ -11,14 +11,19 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import TimePick from "./TimePick";
-import { useMutation } from "@tanstack/react-query";
-import { postSchedules } from "../../services/scheduleService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteSchedules, postSchedules, putSchedules } from "../../services/scheduleService";
+import { getStoreMembers } from "../../services/storeService";
+import { IPostSchedule, IPutSchedule } from "../../types/schedule";
+import { IMember } from "../../types/store";
 
 interface ScheduleModalProps {
   open: boolean;
   onClose: () => void;
   mode: "add" | "edit";
   storeId: string;
+  scheduleId?: string;
+  selectedMember?: string;
 }
 
 const style = {
@@ -38,23 +43,112 @@ const ScheduleModal = ({
   onClose,
   mode,
   storeId,
+  scheduleId,
+  selectedMember
 }: ScheduleModalProps) => {
-  const [worker, setWorker] = useState("이알바");
-  const [day, setDay] = useState("월요일");
+  const [worker, setWorker] = useState("");
+  const [day, setDay] = useState(0);
   const [startTime, setStartTime] = useState<string | null>(null);
   const [endTime, setEndTime] = useState<string | null>(null);
 
-  const handleStartTimeChange = (newValue: string | null) => {
-    setStartTime(newValue);
+
+  //가게 직원들 가져오기
+  const {
+    data: members,      
+    error: membersError,  
+    isLoading: membersLoading,
+  } = useQuery({
+    queryKey: ["storeMemers", storeId], 
+    queryFn: () => getStoreMembers(storeId),
+    enabled: !!storeId,  
+    initialData: [] 
+  });
+
+
+  const addMutation = useMutation({ 
+    mutationFn: (data: {storeId: string; scheduleData: IPostSchedule}) => postSchedules(data.storeId, data.scheduleData),
+    onSuccess: () => {
+      alert('스케줄이 추가되었습니다!');
+      onClose();
+    },
+    onError: (error) => {
+      alert(error.message);
+    }
+  });
+
+  const addHandler = () => {
+    if(!worker || !startTime || !endTime) {
+      alert('모든 필드를 입력하세요');
+      return;
+    }
+
+    const scheduleData = {
+      userId: worker,
+      content: '파트타임',
+      dayOfWeek: day,
+      startTime: startTime,
+      endTime: endTime,
+    }
+
+    console.log(storeId, scheduleData);
+    addMutation.mutate({storeId, scheduleData});
   };
 
-  const handleEndTimeChange = (newValue: string | null) => {
-    setEndTime(newValue);
+
+  const editMutation = useMutation({ 
+    mutationFn: (data: {scheduleId: string; scheduleData: IPutSchedule}) => putSchedules(data.scheduleId, data.scheduleData),
+    onSuccess: () => {
+      alert('스케줄이 수정되었습니다!');
+      onClose();
+    },
+    onError: (error) => {
+      alert(error.message);
+    }
+  });
+
+  const editHandler = () => {
+    if(!scheduleId) {
+      alert('수정할 스케줄이 없습니다.');
+      return;
+    }
+
+    if(!worker || !startTime || !endTime) {
+      alert('모든 필드를 입력하세요');
+      return;
+    }
+
+    const scheduleData = {
+      content: '파트타임',
+      dayOfWeek: day,
+      startTime: startTime,
+      endTime: endTime,
+    }
+
+    console.log(scheduleId, scheduleData);
+    editMutation.mutate({scheduleId, scheduleData});
   };
-  const addMutation = useMutation({ mutationFn: postSchedules });
-  const addHandler = () => {
-    //addMutation.mutate({});
-  };
+
+  const deleteHandler = async() => {
+    if(!scheduleId) {
+      alert('삭제할 스케줄이 없습니다.');
+      return;
+    }
+
+    try {
+      await deleteSchedules(scheduleId);
+      alert('스케줄이 삭제되었습니다.');
+      onClose();
+    } catch(error) {
+      alert('스케줄 삭제에 실패했습니다.');
+      console.log(error);
+    }
+  }
+
+  if (membersLoading) return <div>로딩 중...</div>;
+  if (membersError) return <div>에러 발생: {membersError.message}</div>;
+  if (!members.length) return <div>직원이 없습니다</div>;
+
+
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>
@@ -73,40 +167,38 @@ const ScheduleModal = ({
           <FormControl fullWidth margin="normal" sx={{ mt: "2.5rem" }}>
             <Typography variant="caption">이름</Typography>
             <Select value={worker} onChange={(e) => setWorker(e.target.value)}>
-              <MenuItem value="이알바">이알바</MenuItem>
-              <MenuItem value="김알바">김알바</MenuItem>
-              <MenuItem value="박알바">박알바</MenuItem>
+              {mode === 'add' ? (
+                members.map((member: IMember) => (
+                  <MenuItem key={member.id} value={member.id}>{member.name}</MenuItem>
+                ))
+              ) : (
+                <MenuItem value={selectedMember}>{selectedMember}</MenuItem>
+              )}
             </Select>
           </FormControl>
 
           <FormControl fullWidth margin="normal">
             <Typography variant="caption">요일</Typography>
-            <Select value={day} onChange={(e) => setDay(e.target.value)}>
-              <MenuItem value="일요일">일요일</MenuItem>
-              <MenuItem value="월요일">월요일</MenuItem>
-              <MenuItem value="화요일">화요일</MenuItem>
-              <MenuItem value="수요일">수요일</MenuItem>
-              <MenuItem value="목요일">목요일</MenuItem>
-              <MenuItem value="금요일">금요일</MenuItem>
-              <MenuItem value="토요일">토요일</MenuItem>
+            <Select value={day} onChange={(e) => setDay(Number(e.target.value))}>
+              <MenuItem value={0}>일요일</MenuItem>
+              <MenuItem value={1}>월요일</MenuItem>
+              <MenuItem value={2}>화요일</MenuItem>
+              <MenuItem value={3}>수요일</MenuItem>
+              <MenuItem value={4}>목요일</MenuItem>
+              <MenuItem value={5}>금요일</MenuItem>
+              <MenuItem value={6}>토요일</MenuItem>
             </Select>
           </FormControl>
 
           <FormControl fullWidth margin="normal">
             <Typography variant="caption">시작시간</Typography>
-            <TimePick
-              onChange={(newValue: string | null) =>
-                handleStartTimeChange(newValue)
-              }
-            />
+            <TimePick  onChange={(e) => setStartTime(e)}/>
           </FormControl>
 
           <FormControl fullWidth margin="normal">
             <Typography variant="caption">종료시간</Typography>
             <TimePick
-              onChange={(newValue: string | null) =>
-                handleEndTimeChange(newValue)
-              }
+              onChange={(e) => setEndTime(e)}
               startTime={startTime as string}
             />
           </FormControl>
@@ -127,10 +219,10 @@ const ScheduleModal = ({
           )}
           {mode === "edit" && (
             <>
-              <Button variant="contained" sx={{ backgroundColor: "grey.400" }}>
+              <Button variant="contained" sx={{ backgroundColor: "grey.400" }} onClick={deleteHandler}>
                 삭제
               </Button>
-              <Button variant="contained">수정</Button>
+              <Button variant="contained" onClick={editHandler}>수정</Button>
             </>
           )}
         </Box>
