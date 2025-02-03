@@ -1,12 +1,12 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button,TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Tiptap from "../../components/Tiptap";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { posting } from "../../services/educationService";
+import { editPost, posting } from "../../services/educationService";
 import ToastPopup from "../../components/ToastPopup";
 
 // 폼 입력 데이터 타입
@@ -14,12 +14,17 @@ export interface postProps {
   title: string;
   content: string;
   img?: File;
-  deleteImg?: boolean;
 }
 function WritePost() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeName, storeId } = location.state;
+  const {
+    storeName,
+    storeId,
+    eduId,
+    mode = "create",
+    initialData = { title: "", content: "" },
+  } = location.state;
   const role = localStorage.getItem("role");
 
   const {
@@ -28,14 +33,30 @@ function WritePost() {
     formState: { errors },
   } = useForm<postProps>();
 
-  const [editorContent, setEditorContent] = useState<string>("");
+  const [isModified, setIsModified] = useState(false);
+  const [currentTitle, setCurrentTitle] = useState(initialData.title);
+  const [editorContent, setEditorContent] = useState<string>(
+    initialData.content
+  );
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    const titleChanged = currentTitle !== initialData.title;
+    const contentChanged = editorContent !== initialData.content;
+
+    setIsModified(titleChanged || contentChanged);
+  }, [currentTitle, editorContent, initialData.title, initialData.content]);
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentTitle(e.target.value);
+  };
 
   const handleEditorChange = (content: string) => {
     setEditorContent(content);
   };
 
+  // 글 등록
   const posts = useMutation({
     mutationFn: (formData: FormData) => posting(storeId, formData),
     onSuccess: () => {
@@ -51,22 +72,43 @@ function WritePost() {
     },
   });
 
+  // 글 수정
+  const updatePost = useMutation({
+    mutationFn: (formData: FormData) => editPost(storeId, eduId, formData),
+    onSuccess: () => {
+      setToastMessage("✅ 글 수정 완료!");
+      setShowToast(true);
+      setTimeout(() => {
+        navigate(`/edupost/${role}`, {
+          state: { storeName, storeId, eduId },
+        });
+      }, 800);
+    },
+    onError: () => {
+      setToastMessage("❌ 글 수정 실패!");
+      setShowToast(true);
+    },
+  });
+
   const onSubmit = async (data: postProps) => {
     const formData = new FormData();
 
     // 제목과 콘텐츠 추가
-    formData.append("title", data.title);
-    formData.append("content", editorContent);
+    formData.append("title", data.title || initialData.title);
+    formData.append("content", editorContent || initialData.content);
 
     // 이미지가 Base64 형식일 경우 Blob으로 변환 후 추가
     if (data.img) {
       formData.append("img", data.img); // 선택된 파일이 있는 경우
     }
 
-    // 서버로 데이터 전송
-    posts.mutate(formData);
+    if (mode === "edit") {
+      // 수정 모드일 때
+      updatePost.mutate(formData);
+    } else {
+      posts.mutate(formData);
+    }
   };
-  
 
   return (
     <WritePostStyle>
@@ -108,6 +150,7 @@ function WritePost() {
               type="submit"
               variant="contained"
               size="small"
+              disabled={mode === 'edit' && !isModified}
               sx={{
                 color: "black",
                 background: "#FAED7D",
@@ -116,7 +159,7 @@ function WritePost() {
                 },
               }}
             >
-              등록
+             {mode === 'edit' ? '수정' : '등록'}
             </Button>
           </Box>
         </Box>
@@ -124,6 +167,8 @@ function WritePost() {
           {...register("title", {
             required: "제목을 작성해주세요",
           })}
+          defaultValue={initialData.title}
+          onChange={handleTitleChange}
           placeholder="제목"
           error={!!errors.title}
           helperText={errors.title?.message}
@@ -143,7 +188,10 @@ function WritePost() {
             marginBottom: 2,
           }}
         />
-        <Tiptap onContentChange={handleEditorChange} />
+        <Tiptap
+          onContentChange={handleEditorChange}
+          initialContent={initialData.content}
+        />
       </StyledForm>
       {showToast && (
         <ToastPopup

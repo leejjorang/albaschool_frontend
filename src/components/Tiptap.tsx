@@ -7,8 +7,9 @@ import Image from "@tiptap/extension-image";
 
 interface TiptapProps {
   onContentChange: (content: string) => void;
-} 
-const Tiptap = ({ onContentChange }: TiptapProps) => { 
+  initialContent?: string;
+}
+const Tiptap = ({ onContentChange, initialContent = "" }: TiptapProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -16,7 +17,7 @@ const Tiptap = ({ onContentChange }: TiptapProps) => {
         allowBase64: true, // base64 이미지 허용
       }),
     ],
-    content: "",
+    content: initialContent,
     onUpdate: ({ editor }) => {
       onContentChange(editor.getHTML());
     },
@@ -61,11 +62,11 @@ const EditorWrapper = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #FAED7D;
+    background: #faed7d;
     border-radius: 4px;
 
     &:hover {
-      background: #FFD400;
+      background: #ffd400;
     }
   }
 
@@ -96,7 +97,7 @@ const EditorWrapper = styled.div`
         padding-left: 2em;
 
         &::before {
-          content: counter(item) ". ";
+          content: counter(item) ".";
           counter-increment: item;
           position: absolute;
           left: 0.5em;

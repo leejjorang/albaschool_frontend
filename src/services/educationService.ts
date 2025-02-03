@@ -17,14 +17,9 @@ export const posting = async (storeId: string,formData: FormData) => {
 export const editPost = async (
   storeId: string,
   eduId: string,
-  data: {
-    title: string;
-    content: string;
-    deleteImg: boolean;
-    img?: File;
-  }
+  formData: FormData
 ) => {
-  const response = await axiosInstance.put(`/stores/${storeId}/edu/${eduId}`, data);
+  const response = await axiosInstance.put(`/stores/${storeId}/edu/${eduId}`, formData);
   return response.data;
 };
 
