@@ -100,6 +100,8 @@ const TimeTable = ({
     handleOpen();
   };
 
+  const role=localStorage.getItem("role");
+
   return (
     <div>
       <Box sx={BoxStyle}>
@@ -125,7 +127,7 @@ const TimeTable = ({
           onSelectEvent={handelSelectEvent}
         />
       </Box>
-      {storeId && (
+      {storeId && role!=='staff'&&(
         <ScheduleModal
           open={modalOpen}
           onClose={handleClose}
