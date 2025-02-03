@@ -2,19 +2,29 @@ import React from "react";
 import styled from "styled-components";
 
 interface NoticeCardProps {
-  id: number;
   storeName: string;
   message: string;
   time: string;
 }
 
-
-const NoticeCard: React.FC<NoticeCardProps> = ({id, storeName, message, time}) => {
+const NoticeCard: React.FC<NoticeCardProps> = ({
+  storeName,
+  message,
+  time,
+}) => {
   return (
     <NoticeBoxStyle>
-      <div style={{maxWidth: '60%'}}>
-        <p style={{fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.3rem'}}>{storeName}</p>
-        <p style={{color: '#565656'}}>{message}</p>
+      <div style={{ maxWidth: "60%" }}>
+        <p
+          style={{
+            fontSize: "1.2rem",
+            fontWeight: "600",
+            marginBottom: "0.3rem",
+          }}
+        >
+          {storeName}
+        </p>
+        <p style={{ color: "#565656" }}>{message}</p>
       </div>
       <TimeBoxStyle>
         <p>{time}</p>
@@ -24,7 +34,6 @@ const NoticeCard: React.FC<NoticeCardProps> = ({id, storeName, message, time}) =
 };
 
 export default NoticeCard;
-
 
 const NoticeBoxStyle = styled.div`
   display: flex;
@@ -40,11 +49,11 @@ const NoticeBoxStyle = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-`
+`;
 
 const TimeBoxStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
-`
+`;

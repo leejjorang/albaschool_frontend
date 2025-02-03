@@ -25,8 +25,8 @@ export const connectSSE = ({
 
   eventSource.addEventListener("notification", (event) => {
     const parsedData = JSON.parse((event as MessageEvent).data);
-    console.log("Notification event data:", parsedData.hasUnreadNotification);
-    onNotification?.(parsedData.hasUnreadNotification);
+    console.log("Notification event data:", parsedData);
+    onNotification?.(parsedData);
   });
 
   eventSource.addEventListener("chatRoomInitialize", (event) => {
