@@ -48,7 +48,8 @@ const ManagerSchedule = () => {
     queryKey: ["schedule", storeId],
     queryFn: () => getShopSchedules(storeId),
     enabled: !!storeId,
-    initialData: []
+    initialData: [],
+    retry: false,
   });
 
   //해당 가게의 스케쥴들 전달하는 함수

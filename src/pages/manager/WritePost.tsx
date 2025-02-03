@@ -127,6 +127,7 @@ function WritePost() {
               display: "flex",
               alignItems: "center",
               fontWeight: "bold",
+              fontSize: "20px",
             }}
           >
             <ArrowBackIosIcon

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import styled from "styled-components";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -7,7 +7,6 @@ import { deletePost, getPost } from "../services/educationService";
 import DOMPurify from "dompurify";
 import { useState } from "react";
 import ToastPopup from "./ToastPopup";
-import { Button, NegativeButton } from "./Button";
 
 interface FormProps {
   type: "staff" | "business";
@@ -92,20 +91,32 @@ function EduPostForm({ type }: FormProps) {
           {storeName}
         </Box>
         {type === "business" && (
-          <Box
-            sx={{
-              display: "flex",
-              gap: "20px",
-            }}
-          >
-            <NegativeButton
-              message="삭제"
-              width={45}
-              onClick={() => handleDeleteEduPost(storeId, eduId)}
-            />
+          <Box>
             <Button
-              message="수정"
-              width={45}
+              variant="contained"
+              size="small"
+              sx={{
+                marginRight: "20px",
+                color: "black",
+                background: "#E9E9E9",
+                "&:hover": {
+                  backgroundColor: "#B9B9B9",
+                },
+              }}
+              onClick={() => handleDeleteEduPost(storeId, eduId)}
+            >
+              삭제
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                color: "black",
+                background: "#FAED7D",
+                "&:hover": {
+                  backgroundColor: "#FFD400",
+                },
+              }}
               onClick={() =>
                 navigate(`/post/${role}`, {
                   state: {
@@ -120,13 +131,15 @@ function EduPostForm({ type }: FormProps) {
                   },
                 })
               }
-            />
+            >
+              수정
+            </Button>
           </Box>
         )}
       </Box>
-      {edulpostLoading && <div>글 목록을 불러오는 중...</div>}
+      {edulpostLoading && <div>글을 불러오는 중...</div>}
       {!edulpostLoading && edupostError && (
-        <div>글 목록을 가져오는 데 문제가 발생했습니다</div>
+        <div>글을 불러오는 데 문제가 발생했습니다</div>
       )}
       {!edulpostLoading && !edupostError && edupost.length === 0 && (
         <div>작성된 글이 없습니다</div>
@@ -167,7 +180,8 @@ const EduPostStyle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 20px auto;
+  margin: 0 auto;
+  padding: 10px;
   overflow: hidden;
 
   img {
