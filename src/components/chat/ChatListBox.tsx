@@ -11,36 +11,42 @@ interface ChatListBoxProps {
   badge?: number;
 }
 
-const ChatListBox: React.FC<ChatListBoxProps> = ({id, storeName, headCount, lastMessage, time, badge}) => {
+const ChatListBox: React.FC<ChatListBoxProps> = ({
+  id,
+  storeName,
+  headCount,
+  lastMessage,
+  time,
+  badge,
+}) => {
   const navigate = useNavigate();
   const goToChatRoom = () => {
     navigate(`/chats/${id}`, {
       state: {
         storeName,
-        headCount
-      }
+        headCount,
+      },
     });
-  }
+  };
 
   return (
     <ChatListBoxStyle onClick={goToChatRoom}>
-      <div style={{maxWidth: '60%'}}>
+      <div style={{ maxWidth: "60%" }}>
         <span>
           <p>{storeName}</p>
-          <p style={{color: '#7E7E7E'}}>{headCount}</p>
+          <p style={{ color: "#7E7E7E" }}>{headCount}</p>
         </span>
-        <p style={{color: '#565656'}}>{lastMessage}</p>
+        <p style={{ color: "#565656" }}>{lastMessage}</p>
       </div>
       <TimeBadgeBoxStyle>
         <p>{time}</p>
-        {badge && <Badge message={badge} />}
+        {badge ? <Badge message={badge} /> : null}
       </TimeBadgeBoxStyle>
     </ChatListBoxStyle>
-  )
-}
+  );
+};
 
 export default ChatListBox;
-
 
 const ChatListBoxStyle = styled.div`
   display: flex;
@@ -68,14 +74,15 @@ const ChatListBoxStyle = styled.div`
     text-overflow: ellipsis;
   }
 
-  &:focus, &:hover {
-    background-color: #FFD400;
+  &:focus,
+  &:hover {
+    background-color: #ffd400;
   }
-`
+`;
 
 const TimeBadgeBoxStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
-`
+`;
