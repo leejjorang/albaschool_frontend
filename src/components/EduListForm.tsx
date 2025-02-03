@@ -17,11 +17,6 @@ interface FormProps {
   type: "staff" | "business";
 }
 
-function formatDate(dateString:string) {
-  const date = new Date(dateString);
-  return date.toISOString().split('T')[0]; // '2025-02-01'
-}
-
 function EduListForm({ type }: FormProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -128,8 +123,7 @@ function EduListForm({ type }: FormProps) {
               state: { storeName: storeName, storeId: storeId, eduId:data.id }
             })}
           >
-            <span style={{ fontWeight: "bold" }}>{data.title}</span>
-            <span>{formatDate(data.createdAt)}</span>
+            <span>{data.title}</span>
           </Box>
         ))}
     </EduListStyle>

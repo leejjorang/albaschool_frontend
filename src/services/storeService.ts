@@ -19,6 +19,7 @@ export const createStoreManager = async (storeData: {
   openTime: string;
   closeTime: string;
   bizRegistrationNum: string;
+  type:string;
 }) => {
   const response = await axiosInstance.post("/stores", storeData);
   return response.data;

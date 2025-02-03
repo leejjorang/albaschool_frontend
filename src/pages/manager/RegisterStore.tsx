@@ -4,7 +4,7 @@ import { useState } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { Input, InputBox } from '../../components/InputBox';
 import { Button } from '../../components/Button';
 import TimePick from "../../components/schedule/TimePick";
@@ -96,11 +96,13 @@ const RegisterStore = () => {
       password: password,
       openTime: openTime,
       closeTime: closeTime,
-      bizRegistrationNum: secureBizNum
+      bizRegistrationNum: secureBizNum,
+      type: category
     }
     
     try {
       await createStoreManager(storeData);
+      console.log(category);
       setToastMessage("✅ 가게 추가 완료!");
       setShowToast(true);
 
