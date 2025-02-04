@@ -1,28 +1,21 @@
 import { formatDate, formatTime } from "./time";
+import dayjs from "dayjs";
 
 export const chatListTime = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
+  const date = dayjs.utc(dateString).tz("Asia/Seoul");
+  const now = dayjs().tz("Asia/Seoul");
 
   // 오늘 날짜인지 확인
-  const isToday =
-    date.getUTCFullYear() === now.getUTCFullYear() &&
-    date.getUTCMonth() === now.getUTCMonth() &&
-    date.getUTCDate() === now.getUTCDate();
+  const isToday = date.isSame(now, "day");
 
   // 어제 날짜인지 확인
-  const yesterday = new Date();
-  yesterday.setUTCDate(now.getUTCDate() - 1);
-  const isYesterday =
-    date.getUTCFullYear() === yesterday.getUTCFullYear() &&
-    date.getUTCMonth() === yesterday.getUTCMonth() &&
-    date.getUTCDate() === yesterday.getUTCDate();
+  const isYesterday = date.isSame(now.subtract(1, "day"), "day");
 
   if (isToday) {
-    return `${formatTime(dateString)}`;
+    return String(formatTime(dateString));
   } else if (isYesterday) {
     return "어제";
   } else {
-    return `${formatDate(dateString)[0]}`;
+    return String(formatDate(dateString)[0]);
   }
 };

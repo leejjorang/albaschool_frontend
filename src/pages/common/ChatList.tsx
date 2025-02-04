@@ -55,7 +55,7 @@ const ChatList = () => {
           storeName={message.title}
           headCount={message.memberCount}
           lastMessage={message.lastMessage || "메세지가 없습니다."}
-          time={chatListTime(message.createdAt)}
+          time={message.createdAt ? chatListTime(message.createdAt) : ""}
           badge={message.notReadCount}
         />
       ))}

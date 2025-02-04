@@ -51,6 +51,9 @@ const BoxStyle = {
   "& .rbc-time-gutter": {
     overflow: "hidden",
   },
+  "& .rbc-time-header-gutter": {
+    pr: "2.7rem",
+  },
 };
 
 interface TimeTableProps {
@@ -100,7 +103,7 @@ const TimeTable = ({
     handleOpen();
   };
 
-  const role=localStorage.getItem("role");
+  const role = localStorage.getItem("role");
 
   return (
     <div>
@@ -127,7 +130,7 @@ const TimeTable = ({
           onSelectEvent={handelSelectEvent}
         />
       </Box>
-      {storeId && role!=='staff'&&(
+      {storeId && role !== "staff" && (
         <ScheduleModal
           open={modalOpen}
           onClose={handleClose}
