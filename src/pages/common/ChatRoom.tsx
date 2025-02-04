@@ -79,7 +79,7 @@ const ChatRoom = () => {
 
     const fetchMessages = async () => {
       if (roomId) {
-        const fetchedMessages = await getMessages(roomId);
+        const fetchedMessages = await getMessages(roomId, "1");
         setMessages(fetchedMessages.chatRoomDetail.messages);
       }
     };

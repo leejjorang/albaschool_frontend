@@ -59,7 +59,9 @@ const Layout = ({ children }: LayoutProps) => {
         setUnreadMessages(data);
       },
       onChatNotification: (data) => {
-        if (location.pathname.startsWith("/chats")) return;
+        if (location.pathname.startsWith("/chats")) {
+          return;
+        }
         console.log("New Chat Notification:", data);
         setUnreadMessages(true);
         setShake(true);
