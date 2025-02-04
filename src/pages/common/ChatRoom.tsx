@@ -7,7 +7,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import { getMessages } from "../../services/chatService";
-import { Message } from "../../types/chat";
+import { IChatMember, Message } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
 import { chatIconStore } from "../../stores/chatIconStore";
@@ -21,6 +21,7 @@ const ChatRoom = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [members, setMembers] = useState<IChatMember[]>([]);
   const token = getToken();
   const setUnreadMessages = chatNotificationStore(
     (state) => state.setUnreadMessages
@@ -81,6 +82,7 @@ const ChatRoom = () => {
       if (roomId) {
         const fetchedMessages = await getMessages(roomId, "1");
         setMessages(fetchedMessages.chatRoomDetail.messages);
+        setMembers(fetchedMessages.chatRoomDetail.members);
       }
     };
 
@@ -124,16 +126,16 @@ const ChatRoom = () => {
   return (
     <div>
       <ChatRoomHeaderStyle>
-        {menuOpen && <ChatMenu toggleMenu={toggleMenu} />}
+        {menuOpen && <ChatMenu toggleMenu={toggleMenu} members={members}/>}
 
         <ArrowBackIosOutlinedIcon onClick={goToChatList} />
         <span>
           <h6>{storeName}</h6>
-          <h6 style={{ color: "#7E7E7E" }}>{headCount}</h6>
+          <h6 style={{ color: "#7E7E7E", fontWeight: '100' }}>{headCount}</h6>
         </span>
         <MenuOutlinedIcon sx={{ fontSize: 28 }} onClick={toggleMenu} />
       </ChatRoomHeaderStyle>
-      <ChatContainer messages={messages} />
+      <ChatContainer messages={messages} members={members} />
       <ChatInputBoxStyle>
         <textarea
           id="message"
@@ -163,13 +165,11 @@ const ChatRoomHeaderStyle = styled.div`
 
   span {
     display: inline-flex;
-    align-items: flex-end;
     gap: 0.5rem;
   }
 
   h6 {
-    font-size: 1.2rem;
-    font-weight: 100;
+    font-size: 1.25rem;
   }
 `;
 
