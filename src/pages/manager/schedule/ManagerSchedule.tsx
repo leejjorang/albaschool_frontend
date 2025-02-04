@@ -13,6 +13,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { IStore } from "../../../types/store";
 import { getShopSchedules } from "../../../services/scheduleService";
 import { createEvents } from "../../../features/schedule/createEvents";
+import StoreIsEmpty from "../../../components/StoreIsEmpty";
 
 const ManagerSchedule = () => {
   const [storeId, setStoreId] = useState<string>('');
@@ -32,12 +33,12 @@ const ManagerSchedule = () => {
   //가게 정보들 가져오기
   const {
     data: stores,
-    error: storesError,
     isLoading: storeLoading,
   } = useQuery({
     queryKey: ["stores"],
     queryFn: getStore,
-    initialData: []
+    initialData: [],
+    retry: false,
   });
 
   //해당 가게의 스케쥴 가져오기
@@ -71,8 +72,7 @@ const ManagerSchedule = () => {
 
 
   if (storeLoading) return <div>로딩중...</div>;
-  if (storesError) return <div>에러가 발생했습니다</div>;
-  if (!stores?.length) return <div>매장 정보가 없습니다</div>;
+  if (!stores?.length) return <StoreIsEmpty />;
 
   if (schedulesLoading) return <div>가게 스케줄 로딩중...</div>;
 

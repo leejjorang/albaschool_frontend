@@ -33,7 +33,7 @@ export const Input: React.FC<InputProps> = ({name, type, placeholder, disabled, 
 }
 
 
-export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type, placeholder, disabled, required, width, register,value}) => {
+export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type, placeholder, disabled, required, width, register,value,onChange}) => {
   return (
     <InputBoxStyle>
       <p style={{width: `${titleWidth}%`}}>{title}</p>
@@ -46,6 +46,7 @@ export const InputBox: React.FC<InputBoxProps> = ({title, titleWidth, name, type
         width={width}
         value={value}
         register={register}
+        onChange={onChange}
       />
     </InputBoxStyle>  
   )
