@@ -1,22 +1,44 @@
-import styled from 'styled-components';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import UserProfile from '../../components/user/UserProfile';
-import { StaffStoreCard } from '../../components/user/Card';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import UserProfile from "../../components/user/UserProfile";
+import { StaffStoreCard } from "../../components/user/Card";
+import { Link } from "react-router-dom";
+import { getUserInfo } from "../../services/authService";
+import { useQuery } from "@tanstack/react-query";
+import { getStore } from "../../services/storeService";
+import { IStore } from "../../types/store";
 
 const User = () => {
+  // 사용자 정보 가져오기
+  const { data: userData } = useQuery({
+    queryKey: ["userData"],
+    queryFn: getUserInfo,
+  });
+
+  // 내가 속한 가게 조회
+  const { data: stores } = useQuery({
+    queryKey: ["stores"],
+    queryFn: getStore,
+    initialData: [],
+  });
+
   return (
     <div>
-      <UserProfile userName='홍길동' />
+      <UserProfile userName={userData?.name} />
       <WorkplaceBoxStyle>
         <span>
           <h2>나의 근무지</h2>
-          <Link to={'/store/register/staff'}><ControlPointIcon /></Link>
+          <Link to={"/store/register/staff"}>
+            <ControlPointIcon />
+          </Link>
         </span>
         <CardBoxStyle>
-          <StaffStoreCard storeName='솥뚜껑 삼겹살' />
-          <StaffStoreCard storeName='서브웨이' />
-          <StaffStoreCard storeName='CU 편의점' />
+          {stores?.map((data: IStore) => (
+            <StaffStoreCard
+              key={data.id}
+              storeName={data.title}
+            />
+          ))}
         </CardBoxStyle>
       </WorkplaceBoxStyle>
     </div>
@@ -24,7 +46,6 @@ const User = () => {
 };
 
 export default User;
-
 
 const WorkplaceBoxStyle = styled.div`
   margin: 1rem 1.5rem;
@@ -34,12 +55,12 @@ const WorkplaceBoxStyle = styled.div`
     align-items: center;
     gap: 0.3rem;
   }
-  
+
   a {
     display: flex;
     color: #000000;
   }
-`
+`;
 
 const CardBoxStyle = styled.div`
   display: flex;
@@ -47,4 +68,4 @@ const CardBoxStyle = styled.div`
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
-`
+`;

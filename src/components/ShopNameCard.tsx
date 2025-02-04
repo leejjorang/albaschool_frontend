@@ -5,12 +5,13 @@ import styled from "styled-components";
 interface ShopCardProps {
   storeName: string;
   storeLink: string;
+  storeId: string;
 }
 
-const ShopNameCard: React.FC<ShopCardProps> = ({storeName, storeLink}) => {
+const ShopNameCard: React.FC<ShopCardProps> = ({storeName, storeLink, storeId}) => {
   const navigate = useNavigate();
   const goToStoreEdu = () => {
-    navigate(`${storeLink}`);
+    navigate(`${storeLink}`, {state: { storeName, storeId }});
   }
   return (
     <ShopCardStyle onClick={goToStoreEdu}>

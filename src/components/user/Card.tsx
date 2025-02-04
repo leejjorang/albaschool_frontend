@@ -1,6 +1,10 @@
 import styled from "styled-components";
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import RemoveIcon from '@mui/icons-material/Remove';
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { useState } from "react";
+import Modal from "../Modal";
+import { Button, NegativeButton } from "../Button";
+import { useNavigate } from "react-router-dom";
 
 interface storeCardProps {
   storeName: string;
@@ -8,69 +12,128 @@ interface storeCardProps {
 
 interface managerStoreCardProps extends storeCardProps {
   storeCode: string;
+  openTime?:string;
+  closeTime?:string;
+  onDelete: () => void;
 }
 
 interface StaffCardProps {
   staffName: string;
   staffPhone: string;
+  onDelete: () => void;
 }
 
-export const StaffStoreCard: React.FC<storeCardProps> = ({storeName}) => {
+export const StaffStoreCard: React.FC<storeCardProps> = ({ storeName }) => {
   return (
     <StaffCardStyle>
       <p>{storeName}</p>
     </StaffCardStyle>
-  )
-}
+  );
+};
 
-export const ManagerStoreCard: React.FC<managerStoreCardProps> = ({storeName, storeCode}) => {
+export const ManagerStoreCard: React.FC<managerStoreCardProps> = ({
+  storeName,
+  storeCode,
+  openTime,
+  closeTime,
+  onDelete,
+}) => {
+  const navigate = useNavigate();
+  const handleEditClick = () => {
+    navigate('/store/update/manager', {
+      state: { storeName: storeName, storeId: storeCode , openTime: openTime , closeTime: closeTime}
+    });
+  };
+  const [isOpen, setIsOpen] = useState(false);
+  const handleDelete = () => {
+    onDelete();
+    setIsOpen(false);
+  };
+
   return (
     <ManagerCardStyle>
       <span>
         <p>{storeName}</p>
-        <p style={{color: '#7E7E7E'}}>{storeCode}</p>
+        <p style={{ color: "#7E7E7E" }}>{storeCode}</p>
       </span>
-      <EditOutlinedIcon />
-      <RemoveIcon sx={{ color: 'red' }}/>
+      <EditOutlinedIcon sx={{ cursor: "pointer" }} onClick={handleEditClick}/>
+      <RemoveIcon sx={{ color: "red" }} onClick={() => setIsOpen(true)}/>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <p>{storeName} 가게를 삭제하시겠습니까?</p>
+        <ButtonStyle>
+          <Button message="삭제" width={30} onClick={handleDelete} />
+          <NegativeButton
+            message="취소"
+            width={30}
+            onClick={() => setIsOpen(false)}
+          />
+        </ButtonStyle>
+      </Modal>
     </ManagerCardStyle>
-  )
-}
+  );
+};
 
-export const ManagerStaffCard: React.FC<StaffCardProps> = ({staffName, staffPhone}) => {
+export const ManagerStaffCard: React.FC<StaffCardProps> = ({
+  staffName,
+  staffPhone,
+  onDelete,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleDelete = () => {
+    onDelete();
+    setIsOpen(false);
+  };
+
   return (
     <ManagerCardStyle>
-      <p style={{width: '26%'}}>{staffName}</p>
+      <p style={{ width: "26%" }}>{staffName}</p>
       <p>{staffPhone}</p>
-      <RemoveIcon sx={{ color: 'red' }}/>
+      <RemoveIcon
+        sx={{ color: "red", cursor: "pointer" }}
+        onClick={() => setIsOpen(true)}
+      />
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <p>{staffName} 직원을 삭제하시겠습니까?</p>
+        <ButtonStyle>
+          <Button message="삭제" width={30} onClick={handleDelete} />
+          <NegativeButton
+            message="취소"
+            width={30}
+            onClick={() => setIsOpen(false)}
+          />
+        </ButtonStyle>
+      </Modal>
     </ManagerCardStyle>
-  )
-}
+  );
+};
 
 const StaffCardStyle = styled.div`
-  border: 1px solid #CDCDCD;
+  border: 1px solid #cdcdcd;
   border-radius: 10px;
   width: 100%;
   padding: 0.8rem 0.8rem;
   font-size: 1.3rem;
   text-align: center;
 
-  &:focus, &:hover { 
-    background-color: #FAED7D;
+  &:focus,
+  &:hover {
+    background-color: #faed7d;
   }
-`
+`;
 
 const ManagerCardStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #CDCDCD;
+  border: 1px solid #cdcdcd;
   border-radius: 10px;
   width: 100%;
   padding: 0.8rem 0.8rem;
   font-size: 1.3rem;
 
-  &:focus, &:hover { 
-    background-color: #FAED7D;
+  &:focus,
+  &:hover {
+    background-color: #faed7d;
   }
 
   span {
@@ -78,4 +141,11 @@ const ManagerCardStyle = styled.div`
     gap: 0.5rem;
     width: 80%;
   }
-`
+`;
+
+export const ButtonStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+`;

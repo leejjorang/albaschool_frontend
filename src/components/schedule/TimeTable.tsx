@@ -55,20 +55,27 @@ const BoxStyle = {
 
 interface TimeTableProps {
   events: ISchedule[];
-  storeId: string;
+  storeId?: string;
   openTime?: string;
   closeTime?: string;
 }
 
-const TimeTable = ({ events, openTime='00:00:00', closeTime='23:59:59', storeId }: TimeTableProps) => {
+const TimeTable = ({
+  events,
+  openTime = "00:00:00",
+  closeTime = "23:59:59",
+  storeId,
+}: TimeTableProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedSchedule, setSelectedSchedule] = useState<ISchedule|undefined>();
+  const [selectedSchedule, setSelectedSchedule] = useState<
+    ISchedule | undefined
+  >();
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
 
-  const open = openTime.split(':');
-  const close = closeTime.split(':');
+  const open = openTime.split(":");
+  const close = closeTime.split(":");
 
   const eventStyleGetter = (event: ISchedule) => {
     return {
@@ -92,6 +99,8 @@ const TimeTable = ({ events, openTime='00:00:00', closeTime='23:59:59', storeId 
     setSelectedSchedule(event);
     handleOpen();
   };
+
+  const role=localStorage.getItem("role");
 
   return (
     <div>
@@ -118,8 +127,16 @@ const TimeTable = ({ events, openTime='00:00:00', closeTime='23:59:59', storeId 
           onSelectEvent={handelSelectEvent}
         />
       </Box>
-      <ScheduleModal open={modalOpen} onClose={handleClose} mode="edit" storeId={storeId} scheduleId={selectedSchedule?.id} selectedMember={selectedSchedule?.title}/>
-
+      {storeId && role!=='staff'&&(
+        <ScheduleModal
+          open={modalOpen}
+          onClose={handleClose}
+          mode="edit"
+          storeId={storeId}
+          scheduleId={selectedSchedule?.id}
+          selectedMember={selectedSchedule?.title}
+        />
+      )}
     </div>
   );
 };

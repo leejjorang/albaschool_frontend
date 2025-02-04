@@ -6,7 +6,7 @@ import MyChat from "./MyChat";
 import { jwtDecode } from "jwt-decode";
 import { formatDate, formatTime } from "../../utils/time";
 import { Messages } from "../../types/chat";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { getToken } from "../../stores/authStore";
 
 interface DecodedToken {

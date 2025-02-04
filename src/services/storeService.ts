@@ -1,3 +1,4 @@
+import { UpdateStoreProps } from "../pages/manager/UpdateStore";
 import axiosInstance from "./AxiosInstance";
 
 export const getStores = async () => {
@@ -18,6 +19,7 @@ export const createStoreManager = async (storeData: {
   openTime: string;
   closeTime: string;
   bizRegistrationNum: string;
+  type:string;
 }) => {
   const response = await axiosInstance.post("/stores", storeData);
   return response.data;
@@ -41,7 +43,27 @@ export const getStore = async () => {
   }
 };
 
+export const getStoreById = async(storeId: string) => {
+  const response = await axiosInstance.get(`/stores/${storeId}`);
+  return response.data;
+}
+
+export const editStore = async(storeId: string, data:UpdateStoreProps) => {
+  const response = await axiosInstance.put(`/stores/${storeId}`,data);
+  return response.data;
+}
+
+export const deleteStore = async(storeId: string) => {
+  const response = await axiosInstance.delete(`/stores/${storeId}`);
+  return response.data;
+}
+
 export const getStoreMembers = async (storeId: string) => {
   const response = await axiosInstance.get(`/stores/${storeId}/members`);
   return response.data;
 };
+
+export const deleteStoreMembers = async (userId: string, storeId: string) => {
+  const response = await axiosInstance.delete(`/stores/${storeId}/members/${userId}`);
+  return response.data;
+}

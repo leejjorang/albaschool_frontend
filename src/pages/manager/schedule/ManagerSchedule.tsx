@@ -4,13 +4,12 @@ import {
   Button,
   Select,
   MenuItem,
-  SelectChangeEvent,
   FormControl,
 } from "@mui/material";
 import TimeTable from "../../../components/schedule/TimeTable";
 import ScheduleModal from "../../../components/schedule/ScheduleModal";
-import { getStore, getStoreMembers } from "../../../services/storeService";
-import { useQuery } from "@tanstack/react-query";
+import { getStore } from "../../../services/storeService";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { IStore } from "../../../types/store";
 import { getShopSchedules } from "../../../services/scheduleService";
 import { createEvents } from "../../../features/schedule/createEvents";
@@ -20,11 +19,16 @@ const ManagerSchedule = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [openTime, setOpenTime] = useState('00:00:00');
   const [closeTime, setCloseTime] = useState('00:00:00');
-
+  const queryClient = useQueryClient();
+  
   const handleOpen = () => setModalOpen(true);
-  const handleClose = () => setModalOpen(false);
-
-
+  const handleClose = () => {
+    setModalOpen(false);
+    queryClient.invalidateQueries({ 
+      queryKey: ["schedule", storeId] 
+    });
+  }
+  
   //가게 정보들 가져오기
   const {
     data: stores,
@@ -36,16 +40,16 @@ const ManagerSchedule = () => {
     initialData: []
   });
 
-  //해당 가게의 스케쥴 가져오기기
+  //해당 가게의 스케쥴 가져오기
   const {
     data: schedules, 
-    error: schedulesError,
     isLoading: schedulesLoading
   } = useQuery({
     queryKey: ["schedule", storeId],
     queryFn: () => getShopSchedules(storeId),
     enabled: !!storeId,
-    initialData: []
+    initialData: [],
+    retry: false,
   });
 
   //해당 가게의 스케쥴들 전달하는 함수
@@ -71,7 +75,6 @@ const ManagerSchedule = () => {
   if (!stores?.length) return <div>매장 정보가 없습니다</div>;
 
   if (schedulesLoading) return <div>가게 스케줄 로딩중...</div>;
-  //if (schedulesError) return <div>가게 스케줄을 불러오는 데 문제가 발생했습니다</div>;
 
   return (
     <Box>
