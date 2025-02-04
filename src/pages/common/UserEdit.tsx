@@ -2,13 +2,12 @@ import Avatar from "@mui/material/Avatar";
 import styled from "styled-components";
 import { Input, InputBox } from "../../components/InputBox";
 import { Button, NegativeButton } from "../../components/Button";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { checkPassword, deleteProfile, getUserInfo, postProfile } from "../../services/authService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { checkPassword, deleteProfile, getUserInfo, postProfile, updateUserInfo } from "../../services/authService";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ToastPopup from "../../components/ToastPopup";
 import { useAuthStore } from "../../stores/authStore";
-import { Box } from "@mui/material";
 
 const UserEdit = () => {
   const [password, setPassword] = useState("");
@@ -23,6 +22,7 @@ const UserEdit = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { storeLogout } = useAuthStore();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     data: userData,
@@ -34,13 +34,13 @@ const UserEdit = () => {
   });
 
   useEffect(() => {
-    if (userData) {
+    if (userData && !isEditing) {
       setFormData({
         name: userData.name || "",
         contact: userData.contact || "",
       });
     }
-  }, [userData]);
+  }, [userData,isEditing]);
 
   const validatePassword = useMutation({
     mutationFn: checkPassword,
@@ -59,22 +59,21 @@ const UserEdit = () => {
   });
 
   // 수정 완료 핸들러
-  const updateUserInfo = useMutation({
-    // mutationFn: (updateData) => {
-    //   // API 호출 함수 필요
-    //   return updateUserInfo(updateData);
-    // },
-    // onSuccess: () => {
-    //   setToastMessage("✅ 회원정보가 수정되었습니다!");
-    //   setShowToast(true);
-    //   setIsEditing(false);
-    // },
-    // onError: () => {
-    //   setToastMessage("❌ 회원정보 수정에 실패했습니다!");
-    //   setShowToast(true);
-    // },
+  const updateUser = useMutation({
+    mutationFn: (data: { name: string; contact: string }) => 
+      updateUserInfo(data.name, data.contact),
+    onSuccess: () => {
+      setToastMessage("✅ 회원정보가 수정되었습니다!");
+      setShowToast(true);
+      setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
+    },
+    onError: () => {
+      setToastMessage("❌ 회원정보 수정에 실패했습니다!");
+      setShowToast(true);
+    },
   });
-
+  
   const handleValidatePassword = () => {
     validatePassword.mutate(password);
   };
@@ -138,6 +137,32 @@ const UserEdit = () => {
     removeProfile()
   }
 
+  // 유효성 검사 함수
+const validateForm = () => {
+  const phoneRegex = /^010[0-9]{8}$/; // 010 으로 시작하는 11자리 숫자
+
+  if (!formData.name.trim()) {
+    setToastMessage("❌ 이름을 입력해주세요!");
+    setShowToast(true);
+    return false;
+  }
+
+  if (!phoneRegex.test(formData.contact)) {
+    setToastMessage("❌ 올바른 전화번호 형식이 아닙니다! ");
+    setShowToast(true);
+    return false;
+  }
+
+  return true;
+};
+
+// 수정 버튼 클릭 핸들러
+const handleUpdateClick = () => {
+  if (validateForm()) {
+    updateUser.mutate(formData);
+  }
+};
+
 
   // 로딩 상태 처리
   if (userDataLoading) return <div>로딩중...</div>;
@@ -190,7 +215,7 @@ const UserEdit = () => {
           width={75}
         />
         <InputBox
-          name="phone"
+          name="contact"
           title="전화번호"
           type="tel"
           value={formData.contact}
@@ -207,7 +232,7 @@ const UserEdit = () => {
             <Button
               message="수정 완료"
               width={35}
-              // onClick={() => updateUserInfo.mutate(formData)}
+              onClick={handleUpdateClick}
             />
             <NegativeButton message="취소" width={35} onClick={handleCancel} />
           </>
@@ -222,9 +247,9 @@ const UserEdit = () => {
           </>
         )}
       </ButtonBoxStyle>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      {/* <Box sx={{ display: "flex", justifyContent: "center" }}>
         <NegativeButton message="회원탈퇴" width={35} />
-      </Box>
+      </Box> */}
       {showToast && (
         <ToastPopup
           message={toastMessage}
