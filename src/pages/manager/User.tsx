@@ -108,7 +108,7 @@ const User = () => {
 
   return (
     <div>
-      <UserProfile userName={userData?.name} />
+      <UserProfile userName={userData?.name} profile={userData?.profile}/>
       <WorkplaceBoxStyle>
         <span>
           <h2>가게 관리</h2>
