@@ -14,42 +14,25 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
   @font-face {
-    font-family: 'Paperlogy-8ExtraBold';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
-    font-weight: 800;
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
     font-style: normal;
   }
-  @font-face {
-    font-family: 'LINESeedKR-Bd';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-  }
-  @font-face {
-     font-family: 'S-CoreDream-3Light';
-     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-     font-weight: normal;
-     font-style: normal;
-  }    
 
   * {
     padding: 0;
     margin: 0;
     overflow-x: hidden;
     box-sizing: border-box;
-    font-family: 'LINESeedKR-Bd';
+    font-family: 'Pretendard-Regular';
   }
 
   h1 {
     font-family: 'HakgyoansimDunggeunmisoTTF-B';
   } 
 
-  h2, h3, h4, h5, h6 {
+  h2, h3, h4, h5 {
     font-family: 'GmarketSansMedium';
-  }
-  
-  p {
-    font-family: 'S-CoreDream-3Light';
-    font-weight: bold;
   }
 `
