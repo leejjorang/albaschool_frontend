@@ -138,130 +138,116 @@ function SignUpForm({ type }: SignUpFormProps) {
     <SignUpFormStyle>
       <FormStyle onSubmit={handleSubmit(onSubmit)}>
         <h2>회원가입</h2>
+        <InputWraapStyle>
+        
+        <InputBoxStyle>
+          <p>이메일</p>
+          <input
+            style={{ width: "49%" }}
+            className="inputBox"
+            type="text"
+            {...register("email", {
+              required: "이메일을 입력하세요",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "올바른 이메일 형식이 아닙니다",
+              },
+            })}
+            placeholder="이메일을 입력해주세요"
+          />
+          <button
+            type="button"
+            onClick={handleSendingCode}
+            disabled={
+              !email || sendVerificationCode.isPending || isCodeSent
+            }
+          >
+            전송
+          </button>
+        </InputBoxStyle>
+        {errors.email && (
+          <ErrorText className="error-text">{errors.email.message}</ErrorText>
+        )}
 
-        <InputWrapperStyler>
-          <InputBoxStyle>
-            <div>
-              <p>이메일</p>
-              <input
-                style={{ width: "50%" }}
-                className="inputBox"
-                type="text"
-                {...register("email", {
-                  required: "이메일을 입력하세요",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "올바른 이메일 형식이 아닙니다",
-                  },
-                })}
-                placeholder="이메일을 입력해주세요"
-              />
-              <button
-                type="button"
-                onClick={handleSendingCode}
-                disabled={
-                  !email || sendVerificationCode.isPending || isCodeSent
-                }
-              >
-                전송
-              </button>
-            </div>
-            {errors.email && (
-              <p className="error-text">{errors.email.message}</p>
-            )}
-          </InputBoxStyle>
+        <InputBoxStyle>
+          <p></p>
+          <input
+            style={{ width: "49%" }}
+            className="inputBox"
+            type="text"
+            {...register("verification", {
+              required: "인증번호를 입력하세요",
+            })}
+            placeholder="인증번호 입력"
+            disabled={!isCodeSent || email === "" || isEmailVerified}
+          />
+          <button
+            type="button"
+            onClick={handleVerifyCode}
+            disabled={!code || EmailValidation.isPending || isEmailVerified}
+          >
+            인증
+          </button>
+        </InputBoxStyle>
+        {errors.verification && (
+          <ErrorText className="error-text">{errors.verification.message}</ErrorText>
+        )}
 
-          <InputBoxStyle>
-            <div>
-              <p></p>
-              <input
-                style={{ width: "50%" }}
-                className="inputBox"
-                type="text"
-                {...register("verification", {
-                  required: "인증번호를 입력하세요",
-                })}
-                placeholder="인증번호 입력"
-                disabled={!isCodeSent || email === "" || isEmailVerified}
-              />
-              <button
-                type="button"
-                onClick={handleVerifyCode}
-                disabled={!code || EmailValidation.isPending || isEmailVerified}
-              >
-                인증
-              </button>
-            </div>
-            {errors.verification && (
-              <p className="error-text">{errors.verification.message}</p>
-            )}
-          </InputBoxStyle>
+        <InputBoxStyle>
+          <p>비밀번호</p>
+          <input
+            className="inputBox"
+            type="password"
+            {...register("password", { required: "비밀번호를 입력하세요" })}
+          />
+        </InputBoxStyle>
+        {errors.password && (
+          <ErrorText className="error-text">{errors.password.message}</ErrorText>
+        )}
 
-          <InputBoxStyle>
-            <div>
-              <p>비밀번호</p>
-              <input
-                className="inputBox"
-                type="password"
-                {...register("password", { required: "비밀번호를 입력하세요" })}
-              />
-            </div>
-            {errors.password && (
-              <p className="error-text">{errors.password.message}</p>
-            )}
-          </InputBoxStyle>
+        <InputBoxStyle>
+          <p>비밀번호 확인</p>
+          <input
+            className="inputBox"
+            type="password"
+            {...register("checkPassword", {
+              required: "비밀번호를 확인하세요",
+              validate: (value) =>
+                value === password || "비밀번호가 일치하지 않습니다",
+            })}
+          />
+        </InputBoxStyle>
+        {errors.checkPassword && (
+          <ErrorText className="error-text">{errors.checkPassword.message}</ErrorText>
+        )}
 
-          <InputBoxStyle>
-            <div>
-              <p>
-                비밀번호
-                <br />
-                확인
-              </p>
-              <input
-                className="inputBox"
-                type="password"
-                {...register("checkPassword", {
-                  required: "비밀번호를 확인하세요",
-                  validate: (value) =>
-                    value === password || "비밀번호가 일치하지 않습니다",
-                })}
-              />
-            </div>
-            {errors.checkPassword && (
-              <p className="error-text">{errors.checkPassword.message}</p>
-            )}
-          </InputBoxStyle>
+        <InputBoxStyle>
+          <p>이름</p>
+          <input
+            className="inputBox"
+            type="text"
+            {...register("name", { required: "이름을 입력하세요" })}
+          />        
+        </InputBoxStyle>
+        {errors.name && <ErrorText className="error-text">{errors.name.message}</ErrorText>}
 
-          <InputBoxStyle>
-            <div>
-              <p>이름</p>
-              <input
-                className="inputBox"
-                type="text"
-                {...register("name", { required: "이름을 입력하세요" })}
-              />
-            </div>
-            {errors.name && <p className="error-text">{errors.name.message}</p>}
-          </InputBoxStyle>
+        <InputBoxStyle>
+          <p>전화번호</p>
+          <input
+            className="inputBox"
+            type="text"
+            {...register("phone", { required: "전화번호를 입력하세요" })}
+            placeholder="'-'를 빼고 입력해주세요"
+          /> 
+        </InputBoxStyle>
+        {errors.phone && (
+          <ErrorText className="error-text">{errors.phone.message}</ErrorText>
+        )}
+        </InputWraapStyle>
 
-          <InputBoxStyle>
-            <div>
-              <p>전화번호</p>
-              <input
-                className="inputBox"
-                type="text"
-                {...register("phone", { required: "전화번호를 입력하세요" })}
-                placeholder="'-'를 빼고 입력해주세요"
-              />
-            </div>
-            {errors.phone && (
-              <p className="error-text">{errors.phone.message}</p>
-            )}
-          </InputBoxStyle>
-        </InputWrapperStyler>
         <Button type="submit" message="회원가입" width={40} />
       </FormStyle>
+      
       {showToast && (
         <ToastPopup
           message={toastMessage}
@@ -275,6 +261,7 @@ function SignUpForm({ type }: SignUpFormProps) {
 
 const SignUpFormStyle = styled.div`
   width: 100%;
+  height: calc(100vh - 7.5rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -288,79 +275,70 @@ const FormStyle = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem;
 
  h2 {
     font-size: 2.3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 `;
 
-const InputWrapperStyler = styled.div`
-  width: 90%;
-  height: 100%;
+const InputWraapStyle = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+  margin-bottom: 3rem;
+`
 
 const InputBoxStyle = styled.div`
-  width: 100%;
-  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  gap: 0.8rem;
+  margin-top: 1rem;
 
-  .error-text {
-    color: red;
-    position: absolute;
-    left: 28%;
-    padding-left: 0.8rem;
-    margin-top: 0.2em;
-    font-size: 0.8rem;
+  p {
+    width: 27%;
+    text-align: end;
   }
 
-  div {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+  input {
+    width: 70%;
+    font-size: 1rem;
+    padding: 0.6rem 0.5rem;
+    border: 1px solid #CDCDCD;
+    border-radius: 10px;
 
-    p {
-      color: #000000;
-      width: 25%;
-      text-align: right;
-      margin-left: 0;
-    }
-
-    input {
-      width: 70%;
-      border-radius: 10px;
-      border: 1px solid #cdcdcd;
-      padding: 0.6rem 0.5rem;
-      font-size: 0.9rem;
-
-      &:focus {
-        outline: none;
-        border: 1px solid #ffd400;
-      }
-    }
-
-    input:disabled {
-      background-color: #f5f5f5;
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-
-    button {
-      font-size: 0.9rem;
-      padding: 0.5rem 0.8rem;
-      background-color: #faed7d;
-      border: 1px solid #dbcdcd;
-      border-radius: 10px;
-
-      &:focus,
-      &:hover {
-        background-color: #ffd400;
-      }
+    &:focus {
+      outline: none;
+      border: 1px solid #FFD400;
     }
   }
+
+  input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    background-color: #faed7d;
+    border: 1px solid #dbcdcd;
+    border-radius: 10px;
+
+    &:focus, &:hover {
+      background-color: #ffd400;
+    }
+  }
+`
+
+const ErrorText = styled.p`
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.1rem;
 `;
 
 export default SignUpForm;

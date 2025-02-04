@@ -122,10 +122,11 @@ const LoginStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 9rem);
+  height: calc(100vh - 7.5rem);
 
   span {
     display: inline-flex;
+    align-items: flex-end;
     gap: 0.5em;
     margin-top: 1rem;
 
@@ -155,5 +156,5 @@ const FormStyle = styled.form`
 
 const TextFieldWrapperStyle = styled.div`
   width: 90%;
-  margin: 4rem 0 4rem;
+  margin: 3rem 0;
 `;
