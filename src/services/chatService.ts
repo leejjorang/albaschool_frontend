@@ -21,7 +21,11 @@ export const lastMessage = async (messageData: {
   return response.data;
 };
 
-export const getMessages = async (id: string) => {
-  const response = await axiosInstance.get(`/chat/${id}`);
+export const getMessages = async (
+  id: string,
+  page: string
+  //messageId?: string
+) => {
+  const response = await axiosInstance.get(`/chat/${id}?page=${page}`);
   return response.data;
 };

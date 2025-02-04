@@ -12,10 +12,10 @@ export const chatListTime = (dateString: string) => {
   const isYesterday = date.isSame(now.subtract(1, "day"), "day");
 
   if (isToday) {
-    return formatTime(dateString);
+    return String(formatTime(dateString));
   } else if (isYesterday) {
     return "어제";
   } else {
-    return formatDate(dateString)[0];
+    return String(formatDate(dateString)[0]);
   }
 };
