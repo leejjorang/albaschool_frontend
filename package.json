@@ -36,6 +36,7 @@
     "axios": "^1.7.9",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "dompurify": "^3.2.4",
     "event-source-polyfill": "^1.0.31",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",

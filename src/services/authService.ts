@@ -59,3 +59,20 @@ export const getUserInfo = async () => {
   const response = await axiosInstance.get("/auth/me");
   return response.data;
 }
+
+export const postProfile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("profile", file);
+
+  const response = await axiosInstance.post("/auth/profile", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+  return response.data;
+};
+
+export const deleteProfile = async () => {
+  const response = await axiosInstance.delete("auth/profile");
+  return response.data;
+}

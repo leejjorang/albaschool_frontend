@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { Input, InputBox } from "../../components/InputBox";
 import { Button, NegativeButton } from "../../components/Button";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { checkPassword, getUserInfo } from "../../services/authService";
-import { useEffect, useState } from "react";
+import { checkPassword, deleteProfile, getUserInfo, postProfile } from "../../services/authService";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ToastPopup from "../../components/ToastPopup";
 import { useAuthStore } from "../../stores/authStore";
@@ -20,6 +20,7 @@ const UserEdit = () => {
     contact: "",
   });
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { storeLogout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -107,6 +108,37 @@ const UserEdit = () => {
     setIsEditing(false);
   };
 
+  const {mutate: uploadFile} = useMutation({
+    mutationFn: postProfile,
+    onSuccess: () => {
+      console.log("사진 업로드 성공");
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if(!file) return;
+    uploadFile(file);
+  }
+
+  const {mutate: removeProfile} = useMutation({
+    mutationFn: deleteProfile,
+    onSuccess: () => {
+      console.log("사진 삭제 성공");
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  });
+
+  const handleRemoveProfile = () => {
+    removeProfile()
+  }
+
+
   // 로딩 상태 처리
   if (userDataLoading) return <div>로딩중...</div>;
   if (userDataError) return <div>사용자 정보를 불러오는데 실패했습니다</div>;
@@ -115,12 +147,13 @@ const UserEdit = () => {
     <div>
       <ProfileBoxStyle>
         <Avatar
-          src="/broken-image.jpg"
+          src={userData.profile}
           sx={{ width: "7.5rem", height: "7.5rem" }}
         />
+        <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{display: "none"}}/>
         <ButtonBoxStyle>
-          <Button message="사진 수정" width={35} />
-          <NegativeButton message="사진 삭제" width={35} />
+          <Button message="사진 수정" width={35} onClick={() => fileInputRef.current?.click()}/>
+          <NegativeButton message="사진 삭제" width={35} onClick={handleRemoveProfile} />
         </ButtonBoxStyle>
       </ProfileBoxStyle>
 

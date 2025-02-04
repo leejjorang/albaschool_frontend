@@ -24,7 +24,7 @@ const User = () => {
 
   return (
     <div>
-      <UserProfile userName={userData?.name} />
+      <UserProfile userName={userData?.name} profile={userData?.profile}/>
       <WorkplaceBoxStyle>
         <span>
           <h2>나의 근무지</h2>
