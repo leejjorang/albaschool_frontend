@@ -137,6 +137,32 @@ const UserEdit = () => {
     removeProfile()
   }
 
+  // 유효성 검사 함수
+const validateForm = () => {
+  const phoneRegex = /^010[0-9]{8}$/; // 010 으로 시작하는 11자리 숫자
+
+  if (!formData.name.trim()) {
+    setToastMessage("❌ 이름을 입력해주세요!");
+    setShowToast(true);
+    return false;
+  }
+
+  if (!phoneRegex.test(formData.contact)) {
+    setToastMessage("❌ 올바른 전화번호 형식이 아닙니다! ");
+    setShowToast(true);
+    return false;
+  }
+
+  return true;
+};
+
+// 수정 버튼 클릭 핸들러
+const handleUpdateClick = () => {
+  if (validateForm()) {
+    updateUser.mutate(formData);
+  }
+};
+
 
   // 로딩 상태 처리
   if (userDataLoading) return <div>로딩중...</div>;
@@ -206,7 +232,7 @@ const UserEdit = () => {
             <Button
               message="수정 완료"
               width={35}
-              onClick={() => updateUser.mutate(formData)}
+              onClick={handleUpdateClick}
             />
             <NegativeButton message="취소" width={35} onClick={handleCancel} />
           </>
