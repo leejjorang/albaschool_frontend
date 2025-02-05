@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { editPost, posting } from "../../services/educationService";
 import ToastPopup from "../../components/ToastPopup";
+import { SmallButton } from "../../components/Button";
 
 // 폼 입력 데이터 타입
 export interface postProps {
@@ -116,10 +117,11 @@ function WritePost() {
         <Box
           sx={{
             width: "100%",
-            padding: "10px",
+            padding: "10px 0",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            marginBottom: 1,
           }}
         >
           <Box
@@ -127,7 +129,7 @@ function WritePost() {
               display: "flex",
               alignItems: "center",
               fontWeight: "bold",
-              fontSize: "20px",
+              fontSize: "21px",
             }}
           >
             <ArrowBackIosIcon
@@ -147,21 +149,11 @@ function WritePost() {
             {storeName}
           </Box>
           <Box>
-            <Button
+            <SmallButton
               type="submit"
-              variant="contained"
-              size="small"
               disabled={mode === 'edit' && !isModified}
-              sx={{
-                color: "black",
-                background: "#FAED7D",
-                "&:hover": {
-                  backgroundColor: "#FFD400",
-                },
-              }}
-            >
-             {mode === 'edit' ? '수정' : '등록'}
-            </Button>
+              message={mode === 'edit' ? '수정' : '등록'}
+            />
           </Box>
         </Box>
         <TextField
