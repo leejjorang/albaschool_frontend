@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   Box,
@@ -11,11 +11,13 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import TimePick from "./TimePick";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteSchedules, postSchedules, putSchedules } from "../../services/scheduleService";
 import { getStoreMembers } from "../../services/storeService";
 import { IPostSchedule, IPutSchedule } from "../../types/schedule";
 import { IMember } from "../../types/store";
+import styled from "styled-components";
+import ToastPopup from "../ToastPopup";
 
 interface ScheduleModalProps {
   open: boolean;
@@ -44,12 +46,15 @@ const ScheduleModal = ({
   mode,
   storeId,
   scheduleId,
-  selectedMember
+  selectedMember,
 }: ScheduleModalProps) => {
   const [worker, setWorker] = useState("");
   const [day, setDay] = useState(0);
-  const [startTime, setStartTime] = useState<string | null>(null);
-  const [endTime, setEndTime] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState<string | null>("00:00");
+  const [endTime, setEndTime] = useState<string | null>("00:00");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const queryClient = useQueryClient();
 
 
   //가게 직원들 가져오기
@@ -64,21 +69,35 @@ const ScheduleModal = ({
     initialData: [] 
   });
 
+  useEffect(() => {
+    if (mode === "edit" && selectedMember) {
+      setWorker(selectedMember);
+    }
+  }, [mode, selectedMember]);
+
 
   const addMutation = useMutation({ 
     mutationFn: (data: {storeId: string; scheduleData: IPostSchedule}) => postSchedules(data.storeId, data.scheduleData),
     onSuccess: () => {
-      alert('스케줄이 추가되었습니다!');
-      onClose();
+      setToastMessage('✅ 스케줄 추가 성공!');
+      setShowToast(true);
+
+      setTimeout(() => {
+        setShowToast(false);
+        onClose();
+      }, 800);
     },
     onError: (error) => {
-      alert(error.message);
+      setToastMessage('❌ 스케줄 추가 실패!');
+      setShowToast(true);
+      console.log(error);
     }
   });
 
   const addHandler = () => {
     if(!worker || !startTime || !endTime) {
-      alert('모든 필드를 입력하세요');
+      setToastMessage('⚠️ 모든 필드를 입력하세요.');
+      setShowToast(true);
       return;
     }
 
@@ -98,22 +117,32 @@ const ScheduleModal = ({
   const editMutation = useMutation({ 
     mutationFn: (data: {scheduleId: string; scheduleData: IPutSchedule}) => putSchedules(data.scheduleId, data.scheduleData),
     onSuccess: () => {
-      alert('스케줄이 수정되었습니다!');
-      onClose();
+      setToastMessage('✅ 스케줄 수정 성공!');
+      setShowToast(true);
+      queryClient.invalidateQueries({ queryKey: ["schedule", storeId] });
+
+      setTimeout(() => {
+        setShowToast(false);
+        onClose();
+      }, 800);
     },
     onError: (error) => {
-      alert(error.message);
+      setToastMessage('❌ 스케줄 수정 실패!');
+      setShowToast(true);
+      console.log(error);
     }
   });
 
   const editHandler = () => {
     if(!scheduleId) {
-      alert('수정할 스케줄이 없습니다.');
+      setToastMessage('⚠️ 수정할 스케줄이 없습니다.');
+      setShowToast(true);
       return;
     }
 
     if(!worker || !startTime || !endTime) {
-      alert('모든 필드를 입력하세요');
+      setToastMessage('⚠️ 모든 필드를 입력하세요.');
+      setShowToast(true);
       return;
     }
 
@@ -130,16 +159,24 @@ const ScheduleModal = ({
 
   const deleteHandler = async() => {
     if(!scheduleId) {
-      alert('삭제할 스케줄이 없습니다.');
+      setToastMessage('⚠️ 삭제할 스케줄이 없습니다.');
+      setShowToast(true);
       return;
     }
 
     try {
       await deleteSchedules(scheduleId);
-      alert('스케줄이 삭제되었습니다.');
-      onClose();
+      setToastMessage('✅ 스케줄 삭제 성공!');
+      setShowToast(true);
+      queryClient.invalidateQueries({ queryKey: ["schedule", storeId] });
+
+      setTimeout(() => {
+        setShowToast(false);
+        onClose();
+      }, 800);
     } catch(error) {
-      alert('스케줄 삭제에 실패했습니다.');
+      setToastMessage('❌ 스케줄 삭제 실패!');
+      setShowToast(true);
       console.log(error);
     }
   }
@@ -213,22 +250,54 @@ const ScheduleModal = ({
           }}
         >
           {mode === "add" && (
-            <Button variant="contained" onClick={addHandler}>
-              추가
-            </Button>
+            <ButtonStyle onClick={addHandler}>추가</ButtonStyle>
           )}
           {mode === "edit" && (
             <>
-              <Button variant="contained" sx={{ backgroundColor: "grey.400" }} onClick={deleteHandler}>
-                삭제
-              </Button>
-              <Button variant="contained" onClick={editHandler}>수정</Button>
+              <NegativeButtonStyle onClick={deleteHandler}>삭제</NegativeButtonStyle>
+              <ButtonStyle onClick={editHandler}>수정</ButtonStyle>
             </>
           )}
         </Box>
+        {showToast && (
+          <ToastPopup
+            message={toastMessage}
+            setToast={setShowToast}
+            position="top"
+          />
+        )}
       </Box>
     </Modal>
   );
 };
+
+const ButtonStyle = styled.button`
+  background-color: #FAED7D;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  padding: 0.6rem 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:focus, &:hover {
+    background-color: #FFD400;
+  }
+` 
+
+const NegativeButtonStyle = styled.button`
+  background-color: #F3F3F3;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  padding: 0.6rem 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:focus, &:hover {
+    background-color: #FF9D3C;
+  }
+` 
+
 
 export default ScheduleModal;

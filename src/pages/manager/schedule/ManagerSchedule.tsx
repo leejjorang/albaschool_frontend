@@ -14,6 +14,8 @@ import { IStore } from "../../../types/store";
 import { getShopSchedules } from "../../../services/scheduleService";
 import { createEvents } from "../../../features/schedule/createEvents";
 import StoreIsEmpty from "../../../components/StoreIsEmpty";
+import styled from "styled-components";
+
 
 const ManagerSchedule = () => {
   const [storeId, setStoreId] = useState<string>('');
@@ -80,7 +82,7 @@ const ManagerSchedule = () => {
     <Box>
       <Box
         sx={{
-          padding: "1rem",
+          padding: "1rem 1rem 0",
           display: "flex",
           justifyContent: "space-between",
         }}
@@ -96,13 +98,7 @@ const ManagerSchedule = () => {
             ))}
           </Select>
         </FormControl>
-        <Button
-          onClick={handleOpen}
-          variant="contained"
-          sx={{ width: "6rem", height: "2.7rem" }}
-        >
-          추가하기
-        </Button>
+        <ButtonStyle onClick={handleOpen}>추가하기</ButtonStyle>
         <ScheduleModal
           open={modalOpen}
           onClose={handleClose}
@@ -114,5 +110,19 @@ const ManagerSchedule = () => {
     </Box>
   );
 };
+
+const ButtonStyle = styled.button`
+  background-color: #FAED7D;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  padding: 0.7rem 1.3rem;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:focus, &:hover {
+    background-color: #FFD400;
+  }
+` 
 
 export default ManagerSchedule;

@@ -109,7 +109,7 @@ const StaffSchedule = () => {
     <Box>
       <Box
         sx={{
-          padding: "1rem",
+          padding: "1rem 1rem 0",
           display: "flex",
           justifyContent: "space-between",
         }}
