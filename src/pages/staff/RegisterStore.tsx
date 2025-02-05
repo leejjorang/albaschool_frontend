@@ -1,68 +1,123 @@
-import Input from '@mui/joy/Input';
 import styled from 'styled-components';
+import { InputBox } from '../../components/InputBox';
+import { Button } from '../../components/Button';
+import { createStoreStaff } from '../../services/storeService';
+import { useForm } from "react-hook-form";
+import { useState } from 'react';
+import ToastPopup from '../../components/ToastPopup';
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+
+interface createStoreStaffProps {
+  storeId: string;
+  password: string;
+}
 
 const RegisterStore = () => {
+  const { register, handleSubmit, formState: {errors} } = useForm<createStoreStaffProps>();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: createStoreStaffProps) => {
+    const {storeId, password} = data;
+
+    try {
+      await createStoreStaff(storeId, password); 
+      setToastMessage("✅ 가게 추가 완료!");
+      setShowToast(true);
+
+      setTimeout(() => {
+        navigate('/shoplist');
+      }, 800);
+    } catch(error) {
+      if(error instanceof AxiosError) {
+        if(error.response?.data?.message) {
+          setToastMessage(`❌ ${error.response.data.message}`);
+          setShowToast(true);
+        } else {
+          setToastMessage("❌ 가게 추가 실패!");
+          setShowToast(true);
+          console.log(error);
+        }
+      } else {
+        setToastMessage("❌ 가게 추가 실패!");
+        setShowToast(true);
+        console.log(error);
+      }
+    }
+  }
+
   return (
-      <RegisterStoreStyle>
-          <h1 style={{marginBottom: '3rem'}}>가게 등록하기</h1>
-          <InputBoxStyle>
-            <p>가게 코드</p>
-            <Input
-              disabled={false}
-              placeholder="가게 코드를 입력해주세요"
-              variant="outlined"
-              sx={{ overflowY: 'hidden', width: '60%' }}
-            />
-          </InputBoxStyle>
-          <InputBoxStyle>
-            <p>비밀번호</p>
-            <Input
-              disabled={false}
-              placeholder="비밀번호를 입력해주세요"
-              variant="outlined"
-              sx={{ overflowY: 'hidden', width: '60%' }}
-            />
-          </InputBoxStyle>
-          <ButtonStyle>등록하기</ButtonStyle>
-      </RegisterStoreStyle>
+    <RegisterStoreStyle onSubmit={handleSubmit(onSubmit)}>
+      <h2>근무지 등록하기</h2>
+      <InputStyle>
+        <InputBox 
+          name='storeId' 
+          title='가게 코드' 
+          type='text' 
+          placeholder='가게 코드를 입력해주세요' 
+          required={true} 
+          titleWidth={25} 
+          width={70} 
+          register={register('storeId', {
+            pattern: {
+              value: /^[^ㄱ-ㅎ가-힣]{8}$/,
+              message: '한글을 제외한 8글자만 입력 가능합니다.'
+            }
+          })}
+        />
+        {errors.storeId && errors.storeId.message && <ErrorText>{errors.storeId.message.toString()}</ErrorText>}
+        <InputBox 
+          name='password' 
+          title='비밀번호' 
+          type='password' 
+          placeholder='비밀번호를 입력해주세요' 
+          required={true} 
+          titleWidth={25} 
+          width={70}
+          margin='1rem 0 0 0'
+          register={register('password')}
+        />
+      </InputStyle>
+      <Button message='등록하기'/>
+
+      {showToast && (
+        <ToastPopup
+          message={toastMessage}
+          setToast={setShowToast}
+          position="top"
+        />
+      )}
+    </RegisterStoreStyle>
   );
 }
 
 export default RegisterStore;
 
-const RegisterStoreStyle = styled.div`
+
+const RegisterStoreStyle = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 3.5rem - 4rem);
+  height: calc(100vh - 7.5rem);
+
+  h2 {
+    font-size: 2rem;
+  }
 `
 
-const InputBoxStyle = styled.div`
+const InputStyle = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 0.6rem;
-  width: 90%;
-  gap: 0.8rem;
-
-  p {
-    width: 20%;
-    text-align: end;
-  }
+  width: 100%;
+  margin: 4rem 0 3rem;
 `
 
-const ButtonStyle = styled.button`
-  background-color: #FAED7D;
-  border: 1px solid #DBCDCD;
-  border-radius: 15px;
-  padding: 0.7rem 1.1rem;
-  margin: 2rem 0;
-  text-align: center;
-  font-size: 1.2rem;
-  cursor: pointer;
-
-  &:focus, &:hover {
-    background-color: #FFD400;
-  }
-` 
+const ErrorText = styled.p`
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+`;

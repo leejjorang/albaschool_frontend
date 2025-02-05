@@ -8,9 +8,15 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
   @font-face {
-    font-family: 'MangoDdobak-B';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
-    font-weight: 700;
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
     font-style: normal;
   }
 
@@ -19,10 +25,14 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     overflow-x: hidden;
     box-sizing: border-box;
-    font-family: 'MangoDdobak-B';
+    font-family: 'Pretendard-Regular';
   }
 
   h1 {
     font-family: 'HakgyoansimDunggeunmisoTTF-B';
-  }  
+  } 
+
+  h2, h3, h4, h5 {
+    font-family: 'GmarketSansMedium';
+  }
 `

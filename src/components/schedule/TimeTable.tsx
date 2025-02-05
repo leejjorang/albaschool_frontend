@@ -1,36 +1,12 @@
 import { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import moment from "moment";
 import { ISchedule } from "../../types/schedule";
 import ScheduleModal from "./ScheduleModal";
 
 const localizer = momentLocalizer(moment);
-
-const createEvents = () => {
-  const today = new Date();
-  const monday = new Date(today.setDate(today.getDate() - today.getDay() + 1));
-
-  const events: ISchedule[] = [
-    {
-      id: "1",
-      title: "김알바",
-      start: new Date(monday.setHours(9, 0, 0)),
-      end: new Date(monday.setHours(10, 30, 0)),
-      color: "#FDA4AF",
-    },
-    {
-      id: "2",
-      title: "이알바",
-      start: new Date(monday.setHours(11, 0, 0)),
-      end: new Date(monday.setHours(12, 30, 0)),
-      color: "#93C5FD",
-    },
-  ];
-
-  return events;
-};
 
 const BoxStyle = {
   height: "800px",
@@ -57,28 +33,52 @@ const BoxStyle = {
   },
   "& .rbc-label": {
     //시간 폰트사이즈
-    fontSize: "0.95rem",
+    fontSize: "0.8rem",
   },
   "& .rbc-events-container": {
     margin: "0",
   },
   "& .rbc-event-content div": {
     overflow: "hidden",
+    pt: "0.3rem",
   },
   "& .rbc-current-time-indicator": {
     opacity: "0",
   },
-  "& .rbc-event-selected": {
-    backgroundColor: "transparent",
+  "& .rbc-day-slot": {
+    overflow: "hidden",
+  },
+  "& .rbc-time-gutter": {
+    overflow: "hidden",
+  },
+  "& .rbc-time-header-gutter": {
+    pr: "2.45rem",
   },
 };
 
-const TimeTable = () => {
-  const [events] = useState<ISchedule[]>(createEvents());
+interface TimeTableProps {
+  events: ISchedule[];
+  storeId?: string;
+  openTime?: string;
+  closeTime?: string;
+}
+
+const TimeTable = ({
+  events,
+  openTime = "00:00:00",
+  closeTime = "23:59:59",
+  storeId,
+}: TimeTableProps) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState<
+    ISchedule | undefined
+  >();
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
+
+  const open = openTime.split(":");
+  const close = closeTime.split(":");
 
   const eventStyleGetter = (event: ISchedule) => {
     return {
@@ -98,9 +98,12 @@ const TimeTable = () => {
     </div>
   );
 
-  const handelSelectEvent = () => {
+  const handelSelectEvent = (event: ISchedule) => {
+    setSelectedSchedule(event);
     handleOpen();
   };
+
+  const role = localStorage.getItem("role");
 
   return (
     <div>
@@ -110,8 +113,8 @@ const TimeTable = () => {
           events={events}
           defaultView="week"
           views={["week"]}
-          min={new Date(0, 0, 0, 6, 0, 0)} // 오전 9시부터
-          max={new Date(0, 0, 0, 18, 0, 0)} // 오후 6시까지
+          min={new Date(0, 0, 0, +open[0], +open[1], +open[2])} // 오전 9시부터
+          max={new Date(0, 0, 0, +close[0], +close[1], +close[2])} // 오후 6시까지
           step={60}
           timeslots={1}
           eventPropGetter={eventStyleGetter}
@@ -127,12 +130,16 @@ const TimeTable = () => {
           onSelectEvent={handelSelectEvent}
         />
       </Box>
-      <ScheduleModal open={modalOpen} onClose={handleClose}>
-        <Button variant="contained">수정</Button>
-        <Button variant="contained" sx={{ backgroundColor: "grey.400" }}>
-          삭제
-        </Button>
-      </ScheduleModal>
+      {storeId && role !== "staff" && (
+        <ScheduleModal
+          open={modalOpen}
+          onClose={handleClose}
+          mode="edit"
+          storeId={storeId}
+          scheduleId={selectedSchedule?.id}
+          selectedMember={selectedSchedule?.title}
+        />
+      )}
     </div>
   );
 };

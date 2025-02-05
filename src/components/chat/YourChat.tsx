@@ -28,4 +28,8 @@ const YourChatStyle = styled.div`
   display: flex;
   gap: 0.3rem;
   margin-left: 0.5rem;
+
+  p {
+    margin-bottom: 0.1rem;
+  }
 `

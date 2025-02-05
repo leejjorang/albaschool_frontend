@@ -1,88 +1,77 @@
-import Avatar from '@mui/material/Avatar';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import { useState } from 'react';
-import styled from 'styled-components';
+import styled from "styled-components";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import UserProfile from "../../components/user/UserProfile";
+import { StaffStoreCard } from "../../components/user/Card";
+import { Link } from "react-router-dom";
+import { getUserInfo } from "../../services/authService";
+import { useQuery } from "@tanstack/react-query";
+import { getStore } from "../../services/storeService";
+import { IStore } from "../../types/store";
 
 const User = () => {
-  const [userName, setUserName] = useState<string>("홍길동");
+  // 사용자 정보 가져오기
+  const { data: userData } = useQuery({
+    queryKey: ["userData"],
+    queryFn: getUserInfo,
+  });
 
+  // 내가 속한 가게 조회
+  const { data: stores } = useQuery({
+    queryKey: ["stores"],
+    queryFn: getStore,
+    initialData: [],
+    retry: false,
+  });
 
   return (
     <div>
-      <ProfileBoxStyle>
-        <Avatar src="/broken-image.jpg" sx={{ width: '6.5rem', height: '6.5rem' }}/>
-        <div>
-          <h2>{userName} 님</h2>
-          <TextWrapperStyle>
-            <SettingsIcon sx={{ color: '#5F6368' }}/>
-            <p>회원 정보</p>
-          </TextWrapperStyle>
-        </div>
-      </ProfileBoxStyle>
-
+      <UserProfile userName={userData?.name} profile={userData?.profile} />
       <WorkplaceBoxStyle>
-        <TextWrapperStyle>
+        <span>
           <h2>나의 근무지</h2>
-          <ControlPointIcon />
-        </TextWrapperStyle>
-        <ButtonBoxStyle>
-          <ButtonStyle>솥뚜껑 삼겹살</ButtonStyle>
-          <ButtonStyle>서브웨이</ButtonStyle>
-          <ButtonStyle>CU 편의점</ButtonStyle>
-        </ButtonBoxStyle>
+          <Link to={"/store/register/staff"}>
+            <ControlPointIcon />
+          </Link>
+        </span>
+        <CardBoxStyle>
+          {stores?.length === 0 ? (
+            <div style={{ color: "#5F6368" }}>가게를 추가해주세요 😊</div>
+          ) : (
+            stores?.map((data: IStore) => (
+              <StaffStoreCard key={data.id} storeName={data.title} />
+            ))
+          )}
+        </CardBoxStyle>
       </WorkplaceBoxStyle>
-
     </div>
   );
 };
 
 export default User;
 
-const ProfileBoxStyle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 1.5rem;
+const WorkplaceBoxStyle = styled.div`
+  margin: 1rem 1.5rem;
 
   h2 {
-    font-size: 1.8rem;
-    margin-bottom: 0.4rem;
+    font-size: 1.35rem;
   }
 
-  p {
-    font-size: 1.3rem;
-    color: #5F6368;
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
   }
-`
 
-const TextWrapperStyle = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-`
+  a {
+    display: flex;
+    color: #000000;
+  }
+`;
 
-const WorkplaceBoxStyle = styled.div`
-  margin: 3rem 1.5rem 1rem 1.5rem;
-`
-
-const ButtonBoxStyle = styled.div`
+const CardBoxStyle = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
-  align-items: center;
-`
-
-const ButtonStyle = styled.button`
-  background-color: #F7F6F6;
-  border: 1px solid #DBCDCD;
-  border-radius: 10px;
-  width: 100%;
-  padding: 0.9rem 0.5rem;
-  font-size: 1.4rem;
-
-  &:focus, &:hover { 
-    background-color: #FAED7D;
-  }
-`
+`;

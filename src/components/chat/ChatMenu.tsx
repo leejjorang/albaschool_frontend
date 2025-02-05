@@ -1,20 +1,31 @@
 import styled from "styled-components";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ProfileBox from "./ProfileBox";
+import { IChatMember } from "../../types/chat";
+import { getUserInfo } from "../../services/authService";
+import { useQuery } from "@tanstack/react-query";
 
-const ChatMenu = ({toggleMenu}: {toggleMenu: () => void}) => {
+const ChatMenu = ({toggleMenu, members}: {toggleMenu: () => void; members: IChatMember[]}) => {
+  const { data: myInfo } = useQuery({
+    queryKey: ["myInfo"], 
+    queryFn: () => getUserInfo(),
+    initialData: [],
+  });
+
+  const chatMembers = members.filter((member) => (myInfo.id !== member.userId))
+
   return (
     <BackgroundStyle>
       <ChatMenuStyle>
         <MenuHeaderStyle>
-          <p>참여 직원</p>
+          <h6>참여 직원</h6>
           <ClearOutlinedIcon onClick={toggleMenu} />
         </MenuHeaderStyle>
         <div>
-          <ProfileBox name="이직원" my={true} />
-          <ProfileBox name="김사장" profile="https://picsum.photos/id/49/200/300.jpg" />
-          <ProfileBox name="이알바" />
-          <ProfileBox name="김알바" />
+          <ProfileBox name={myInfo.name} profile={myInfo.profile} my={true}/>
+          {chatMembers.map((member) => (
+            <ProfileBox key={member.userId} name={member.name} profile={member.profile} />
+          ))}
         </div>
       </ChatMenuStyle>
     </BackgroundStyle>
@@ -30,7 +41,7 @@ const BackgroundStyle = styled.div`
   left: 0;
   right: 0;
   z-index: 20;
-  height: 86vh;
+  height: calc(100vh - 3.4rem - 4rem);
   background-color: rgba(0, 0, 0, 0.4);
 `
 
@@ -45,6 +56,6 @@ const MenuHeaderStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.9rem;
+  padding: 0.95rem 0.8rem;
   border-bottom: 1px solid #CDCDCD;
 `

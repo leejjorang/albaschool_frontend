@@ -1,134 +1,160 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { TextField } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "../../components/Button";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../../services/authService";
+import { useAuthStore } from "../../stores/authStore";
+import { useState } from "react";
+import ToastPopup from "../../components/ToastPopup";
 
-interface LoginProps {
+export interface LoginProps {
   email: string;
   password: string;
 }
-
-const StyledForm = styled.form`
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 20px;
-`;
 
 const commonTextFieldStyle = {
   width: "100%",
   "& .MuiInput-underline:before": {
     borderBottomColor: "black",
   },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "#FFD400",
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "#FFD400",
-  },
 };
 
-function Login() {
+const Login = () => {
+  const { storeLogin } = useAuthStore();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginProps>();
+  const navigate = useNavigate();
 
-  const onSubmit = async () => {
-    //백엔드에 데이터 전송
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      setToastMessage("✅ 로그인 성공!");
+      setShowToast(true);
+      storeLogin(data.token); // 상태 변화
+
+      localStorage.setItem("role", data.role); // 역할 저장
+
+      setTimeout(() => {
+        if (data.role === "staff") {
+          navigate("/staff");
+        } else if (data.role === "manager") {
+          navigate("/manager");
+        }
+      }, 800);
+    },
+    onError: (error) => {
+      setToastMessage("아이디 또는 비밀번호를 확인해주세요.");
+      setShowToast(true);
+      console.error(error);
+    },
+  });
+
+  const onSubmit = async (data: LoginProps) => {
+    loginMutation.mutate(data);
   };
 
   return (
     <LoginStyle>
-      <StyledForm onSubmit={handleSubmit(onSubmit)}>
-        <Typography
-          component="h1"
-          variant="h4"
-          sx={{ 
-            fontWeight: "bold",
-            marginBottom: 4
-          }}
-        >
-          Login
-        </Typography>
-        
-        <TextField
-          fullWidth
-          variant="standard"
-          label="이메일"
-          {...register("email", {
-            required: "이메일을 입력하세요",
-            pattern: {
-              value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i,
-              message: "올바른 이메일 형식이 아닙니다",
-            },
-          })}
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          sx={{
-            ...commonTextFieldStyle,
-            marginBottom: 2,
-          }}
+      <FormStyle onSubmit={handleSubmit(onSubmit)}>
+        <h2>로그인</h2>
+        <TextFieldWrapperStyle>
+          <TextField
+            fullWidth
+            variant="standard"
+            label="이메일"
+            {...register("email", {
+              required: "이메일을 입력하세요",
+              pattern: {
+                value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i,
+                message: "올바른 이메일 형식이 아닙니다",
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            sx={{
+              ...commonTextFieldStyle,
+              marginBottom: 2,
+            }}
+          />
+          <TextField
+            fullWidth
+            variant="standard"
+            type="password"
+            label="비밀번호"
+            {...register("password", { required: "비밀번호를 입력하세요" })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            sx={{
+              ...commonTextFieldStyle,
+            }}
+          />
+        </TextFieldWrapperStyle>
+        <Button type="submit" message="로그인" width={56} />
+      </FormStyle>
+      <span>
+        <p>계정이 없으신가요?</p>
+        <Link to="/signup/role">회원가입</Link>
+      </span>
+      {showToast && (
+        <ToastPopup
+          message={toastMessage}
+          setToast={setShowToast}
+          position="top"
         />
-        
-        <TextField
-          fullWidth
-          variant="standard"
-          type="password"
-          label="비밀번호"
-          {...register("password", { required: "비밀번호를 입력하세요" })}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-          sx={{
-            ...commonTextFieldStyle,
-            marginBottom: 3,
-          }}
-        />
-
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            width:"40%",
-            marginBottom: 3,
-            color: "black",
-            background: "#FAED7D",
-            "&:hover": {
-              backgroundColor: "#FFD400",
-            },
-          }}
-        >
-          로그인
-        </Button>
-      </StyledForm>
-
-      <Box sx={{ display: "flex", gap: 1 }}>
-        <Typography>계정이 없으신가요?</Typography>
-        <Typography 
-          component="span" 
-          sx={{ 
-            cursor: 'pointer',
-            color: '#FFD400',
-            '&:hover': {
-              textDecoration: 'underline'
-            }
-          }}
-        >
-          회원가입
-        </Typography>
-      </Box>
+      )}
     </LoginStyle>
   );
-}
+};
+
+export default Login;
 
 const LoginStyle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 8rem);
+  height: calc(100vh - 7.5rem);
+
+  span {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.5em;
+    margin-top: 1rem;
+
+    a {
+      cursor: pointer;
+      text-decoration: none;
+      color: #ffd400;
+
+      &:hover: {
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
-export default Login;
+const FormStyle = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+
+  h2 {
+    font-size: 2rem;
+  }
+`;
+
+const TextFieldWrapperStyle = styled.div`
+  width: 90%;
+  margin: 3rem 0;
+`;

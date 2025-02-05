@@ -1,39 +1,59 @@
 import React from "react";
-import { Paper, Typography, Box } from "@mui/material";
+import styled from "styled-components";
 
-const NoticeCard = () => {
+interface NoticeCardProps {
+  storeName: string;
+  message: string;
+  time: string;
+}
+
+const NoticeCard: React.FC<NoticeCardProps> = ({
+  storeName,
+  message,
+  time,
+}) => {
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 1.5,
-        borderRadius: "16px",
-        border: "1px solid black",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="subtitle1"
-          component="div"
-          sx={{ fontWeight: "bold" }}
+    <NoticeBoxStyle>
+      <div style={{ maxWidth: "60%" }}>
+        <p
+          style={{
+            fontSize: "1.1rem",
+            fontWeight: "600",
+            marginBottom: "0.3rem",
+          }}
         >
-          솥뚜껑 삼겹살
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          3분전
-        </Typography>
-      </Box>
-      <Typography variant="body2" color="text.primary">
-        김알바님이 추가되었습니다.
-      </Typography>
-    </Paper>
+          {storeName}
+        </p>
+        <p style={{ color: "#565656" }}>{message}</p>
+      </div>
+      <TimeBoxStyle>
+        <p style={{color: "#7E7E7E"}}>{time}</p>
+      </TimeBoxStyle>
+    </NoticeBoxStyle>
   );
 };
 
 export default NoticeCard;
+
+const NoticeBoxStyle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #cdcdcd;
+  width: 93%;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+
+  p {
+    font-size: 1rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+`;
+
+const TimeBoxStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+`;

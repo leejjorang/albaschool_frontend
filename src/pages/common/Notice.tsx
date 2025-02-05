@@ -1,20 +1,53 @@
+import styled from "styled-components";
 import NoticeCard from "../../components/NoticeCard";
-import { Box } from "@mui/material";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { getNotifications, putRead } from "../../services/NotificationService";
+import { chatListTime } from "../../utils/chatListTime";
+import { INotification } from "../../types/notification";
+import { chatNotificationStore } from "../../stores/chatNotificationStore";
 
 const Notice = () => {
+  const setUnreadNotifications = chatNotificationStore(
+    (state) => state.setUnreadNotifications
+  );
+  const mutation = useMutation({
+    mutationFn: putRead,
+    onSuccess: (data) => {
+      console.log("Update successful:", data);
+    },
+    onError: (error) => {
+      console.error("Update failed:", error);
+    },
+  });
+  useEffect(() => {
+    mutation.mutate();
+    setUnreadNotifications(false);
+  }, []);
+  const { data } = useQuery<INotification[]>({
+    queryKey: ["notifications"],
+    queryFn: getNotifications,
+  });
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.5rem",
-        p: "1rem",
-      }}
-    >
-      <NoticeCard />
-      <NoticeCard />
-    </Box>
+    <ChatListStyle>
+      {data?.map((notice) => (
+        <NoticeCard
+          key={notice.id}
+          storeName={notice.title}
+          message={notice.content}
+          time={chatListTime(notice.createdAt)}
+        />
+      ))}
+    </ChatListStyle>
   );
 };
 
 export default Notice;
+
+const ChatListStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1rem 0;
+`;
