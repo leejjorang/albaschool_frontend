@@ -48,11 +48,13 @@ const Layout = ({ children }: LayoutProps) => {
       },
       onChatNotification: (data) => {
         if (location.pathname.startsWith("/chats")) {
+          console.log("sse pass");
           return;
+        } else {
+          console.log("New Chat Notification:", data);
+          setUnreadMessages(true);
+          setShake(true);
         }
-        console.log("New Chat Notification:", data);
-        setUnreadMessages(true);
-        setShake(true);
       },
     });
     return () => {
