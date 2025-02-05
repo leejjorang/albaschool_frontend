@@ -63,7 +63,7 @@ const Layout = ({ children }: LayoutProps) => {
     <LayoutStyle>
       <Header />
       <MainStyle>{children}</MainStyle>
-      <Bottom notification={true} />
+      <Bottom />
     </LayoutStyle>
   );
 };
@@ -73,7 +73,6 @@ export default Layout;
 const LayoutStyle = styled.div`
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 `;
 const MainStyle = styled.div`
   margin-top: 3.5rem;
