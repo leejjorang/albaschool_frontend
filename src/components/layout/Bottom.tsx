@@ -1,20 +1,14 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import * as React from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { useNavigate } from "react-router-dom";
-import { Badge } from "@mui/material";
 import ChatIcon from "./ChatIcon";
 
-interface BottomProps {
-  notification: boolean;
-}
-
-const Bottom = ({ notification }: BottomProps) => {
+const Bottom = () => {
   const [value, setValue] = React.useState("schedule");
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
@@ -56,7 +50,7 @@ const Bottom = ({ notification }: BottomProps) => {
         <BottomNavigationAction
           label="채팅"
           value="chat"
-          icon={<ChatIcon notification={notification} />}
+          icon={<ChatIcon />}
           sx={{ "&.Mui-selected": { color: "#FF6F00" } }}
         />
         <BottomNavigationAction
