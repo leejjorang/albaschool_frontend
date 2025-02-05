@@ -17,7 +17,7 @@ const NoticeCard: React.FC<NoticeCardProps> = ({
       <div style={{ maxWidth: "60%" }}>
         <p
           style={{
-            fontSize: "1.2rem",
+            fontSize: "1.1rem",
             fontWeight: "600",
             marginBottom: "0.3rem",
           }}
@@ -27,7 +27,7 @@ const NoticeCard: React.FC<NoticeCardProps> = ({
         <p style={{ color: "#565656" }}>{message}</p>
       </div>
       <TimeBoxStyle>
-        <p>{time}</p>
+        <p style={{color: "#7E7E7E"}}>{time}</p>
       </TimeBoxStyle>
     </NoticeBoxStyle>
   );
@@ -38,7 +38,7 @@ export default NoticeCard;
 const NoticeBoxStyle = styled.div`
   display: flex;
   justify-content: space-between;
-  border: 1px solid #000000;
+  border: 1px solid #cdcdcd;
   width: 93%;
   padding: 0.7rem 1rem;
   border-radius: 10px;
