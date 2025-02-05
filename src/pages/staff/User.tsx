@@ -52,6 +52,10 @@ export default User;
 const WorkplaceBoxStyle = styled.div`
   margin: 1rem 1.5rem;
 
+  h2 {
+    font-size: 1.35rem;
+  }
+
   span {
     display: flex;
     align-items: center;

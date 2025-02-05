@@ -3,7 +3,7 @@ import { InputBox } from "../../components/InputBox";
 import { Button, NegativeButton } from "../../components/Button";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { InputBoxStyle, InputStyle } from "./RegisterStore";
+import { InputStyle } from "./RegisterStore";
 import TimePick from "../../components/schedule/TimePick";
 import ToastPopup from "../../components/ToastPopup";
 import { useMutation } from "@tanstack/react-query";
@@ -84,8 +84,9 @@ const UpdateStore = () => {
           type="password"
           placeholder="비밀번호를 변경해주세요"
           required={true}
-          titleWidth={25}
-          width={70}
+          titleWidth={23}
+          width={69}
+          margin='1rem 0 0 0'
           register={register("password")}
         />
         <InputBoxStyle>
@@ -140,5 +141,19 @@ const UpdateStorerStyle = styled.form`
     font-size: 2rem;
   }
 `;
+
+export const InputBoxStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  gap: 0.8rem;
+  margin-top: 1rem;
+
+  p {
+    width: 23%;
+    text-align: end;
+  }
+`
 
 export default UpdateStore;

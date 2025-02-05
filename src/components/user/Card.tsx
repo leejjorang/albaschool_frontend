@@ -53,7 +53,7 @@ export const ManagerStoreCard: React.FC<managerStoreCardProps> = ({
   return (
     <ManagerCardStyle>
       <span>
-        <p>{storeName}</p>
+        <p style={{ fontWeight: "600" }}>{storeName}</p>
         <p style={{ color: "#7E7E7E" }}>{storeCode}</p>
       </span>
       <EditOutlinedIcon sx={{ cursor: "pointer" }} onClick={handleEditClick}/>
@@ -86,8 +86,8 @@ export const ManagerStaffCard: React.FC<StaffCardProps> = ({
 
   return (
     <ManagerCardStyle>
-      <p style={{ width: "26%" }}>{staffName}</p>
-      <p>{staffPhone}</p>
+      <p style={{ width: "30%" }}>{staffName}</p>
+      <p style={{ width: "55%" }}>{staffPhone}</p>
       <RemoveIcon
         sx={{ color: "red", cursor: "pointer" }}
         onClick={() => setIsOpen(true)}
@@ -109,16 +109,12 @@ export const ManagerStaffCard: React.FC<StaffCardProps> = ({
 
 const StaffCardStyle = styled.div`
   border: 1px solid #cdcdcd;
+  background-color: #fcfcfc;
   border-radius: 10px;
   width: 100%;
-  padding: 0.8rem 0.8rem;
-  font-size: 1.3rem;
+  padding: 1rem 0.8rem;
+  font-size: 1.15rem;
   text-align: center;
-
-  &:focus,
-  &:hover {
-    background-color: #faed7d;
-  }
 `;
 
 const ManagerCardStyle = styled.div`
@@ -126,20 +122,20 @@ const ManagerCardStyle = styled.div`
   justify-content: space-between;
   align-items: center;
   border: 1px solid #cdcdcd;
+  background-color: #fcfcfc;
   border-radius: 10px;
   width: 100%;
-  padding: 0.8rem 0.8rem;
+  padding: 1rem 0.8rem;
   font-size: 1.3rem;
-
-  &:focus,
-  &:hover {
-    background-color: #faed7d;
-  }
 
   span {
     display: inline-flex;
     gap: 0.5rem;
     width: 80%;
+  }
+
+  p {
+    font-size: 1.15rem;
   }
 `;
 

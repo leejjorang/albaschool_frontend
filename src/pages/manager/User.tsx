@@ -20,6 +20,7 @@ import { IStore } from "../../types/store";
 import { useEffect, useState } from "react";
 import ToastPopup from "../../components/ToastPopup";
 import { AxiosError } from "axios";
+import { formatPhoneNumber } from "../../utils/phoneNumber";
 
 interface staffProps {
   id: string;
@@ -173,7 +174,7 @@ const User = () => {
         </span>
         <CardBoxStyle>
           {stores?.length === 0 || staffs?.length <=1 ? (
-            <div style={{ color: "#5F6368" }}>현재 직원이 없습니다</div>
+            <div style={{ color: "#5F6368"}}>현재 직원이 없습니다</div>
           ) : (
             staffs
               ?.filter((data: staffProps) => myId !== data.id)
@@ -181,7 +182,7 @@ const User = () => {
                 <ManagerStaffCard
                   key={data.id}
                   staffName={data.name}
-                  staffPhone={data.contact}
+                  staffPhone={formatPhoneNumber(data.contact)}
                   onDelete={() => handleMemberDelete(data.id)}
                 />
               ))
@@ -204,7 +205,11 @@ export default User;
 const WorkplaceBoxStyle = styled.div`
   margin: 1rem 1.5rem;
 
-  span {
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  > span {
     display: flex;
     align-items: center;
     gap: 0.3rem;
@@ -218,6 +223,10 @@ const WorkplaceBoxStyle = styled.div`
 
 const StaffBoxStyle = styled.div`
   margin: 1.5rem 1.5rem;
+
+  h2 {
+    font-size: 1.35rem;
+  }
 
   span {
     display: flex;
