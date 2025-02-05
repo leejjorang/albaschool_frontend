@@ -18,3 +18,9 @@ export interface IChatRoom {
   memberCount: number;
   title: string;
 }
+
+export interface IChatMember { 
+  userId: string;
+  name: string;
+  profile: string;
+}

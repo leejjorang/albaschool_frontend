@@ -6,7 +6,6 @@ import { getNotifications, putRead } from "../../services/NotificationService";
 import { chatListTime } from "../../utils/chatListTime";
 import { INotification } from "../../types/notification";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
-import { utcToKtc } from "../../utils/utcToKtc";
 
 const Notice = () => {
   const setUnreadNotifications = chatNotificationStore(
@@ -50,5 +49,5 @@ const ChatListStyle = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
-  margin-top: 1rem;
+  margin: 1rem 0;
 `;

@@ -5,7 +5,7 @@ import MyChat from "./MyChat";
 
 import { jwtDecode } from "jwt-decode";
 import { formatDate, formatTime } from "../../utils/time";
-import { Messages } from "../../types/chat";
+import { IChatMember, Message } from "../../types/chat";
 import React from "react";
 import { getToken } from "../../stores/authStore";
 
@@ -14,7 +14,7 @@ interface DecodedToken {
   name: string;
 }
 
-const ChatContainer = ({ messages }: Messages) => {
+const ChatContainer = ({ messages, members }: {messages: Message[]; members: IChatMember[]}) => {
   const token = getToken();
   const decoded = jwtDecode<DecodedToken>(token as string);
 
@@ -27,6 +27,8 @@ const ChatContainer = ({ messages }: Messages) => {
         if (checkDate) {
           lastDate = Number(formatDate(message.createdAt)[1]);
         }
+
+        const sender = members.find((member) => member.userId === message.senderId);
 
         return (
           <React.Fragment key={message.id || i}>
@@ -41,7 +43,7 @@ const ChatContainer = ({ messages }: Messages) => {
             ) : (
               <YourChat
                 senderName={message.name}
-                profile="https://picsum.photos/id/49/200/300.jpg"
+                profile={sender?.profile}
                 message={message.content}
                 time={formatTime(message.createdAt)}
               />
@@ -56,7 +58,7 @@ const ChatContainer = ({ messages }: Messages) => {
 export default ChatContainer;
 
 const ChatBoxStyle = styled.div`
-  min-height: 72.5vh;
+  min-height: 74vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

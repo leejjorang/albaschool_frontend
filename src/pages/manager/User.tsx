@@ -19,6 +19,8 @@ import {
 import { IStore } from "../../types/store";
 import { useEffect, useState } from "react";
 import ToastPopup from "../../components/ToastPopup";
+import { AxiosError } from "axios";
+import { formatPhoneNumber } from "../../utils/phoneNumber";
 
 interface staffProps {
   id: string;
@@ -43,8 +45,19 @@ const User = () => {
   // 내가 속한 가게 조회
   const { data: stores } = useQuery({
     queryKey: ["stores"],
-    queryFn: getStore,
+    queryFn: async () => {
+      try {
+        const response = await getStore();
+        return response;
+      } catch (error) {
+        if (error instanceof AxiosError && error.response?.status === 404) {
+          return [];
+        }
+        throw error;
+      }
+    },
     initialData: [],
+    retry: false,
   });
 
   const [category, setCategory] = React.useState("");
@@ -60,6 +73,7 @@ const User = () => {
     queryFn: () => getStoreMembers(category),
     enabled: !!category, // category 가 있을 때만 쿼리 실행
     initialData: [],
+    retry: false,
   });
 
   // 직원 삭제
@@ -69,6 +83,7 @@ const User = () => {
     onSuccess: () => {
       setToastMessage("✅ 직원 삭제 완료!");
       setShowToast(true);
+      queryClient.invalidateQueries({ queryKey: ["staffs", category] });
     },
     onError: () => {
       setToastMessage("❌ 직원 삭제 실패!");
@@ -78,12 +93,11 @@ const User = () => {
 
   // 가게 삭제
   const deleteStoreById = useMutation({
-    mutationFn: (storeId: string ) =>
-      deleteStore(storeId),
+    mutationFn: (storeId: string) => deleteStore(storeId),
     onSuccess: () => {
       setToastMessage("✅ 가게 삭제 완료!");
       setShowToast(true);
-      queryClient.invalidateQueries({ queryKey: ['stores'] });
+      queryClient.invalidateQueries({ queryKey: ["stores"] });
     },
     onError: () => {
       setToastMessage("❌ 가게 삭제 실패!");
@@ -98,7 +112,7 @@ const User = () => {
     });
   };
 
-  const handleStoreDelete = (storeId:string) => {
+  const handleStoreDelete = (storeId: string) => {
     deleteStoreById.mutate(storeId);
   };
 
@@ -108,7 +122,7 @@ const User = () => {
 
   return (
     <div>
-      <UserProfile userName={userData?.name} profile={userData?.profile}/>
+      <UserProfile userName={userData?.name} profile={userData?.profile} />
       <WorkplaceBoxStyle>
         <span>
           <h2>가게 관리</h2>
@@ -117,16 +131,20 @@ const User = () => {
           </Link>
         </span>
         <CardBoxStyle>
-          {stores?.map((data: IStore) => (
-            <ManagerStoreCard
-              key={data.id}
-              storeName={data.title}
-              storeCode={data.id}
-              openTime={data.openTime}
-              closeTime={data.closeTime}
-              onDelete={() => handleStoreDelete(data.id)}
-            />
-          ))}
+          {stores?.length === 0 ? (
+            <div style={{ color: "#5F6368" }}>가게를 추가해주세요 😊</div>
+          ) : (
+            stores?.map((data: IStore) => (
+              <ManagerStoreCard
+                key={data.id}
+                storeName={data.title}
+                storeCode={data.id}
+                openTime={data.openTime}
+                closeTime={data.closeTime}
+                onDelete={() => handleStoreDelete(data.id)}
+              />
+            ))
+          )}
         </CardBoxStyle>
       </WorkplaceBoxStyle>
       <StaffBoxStyle>
@@ -155,16 +173,20 @@ const User = () => {
           </FormControl>
         </span>
         <CardBoxStyle>
-          {staffs
-            ?.filter((data:staffProps) => myId !== data.id)
-            .map((data: staffProps) => (
-              <ManagerStaffCard
-                key={data.id}
-                staffName={data.name}
-                staffPhone={data.contact}
-                onDelete={() => handleMemberDelete(data.id)}
-              />
-            ))}
+          {stores?.length === 0 || staffs?.length <=1 ? (
+            <div style={{ color: "#5F6368"}}>현재 직원이 없습니다</div>
+          ) : (
+            staffs
+              ?.filter((data: staffProps) => myId !== data.id)
+              .map((data: staffProps) => (
+                <ManagerStaffCard
+                  key={data.id}
+                  staffName={data.name}
+                  staffPhone={formatPhoneNumber(data.contact)}
+                  onDelete={() => handleMemberDelete(data.id)}
+                />
+              ))
+          )}
         </CardBoxStyle>
         {showToast && (
           <ToastPopup
@@ -183,7 +205,11 @@ export default User;
 const WorkplaceBoxStyle = styled.div`
   margin: 1rem 1.5rem;
 
-  span {
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  > span {
     display: flex;
     align-items: center;
     gap: 0.3rem;
@@ -197,6 +223,10 @@ const WorkplaceBoxStyle = styled.div`
 
 const StaffBoxStyle = styled.div`
   margin: 1.5rem 1.5rem;
+
+  h2 {
+    font-size: 1.35rem;
+  }
 
   span {
     display: flex;

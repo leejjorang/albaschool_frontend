@@ -52,7 +52,7 @@ const BoxStyle = {
     overflow: "hidden",
   },
   "& .rbc-time-header-gutter": {
-    pr: "2.7rem",
+    pr: "2.45rem",
   },
 };
 

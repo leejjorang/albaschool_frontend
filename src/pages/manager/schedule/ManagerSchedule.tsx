@@ -13,6 +13,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { IStore } from "../../../types/store";
 import { getShopSchedules } from "../../../services/scheduleService";
 import { createEvents } from "../../../features/schedule/createEvents";
+import StoreIsEmpty from "../../../components/StoreIsEmpty";
+import styled from "styled-components";
+
 
 const ManagerSchedule = () => {
   const [storeId, setStoreId] = useState<string>('');
@@ -32,12 +35,12 @@ const ManagerSchedule = () => {
   //가게 정보들 가져오기
   const {
     data: stores,
-    error: storesError,
     isLoading: storeLoading,
   } = useQuery({
     queryKey: ["stores"],
     queryFn: getStore,
-    initialData: []
+    initialData: [],
+    retry: false,
   });
 
   //해당 가게의 스케쥴 가져오기
@@ -71,8 +74,7 @@ const ManagerSchedule = () => {
 
 
   if (storeLoading) return <div>로딩중...</div>;
-  if (storesError) return <div>에러가 발생했습니다</div>;
-  if (!stores?.length) return <div>매장 정보가 없습니다</div>;
+  if (!stores?.length) return <StoreIsEmpty />;
 
   if (schedulesLoading) return <div>가게 스케줄 로딩중...</div>;
 
@@ -80,7 +82,7 @@ const ManagerSchedule = () => {
     <Box>
       <Box
         sx={{
-          padding: "1rem",
+          padding: "1rem 1rem 0",
           display: "flex",
           justifyContent: "space-between",
         }}
@@ -96,13 +98,7 @@ const ManagerSchedule = () => {
             ))}
           </Select>
         </FormControl>
-        <Button
-          onClick={handleOpen}
-          variant="contained"
-          sx={{ width: "6rem", height: "2.7rem" }}
-        >
-          추가하기
-        </Button>
+        <ButtonStyle onClick={handleOpen}>추가하기</ButtonStyle>
         <ScheduleModal
           open={modalOpen}
           onClose={handleClose}
@@ -114,5 +110,19 @@ const ManagerSchedule = () => {
     </Box>
   );
 };
+
+const ButtonStyle = styled.button`
+  background-color: #FAED7D;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  padding: 0.7rem 1.3rem;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:focus, &:hover {
+    background-color: #FFD400;
+  }
+` 
 
 export default ManagerSchedule;

@@ -60,6 +60,14 @@ export const getUserInfo = async () => {
   return response.data;
 }
 
+export const updateUserInfo = async (name: string, contact:string) => {
+  const response = await axiosInstance.put("/auth/update",{
+    name: name,
+    contact: contact
+  })
+  return response.data;
+}
+
 export const postProfile = async (file: File) => {
   const formData = new FormData();
   formData.append("profile", file);

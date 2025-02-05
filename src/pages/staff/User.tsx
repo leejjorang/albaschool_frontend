@@ -20,11 +20,12 @@ const User = () => {
     queryKey: ["stores"],
     queryFn: getStore,
     initialData: [],
+    retry: false,
   });
 
   return (
     <div>
-      <UserProfile userName={userData?.name} profile={userData?.profile}/>
+      <UserProfile userName={userData?.name} profile={userData?.profile} />
       <WorkplaceBoxStyle>
         <span>
           <h2>나의 근무지</h2>
@@ -33,12 +34,13 @@ const User = () => {
           </Link>
         </span>
         <CardBoxStyle>
-          {stores?.map((data: IStore) => (
-            <StaffStoreCard
-              key={data.id}
-              storeName={data.title}
-            />
-          ))}
+          {stores?.length === 0 ? (
+            <div style={{ color: "#5F6368" }}>가게를 추가해주세요 😊</div>
+          ) : (
+            stores?.map((data: IStore) => (
+              <StaffStoreCard key={data.id} storeName={data.title} />
+            ))
+          )}
         </CardBoxStyle>
       </WorkplaceBoxStyle>
     </div>
@@ -49,6 +51,10 @@ export default User;
 
 const WorkplaceBoxStyle = styled.div`
   margin: 1rem 1.5rem;
+
+  h2 {
+    font-size: 1.35rem;
+  }
 
   span {
     display: flex;

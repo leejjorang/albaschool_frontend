@@ -50,7 +50,7 @@ const RegisterStore = () => {
 
   return (
     <RegisterStoreStyle onSubmit={handleSubmit(onSubmit)}>
-      <h2>가게 등록하기</h2>
+      <h2>근무지 등록하기</h2>
       <InputStyle>
         <InputBox 
           name='storeId' 
@@ -63,7 +63,7 @@ const RegisterStore = () => {
           register={register('storeId', {
             pattern: {
               value: /^[^ㄱ-ㅎ가-힣]{8}$/,
-              message: '한글을 제외한 8자의 글자만 입력 가능합니다.'
+              message: '한글을 제외한 8글자만 입력 가능합니다.'
             }
           })}
         />
@@ -76,6 +76,7 @@ const RegisterStore = () => {
           required={true} 
           titleWidth={25} 
           width={70}
+          margin='1rem 0 0 0'
           register={register('password')}
         />
       </InputStyle>
@@ -112,8 +113,7 @@ const InputStyle = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 4rem 0 3rem;  
-  gap: 1rem;
+  margin: 4rem 0 3rem;
 `
 
 const ErrorText = styled.p`

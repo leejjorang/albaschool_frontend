@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Select,
@@ -15,47 +15,38 @@ import {
   getShopSchedules,
 } from "../../../services/scheduleService";
 import { createEvents } from "../../../features/schedule/createEvents";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../../../components/Button";
+import StoreIsEmpty from "../../../components/StoreIsEmpty";
 
 const StaffSchedule = () => {
   const [storeId, setStoreId] = useState<string>("");
   const [viewType, setViewType] = useState<"store" | "mine">("mine");
-  const navigate = useNavigate();
+  const [openTime, setOpenTime] = useState("00:00:00");
+  const [closeTime, setCloseTime] = useState("23:59:59");
 
   // 내가 속한 가게 조회
-  const {
-    data: stores,
-    error: storesError,
-    isLoading: storesLoading,
-  } = useQuery({
+  const { data: stores, isLoading: storesLoading } = useQuery({
     queryKey: ["stores"],
     queryFn: getStore,
     initialData: [],
+    retry: false,
   });
 
   // 내가 속한 가게의 스케줄 조회
-  const {
-    data: schedules,
-    error: schedulesError,
-    isLoading: schedulesLoading,
-  } = useQuery({
+  const { data: schedules = []} = useQuery({
     queryKey: ["schedules", storeId], // storeId를 포함
     queryFn: () => getShopSchedules(storeId),
     enabled: !!storeId && !storesLoading, // storeId가 있을 때만 쿼리 실행
     initialData: [],
+    retry: false,
   });
 
   // 나의 스케줄 조회
-  const {
-    data: MySchedules,
-    error: MySchedulesError,
-    isLoading: MySchedulesLoading,
-  } = useQuery({
+  const { data: MySchedules, isLoading: MySchedulesLoading } = useQuery({
     queryKey: ["MySchedules"],
     queryFn: getSchedules,
     enabled: !storesLoading,
     initialData: [],
+    retry: false, // 에러 발생 시 재시도하지 않음
   });
 
   const handleShopChange = (event: SelectChangeEvent) => {
@@ -69,44 +60,46 @@ const StaffSchedule = () => {
     }
   };
 
+  useEffect(() => {
+    if (viewType === "store") {
+      const store = stores.find((store: IStore) => store.id === storeId);
+      if (store) {
+        setOpenTime(store.openTime);
+        setCloseTime(store.closeTime);
+      }
+    } else {
+      // mine인 경우 가장 빠른 openTime 찾기
+      const findMinOpenTime = () => {
+        const validStores = stores.filter(
+          (store: IStore) => store.openTime !== "00:00:00"
+        );
+        if (!validStores.length) return "00:00:00";
+
+        const timeToMinutes = (time: string) => {
+          const [hours, minutes] = time.split(":").map(Number);
+          return hours * 60 + minutes;
+        };
+
+        // 시간을 기준으로 정렬하여 가장 빠른 시간 찾기
+        const sortedStores = [...validStores].sort(
+          (a, b) => timeToMinutes(a.openTime) - timeToMinutes(b.openTime)
+        );
+
+        return sortedStores[0].openTime;
+      };
+
+      setOpenTime(findMinOpenTime());
+    }
+  }, [viewType, storeId, stores]);
+
   console.log("스케줄:", schedules);
   if (storesLoading) return <div>가게 정보를 불러오는 중...</div>;
-  if (stores.length!==0 && storesError) return <div>가게를 조회하는 데 문제가 발생했습니다</div>;
   if (!stores?.length) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "1rem",
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "80%",
-          maxWidth: "400px",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>소속된 가게가 없습니다</div>
-        <Button
-          message="가게 추가하기"
-          width={80}
-          onClick={() => navigate(`/store/register/staff`)}
-        />
-      </Box>
-    );
+    return <StoreIsEmpty />;
   }
-  if (schedulesLoading) return <div>가게 스케줄 로딩중...</div>;
-  if (schedules.length!==0 && schedulesError)
-    return <div>가게 스케줄을 불러오는 데 문제가 발생했습니다</div>;
-
   if (MySchedulesLoading) return <div>내 스케줄 로딩중..</div>;
-  if (MySchedules.length!==0 && MySchedulesError)
-    return <div>내 스케줄을 불러오는 데 문제가 발생했습니다.</div>;
 
-  // viewType 에 따라 events 생성
+  //viewType 에 따라 events 생성
   const events =
     viewType === "mine"
       ? createEvents(MySchedules, "mine")
@@ -116,7 +109,7 @@ const StaffSchedule = () => {
     <Box>
       <Box
         sx={{
-          padding: "1rem",
+          padding: "1rem 1rem 0",
           display: "flex",
           justifyContent: "space-between",
         }}
@@ -139,6 +132,8 @@ const StaffSchedule = () => {
       <TimeTable
         events={events}
         storeId={viewType === "store" ? storeId : undefined}
+        openTime={openTime}
+        closeTime={closeTime}
       />
     </Box>
   );
