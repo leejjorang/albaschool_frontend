@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-} from "@mui/material";
+import { Box, Select, MenuItem, FormControl } from "@mui/material";
 import TimeTable from "../../../components/schedule/TimeTable";
 import ScheduleModal from "../../../components/schedule/ScheduleModal";
 import { getStore } from "../../../services/storeService";
@@ -16,27 +10,23 @@ import { createEvents } from "../../../features/schedule/createEvents";
 import StoreIsEmpty from "../../../components/StoreIsEmpty";
 import styled from "styled-components";
 
-
 const ManagerSchedule = () => {
-  const [storeId, setStoreId] = useState<string>('');
+  const [storeId, setStoreId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [openTime, setOpenTime] = useState('00:00:00');
-  const [closeTime, setCloseTime] = useState('00:00:00');
+  const [openTime, setOpenTime] = useState("00:00:00");
+  const [closeTime, setCloseTime] = useState("00:00:00");
   const queryClient = useQueryClient();
-  
+
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => {
     setModalOpen(false);
-    queryClient.invalidateQueries({ 
-      queryKey: ["schedule", storeId] 
+    queryClient.invalidateQueries({
+      queryKey: ["schedule", storeId],
     });
-  }
-  
+  };
+
   //가게 정보들 가져오기
-  const {
-    data: stores,
-    isLoading: storeLoading,
-  } = useQuery({
+  const { data: stores, isLoading: storeLoading } = useQuery({
     queryKey: ["stores"],
     queryFn: getStore,
     initialData: [],
@@ -44,10 +34,7 @@ const ManagerSchedule = () => {
   });
 
   //해당 가게의 스케쥴 가져오기
-  const {
-    data: schedules, 
-    isLoading: schedulesLoading
-  } = useQuery({
+  const { data: schedules, isLoading: schedulesLoading } = useQuery({
     queryKey: ["schedule", storeId],
     queryFn: () => getShopSchedules(storeId),
     enabled: !!storeId,
@@ -56,7 +43,7 @@ const ManagerSchedule = () => {
   });
 
   //해당 가게의 스케쥴들 전달하는 함수
-  const events = createEvents(schedules, "store"); 
+  const events = createEvents(schedules, "store");
 
   useEffect(() => {
     if (stores?.length > 0) {
@@ -66,12 +53,11 @@ const ManagerSchedule = () => {
 
   useEffect(() => {
     const store = stores.find((store: IStore) => store.id === storeId);
-    if(store) {
+    if (store) {
       setOpenTime(store.openTime);
       setCloseTime(store.closeTime);
     }
   }, [storeId]);
-
 
   if (storeLoading) return <div>로딩중...</div>;
   if (!stores?.length) return <StoreIsEmpty />;
@@ -93,8 +79,10 @@ const ManagerSchedule = () => {
             onChange={(e) => setStoreId(e.target.value)}
             sx={{ overflow: "hidden" }}
           >
-            {stores.map((data: IStore, i:number) => (
-              <MenuItem key={i} value={data.id}>{data.title}</MenuItem>
+            {stores.map((data: IStore, i: number) => (
+              <MenuItem key={i} value={data.id}>
+                {data.title}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -106,23 +94,29 @@ const ManagerSchedule = () => {
           storeId={storeId}
         />
       </Box>
-      <TimeTable events={events} openTime={openTime} closeTime={closeTime} storeId={storeId} />
+      <TimeTable
+        events={events}
+        openTime={openTime}
+        closeTime={closeTime}
+        storeId={storeId}
+      />
     </Box>
   );
 };
 
 const ButtonStyle = styled.button`
-  background-color: #FAED7D;
-  border: 1px solid #CDCDCD;
+  background-color: #faed7d;
+  border: 1px solid #cdcdcd;
   border-radius: 10px;
   padding: 0.7rem 1.3rem;
   text-align: center;
   font-size: 1rem;
   cursor: pointer;
 
-  &:focus, &:hover {
-    background-color: #FFD400;
+  &:focus,
+  &:hover {
+    background-color: #ffd400;
   }
-` 
+`;
 
 export default ManagerSchedule;

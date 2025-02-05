@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import styled from "styled-components";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 
@@ -23,7 +22,7 @@ function EduListForm({ type }: FormProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { storeName, storeId } = location.state;
-  const role = localStorage.getItem('role');
+  const role = localStorage.getItem("role");
 
   // 교육페이지 목록 조회
   const {
@@ -41,7 +40,7 @@ function EduListForm({ type }: FormProps) {
             // 빈 배열 반환
             return [];
           }
-          throw error; 
+          throw error;
         }
         throw error;
       }
@@ -68,7 +67,7 @@ function EduListForm({ type }: FormProps) {
             display: "flex",
             alignItems: "center",
             fontWeight: "bold",
-            fontSize: "21px"
+            fontSize: "21px",
           }}
         >
           <ArrowBackIosIcon
@@ -91,9 +90,11 @@ function EduListForm({ type }: FormProps) {
                 color: "#FFD400",
               },
             }}
-            onClick={() => navigate("/post/manager", {
-              state: { storeName, storeId }
-            })}
+            onClick={() =>
+              navigate("/post/manager", {
+                state: { storeName, storeId },
+              })
+            }
           />
         )}
       </Box>
@@ -120,11 +121,17 @@ function EduListForm({ type }: FormProps) {
               backgroundColor: "#fcfcfc",
               marginBottom: 1,
             }}
-            onClick={() => navigate(`/edupost/${role}`, {
-              state: { storeName: storeName, storeId: storeId, eduId:data.id }
-            })}
+            onClick={() =>
+              navigate(`/edupost/${role}`, {
+                state: {
+                  storeName: storeName,
+                  storeId: storeId,
+                  eduId: data.id,
+                },
+              })
+            }
           >
-            <span style={{fontSize: "1.1rem"}}>{data.title}</span>
+            <span style={{ fontSize: "1.1rem" }}>{data.title}</span>
           </Box>
         ))}
     </EduListStyle>
