@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { connectSSE } from "../../services/sseService";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
 import { chatIconStore } from "../../stores/chatIconStore";
 import { useLocation } from "react-router-dom";
-import { useChatScrollStore } from "../../stores/chatScrollStore";
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -22,27 +21,16 @@ const Layout = ({ children }: LayoutProps) => {
   );
   const setShake = chatIconStore((state) => state.setShake);
 
-  const isNewMessage = useChatScrollStore((state) => state.isNewMessage);
-  const scrollContainerRef = useRef<HTMLDivElement>(null); //채팅방 스크롤 컨트롤
-  const isChatRoom = location.pathname.startsWith("/chats/");
-  const scrollToBottom = () => {
-    if (isChatRoom && scrollContainerRef.current) {
-      console.log("Set scrollTop to:", scrollContainerRef.current.scrollHeight);
-      scrollContainerRef.current.scrollTop =
-        scrollContainerRef.current.scrollHeight;
-      console.log("scrollTop after:", scrollContainerRef.current.scrollTop);
-    }
-  };
-  useEffect(() => {
-    if (isNewMessage) {
-      scrollToBottom();
-      const timeout = setTimeout(() => {
-        useChatScrollStore.setState({ isNewMessage: false });
-      }, 300);
+  // useEffect(() => {
+  //   if (isNewMessage) {
+  //     scrollToBottom();
+  //     const timeout = setTimeout(() => {
+  //       useChatScrollStore.setState({ isNewMessage: false });
+  //     }, 300);
 
-      return () => clearTimeout(timeout);
-    }
-  }, [isNewMessage]);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [isNewMessage]);
 
   useEffect(() => {
     const eventSource = connectSSE({
@@ -72,7 +60,7 @@ const Layout = ({ children }: LayoutProps) => {
     };
   }, []);
   return (
-    <LayoutStyle ref={scrollContainerRef}>
+    <LayoutStyle>
       <Header />
       <MainStyle>{children}</MainStyle>
       <Bottom notification={true} />
@@ -85,7 +73,7 @@ export default Layout;
 const LayoutStyle = styled.div`
   width: 100vw;
   height: 100vh;
-  overflow-y: auto;
+  overflow: hidden;
 `;
 const MainStyle = styled.div`
   margin-top: 3.5rem;

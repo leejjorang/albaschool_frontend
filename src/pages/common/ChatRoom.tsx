@@ -11,7 +11,6 @@ import { Message } from "../../types/chat";
 import { getToken } from "../../stores/authStore";
 import { chatNotificationStore } from "../../stores/chatNotificationStore";
 import { chatIconStore } from "../../stores/chatIconStore";
-import { useChatScrollStore } from "../../stores/chatScrollStore";
 
 const ChatRoom = () => {
   const roomId = useParams().id;
@@ -26,19 +25,28 @@ const ChatRoom = () => {
     (state) => state.setUnreadMessages
   );
   const setShake = chatIconStore((state) => state.setShake);
-  const triggerScroll = useChatScrollStore((state) => state.triggerScroll);
 
   const socketRef = useRef<Socket>();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+      console.log("Set scrollTop to:", scrollContainerRef.current.scrollHeight);
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
+      console.log("scrollTop after:", scrollContainerRef.current.scrollTop);
+    }
+  };
 
   useEffect(() => {
-    //채팅오면 스크롤 내리기
-    triggerScroll();
+    scrollToBottom();
   }, [messages]);
 
   useLayoutEffect(() => {
-    setTimeout(() => {
-      triggerScroll();
-    }, 400);
+    scrollToBottom();
+    // setTimeout(() => {
+    //   scrollToBottom();
+    // }, 400);
   }, []);
 
   useEffect(() => {
@@ -122,7 +130,7 @@ const ChatRoom = () => {
   };
 
   return (
-    <div>
+    <ChatRoomContainer ref={scrollContainerRef}>
       <ChatRoomHeaderStyle>
         {menuOpen && <ChatMenu toggleMenu={toggleMenu} />}
 
@@ -144,11 +152,18 @@ const ChatRoom = () => {
         ></textarea>
         <button onClick={sendMessage}>전송</button>
       </ChatInputBoxStyle>
-    </div>
+    </ChatRoomContainer>
   );
 };
 
 export default ChatRoom;
+
+const ChatRoomContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 85%;
+  overflow-y: auto;
+`;
 
 const ChatRoomHeaderStyle = styled.div`
   display: flex;
