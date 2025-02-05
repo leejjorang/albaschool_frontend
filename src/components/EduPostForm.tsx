@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import styled from "styled-components";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -93,11 +93,12 @@ function EduPostForm({ type }: FormProps) {
         </Box>
         {type === "business" && (
           <Box>
-            <SmallNegativeButton 
-              onClick={() => handleDeleteEduPost(storeId, eduId)}>
-              삭제  
+            <SmallNegativeButton
+              onClick={() => handleDeleteEduPost(storeId, eduId)}
+            >
+              삭제
             </SmallNegativeButton>
-            <SmallButton 
+            <SmallButton
               message="수정"
               onClick={() =>
                 navigate(`/post/${role}`, {
@@ -222,8 +223,8 @@ const EduPostStyle = styled.div`
 `;
 
 const SmallNegativeButton = styled.button`
-  background-color: #F3F3F3;
-  border: 1px solid #CDCDCD;
+  background-color: #f3f3f3;
+  border: 1px solid #cdcdcd;
   border-radius: 10px;
   padding: 0.3rem 0.9rem;
   margin-right: 0.5rem;
@@ -231,8 +232,9 @@ const SmallNegativeButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
 
-  &:focus, &:hover {
-    background-color: #FF9D3C;
+  &:focus,
+  &:hover {
+    background-color: #ff9d3c;
   }
-`
+`;
 export default EduPostForm;

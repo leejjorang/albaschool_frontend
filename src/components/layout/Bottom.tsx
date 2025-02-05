@@ -20,7 +20,7 @@ const Bottom = () => {
     mypage: role === "manager" ? "/user/manager" : "/user/staff",
   };
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
     const path = routes[newValue];
     if (path) {

@@ -1,22 +1,22 @@
 import styled from "styled-components";
-import { BigButton, Button } from "../../components/Button";
+import { BigButton } from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 
 function SelectRole() {
   const navigate = useNavigate();
 
   const handleManagerClick = () => {
-    navigate('/signup/manager');
+    navigate("/signup/manager");
   };
 
   const handleStaffClick = () => {
-    navigate('/signup/staff');
-  }
- 
+    navigate("/signup/staff");
+  };
+
   return (
     <SelectRoleStyle>
       <p>이용 목적에 맞는 회원 유형을 선택하세요.</p>
-      <BigButton message="사업자" width={70} onClick={handleManagerClick}/>
+      <BigButton message="사업자" width={70} onClick={handleManagerClick} />
       <BigButton message="직원 / 알바" width={70} onClick={handleStaffClick} />
     </SelectRoleStyle>
   );

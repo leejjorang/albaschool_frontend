@@ -1,4 +1,4 @@
-import { TextField, Typography } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -62,7 +62,7 @@ function ChangePwd() {
     },
   });
 
-  const onSubmit = async (data:ChangePwdProps) => {
+  const onSubmit = async (data: ChangePwdProps) => {
     changePassword.mutate(data.newPassword);
   };
 
@@ -133,6 +133,5 @@ const TextFieldWrapperStyle = styled.div`
   width: 90%;
   margin: 3rem 0;
 `;
-
 
 export default ChangePwd;

@@ -1,4 +1,4 @@
-import { Box, Button,TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Tiptap from "../../components/Tiptap";
@@ -151,8 +151,8 @@ function WritePost() {
           <Box>
             <SmallButton
               type="submit"
-              disabled={mode === 'edit' && !isModified}
-              message={mode === 'edit' ? '수정' : '등록'}
+              disabled={mode === "edit" && !isModified}
+              message={mode === "edit" ? "수정" : "등록"}
             />
           </Box>
         </Box>
