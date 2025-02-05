@@ -208,7 +208,7 @@ const RegisterStore = () => {
           <TimePick onChange={(e) => setCloseTime(e)} startTime={openTime as string} />
         </InputBoxStyle>
       </InputStyle>
-      <Button message='등록하기' />
+      <Button message='등록하기' width={30}/>
 
       {showToast && (
         <ToastPopup
@@ -262,7 +262,7 @@ const ButtonStyle = styled.button`
   font-size: 1rem;
   padding: 0.6rem 0.9rem;
   background-color: #faed7d;
-  border: 1px solid #dbcdcd;
+  border: 1px solid #cbcdcd;
   border-radius: 10px;
 
   &:focus,

@@ -301,9 +301,9 @@ const InputBoxStyle = styled.div`
 
   button {
     font-size: 1rem;
-    padding: 0.5rem 0.8rem;
+    padding: 0.6rem 0.8rem;
     background-color: #faed7d;
-    border: 1px solid #dbcdcd;
+    border: 1px solid #cbcdcd;
     border-radius: 10px;
 
     &:focus,

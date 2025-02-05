@@ -277,7 +277,7 @@ const FormStyle = styled.form`
   align-items: center;
 
  h2 {
-    font-size: 2.3rem;
+    font-size: 2rem;
     margin-bottom: 1.5rem;
   }
 `;
@@ -299,7 +299,7 @@ const InputBoxStyle = styled.div`
   margin-top: 1rem;
 
   p {
-    width: 27%;
+    width: 25%;
     text-align: end;
   }
 
@@ -326,7 +326,7 @@ const InputBoxStyle = styled.div`
     font-size: 1rem;
     padding: 0.6rem 1rem;
     background-color: #faed7d;
-    border: 1px solid #dbcdcd;
+    border: 1px solid #cbcdcd;
     border-radius: 10px;
 
     &:focus, &:hover {

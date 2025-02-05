@@ -102,7 +102,7 @@ const UpdateStore = () => {
           />
         </InputBoxStyle>
       </InputStyle>
-      <Button message="수정하기" />
+      <Button message="수정하기" width={30} />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <p>{storeName} 정보를 변경하시겠습니까?</p>
         <ButtonStyle>

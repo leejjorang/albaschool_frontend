@@ -150,7 +150,7 @@ const FormStyle = styled.form`
   padding: 0 20px;
 
   h2 {
-    font-size: 2.3rem;
+    font-size: 2rem;
   }
 `;
 
