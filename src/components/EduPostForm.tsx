@@ -7,6 +7,7 @@ import { deletePost, getPost } from "../services/educationService";
 import DOMPurify from "dompurify";
 import { useState } from "react";
 import ToastPopup from "./ToastPopup";
+import { SmallButton } from "./Button";
 
 interface FormProps {
   type: "staff" | "business";
@@ -59,7 +60,7 @@ function EduPostForm({ type }: FormProps) {
     <EduPostStyle>
       <Box
         sx={{
-          padding: "10px",
+          padding: "10px 0",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -71,7 +72,7 @@ function EduPostForm({ type }: FormProps) {
             display: "flex",
             alignItems: "center",
             fontWeight: "bold",
-            fontSize: "20px",
+            fontSize: "21px",
           }}
         >
           <ArrowBackIosIcon
@@ -92,31 +93,12 @@ function EduPostForm({ type }: FormProps) {
         </Box>
         {type === "business" && (
           <Box>
-            <Button
-              variant="contained"
-              size="small"
-              sx={{
-                marginRight: "20px",
-                color: "black",
-                background: "#E9E9E9",
-                "&:hover": {
-                  backgroundColor: "#B9B9B9",
-                },
-              }}
-              onClick={() => handleDeleteEduPost(storeId, eduId)}
-            >
-              삭제
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              sx={{
-                color: "black",
-                background: "#FAED7D",
-                "&:hover": {
-                  backgroundColor: "#FFD400",
-                },
-              }}
+            <SmallNegativeButton 
+              onClick={() => handleDeleteEduPost(storeId, eduId)}>
+              삭제  
+            </SmallNegativeButton>
+            <SmallButton 
+              message="수정"
               onClick={() =>
                 navigate(`/post/${role}`, {
                   state: {
@@ -131,9 +113,7 @@ function EduPostForm({ type }: FormProps) {
                   },
                 })
               }
-            >
-              수정
-            </Button>
+            />
           </Box>
         )}
       </Box>
@@ -146,11 +126,10 @@ function EduPostForm({ type }: FormProps) {
       )}
       <Box
         sx={{
-          backgroundColor: "#f7f6f6",
-          border: "1px solid #dbcdcd",
+          backgroundColor: "#fcfcfc",
+          border: "1px solid #cdcdcd",
           borderRadius: "20px",
           padding: "15px",
-          margin: "0 10px",
         }}
       >
         <p
@@ -241,4 +220,19 @@ const EduPostStyle = styled.div`
     }
   }
 `;
+
+const SmallNegativeButton = styled.button`
+  background-color: #F3F3F3;
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  padding: 0.3rem 0.9rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:focus, &:hover {
+    background-color: #FF9D3C;
+  }
+`
 export default EduPostForm;

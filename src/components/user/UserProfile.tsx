@@ -11,7 +11,7 @@ interface UserProfileProps {
 const UserProfile: React.FC<UserProfileProps> = ({userName, profile}) => {
   return (
     <UserProfileStyle>
-      <Avatar src={profile} sx={{ width: '6.5rem', height: '6.5rem' }} />
+      <Avatar src={profile} sx={{ width: '6.3rem', height: '6.3rem' }} />
       <div>
         <h3>{userName} 님</h3>
         <Link to={'/user/edit'}>
@@ -33,7 +33,7 @@ const UserProfileStyle = styled.div`
   margin: 1.5rem 1.5rem 2.5rem 1.5rem;
 
   h3 {
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     margin-bottom: 0.1rem;
   }
 

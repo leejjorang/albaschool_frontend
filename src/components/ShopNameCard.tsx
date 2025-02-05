@@ -24,13 +24,13 @@ export default ShopNameCard;
 
 
 const ShopCardStyle = styled.div`
-  border: 1px solid #000000;
+  border: 1px solid #cdcdcd;
   width: 93%;
   padding: 1.1rem 1rem;
   border-radius: 10px;
 
   p {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 600;
     text-align: center;
   }

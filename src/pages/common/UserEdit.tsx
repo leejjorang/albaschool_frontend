@@ -110,9 +110,13 @@ const UserEdit = () => {
   const {mutate: uploadFile} = useMutation({
     mutationFn: postProfile,
     onSuccess: () => {
-      console.log("사진 업로드 성공");
+      setToastMessage("✅ 프로필 사진이 변경되었습니다.");
+      setShowToast(true);
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
     },
     onError: (error) => {
+      setToastMessage("❌ 프로필 사진 변경이 실패했습니다.");
+      setShowToast(true);
       console.error(error);
     }
   });
@@ -126,9 +130,13 @@ const UserEdit = () => {
   const {mutate: removeProfile} = useMutation({
     mutationFn: deleteProfile,
     onSuccess: () => {
-      console.log("사진 삭제 성공");
+      setToastMessage("✅ 프로필 사진이 삭제되었습니다.");
+      setShowToast(true);
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
     },
     onError: (error) => {
+      setToastMessage("❌ 프로필 사진 삭제가가 실패했습니다.");
+      setShowToast(true);
       console.error(error);
     }
   });
@@ -173,7 +181,7 @@ const handleUpdateClick = () => {
       <ProfileBoxStyle>
         <Avatar
           src={userData.profile}
-          sx={{ width: "7.5rem", height: "7.5rem" }}
+          sx={{ width: "8rem", height: "8rem" }}
         />
         <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{display: "none"}}/>
         <ButtonBoxStyle>
@@ -198,7 +206,7 @@ const handleUpdateClick = () => {
             name="password"
             type="password"
             placeholder="비밀번호를 입력해주세요"
-            width={55}
+            width={57}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -267,7 +275,7 @@ const ProfileBoxStyle = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 3.5rem;
+  margin-top: 4rem;
 `;
 
 const InputStyle = styled.div`
@@ -293,9 +301,9 @@ const InputBoxStyle = styled.div`
 
   button {
     font-size: 1rem;
-    padding: 0.5rem 0.8rem;
+    padding: 0.6rem 0.8rem;
     background-color: #faed7d;
-    border: 1px solid #dbcdcd;
+    border: 1px solid #cbcdcd;
     border-radius: 10px;
 
     &:focus,
@@ -309,7 +317,7 @@ const ButtonBoxStyle = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 2.5rem 0;
   gap: 0.7rem;
   width: 100%;
 `;

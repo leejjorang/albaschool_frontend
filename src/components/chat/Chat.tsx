@@ -36,7 +36,7 @@ const ChatStyle = styled.span`
 const MessageStyle = styled.p`
   border: 1px solid #CDCDCD;
   border-radius: 15px;
-  padding: 0.7rem 1rem;
+  padding: 0.5rem 0.8rem;
   max-width: 70%;
   word-wrap: break-word;
 

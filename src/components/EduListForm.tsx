@@ -2,6 +2,8 @@ import { Box } from "@mui/material";
 import styled from "styled-components";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getEdulist } from "../services/educationService";
@@ -54,7 +56,7 @@ function EduListForm({ type }: FormProps) {
       <Box
         sx={{
           width: "100%",
-          padding: "10px",
+          padding: "10px 0",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -66,7 +68,7 @@ function EduListForm({ type }: FormProps) {
             display: "flex",
             alignItems: "center",
             fontWeight: "bold",
-            fontSize:"20px"
+            fontSize: "21px"
           }}
         >
           <ArrowBackIosIcon
@@ -82,10 +84,9 @@ function EduListForm({ type }: FormProps) {
           {storeName}
         </Box>
         {type === "business" && (
-          <AddCircleIcon
+          <ControlPointIcon
             sx={{
               cursor: "pointer",
-              color: "#FAED7D",
               "&:hover": {
                 color: "#FFD400",
               },
@@ -110,20 +111,20 @@ function EduListForm({ type }: FormProps) {
             sx={{
               width: "100%",
               padding: 2,
-              border: "1px solid #DBCDCD",
+              border: "1px solid #cdcdcd",
               borderRadius: 3,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
               cursor: "pointer",
-              backgroundColor: "#F7F6F6",
+              backgroundColor: "#fcfcfc",
               marginBottom: 1,
             }}
             onClick={() => navigate(`/edupost/${role}`, {
               state: { storeName: storeName, storeId: storeId, eduId:data.id }
             })}
           >
-            <span>{data.title}</span>
+            <span style={{fontSize: "1.1rem"}}>{data.title}</span>
           </Box>
         ))}
     </EduListStyle>

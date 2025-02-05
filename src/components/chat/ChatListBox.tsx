@@ -33,8 +33,8 @@ const ChatListBox: React.FC<ChatListBoxProps> = ({
     <ChatListBoxStyle onClick={goToChatRoom}>
       <div style={{ maxWidth: "60%" }}>
         <span>
-          <p>{storeName}</p>
-          <p style={{ color: "#7E7E7E" }}>{headCount}</p>
+          <p style={{ fontWeight: "600", color: "#000000" }}>{storeName}</p>
+          <p>{headCount}</p>
         </span>
         <p style={{ color: "#565656" }}>{lastMessage}</p>
       </div>
@@ -51,7 +51,7 @@ export default ChatListBox;
 const ChatListBoxStyle = styled.div`
   display: flex;
   justify-content: space-between;
-  border: 1px solid #000000;
+  border: 1px solid #cdcdcd;
   width: 93%;
   padding: 0.7rem 1rem;
   border-radius: 10px;
@@ -62,8 +62,7 @@ const ChatListBoxStyle = styled.div`
     margin-bottom: 0.3rem;
 
     p {
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1.1rem;
     }
   }
 
@@ -72,10 +71,10 @@ const ChatListBoxStyle = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    color: #7E7E7E;
   }
 
-  &:focus,
-  &:hover {
+  &:focus, &:hover {
     background-color: #ffd400;
   }
 `;

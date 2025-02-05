@@ -139,7 +139,7 @@ const RegisterStore = () => {
             type='text'
             disabled={isBizNumVerified}
             required={true}
-            width={50}
+            width={49}
             register={register('bizNum', {
               pattern: {
                 value: /^[0-9]{10}$/,
@@ -147,15 +147,15 @@ const RegisterStore = () => {
               }
             })}
           />
-          <button type="button" onClick={handleVerifyBizNum} disabled={isBizNumVerified}>
+          <ButtonStyle type="button" onClick={handleVerifyBizNum} disabled={isBizNumVerified}>
             인증
-          </button>
+          </ButtonStyle>
         </InputBoxStyle>
         {errors.bizNum && errors.bizNum.message && <ErrorText>{errors.bizNum.message.toString()}</ErrorText>}
 
         <InputBoxStyle>
           <p>카테고리</p>
-          <FormControl variant="standard" sx={{ m: 1, minWidth: '70%', margin: '0' }}>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: '68%', margin: '0' }}>
             <InputLabel id="demo-simple-select-standard-label">업종</InputLabel>
             <Select
               labelId="demo-simple-select-standard-label"
@@ -183,8 +183,9 @@ const RegisterStore = () => {
           type='text' 
           placeholder='가게 이름을 입력해주세요' 
           required={true} 
-          titleWidth={25} 
-          width={70} 
+          titleWidth={23} 
+          width={68} 
+          margin='1rem 0 0 0'
           register={register('title')}
         />
         <InputBox 
@@ -193,8 +194,9 @@ const RegisterStore = () => {
           type='password' 
           placeholder='비밀번호를 입력해주세요' 
           required={true} 
-          titleWidth={25} 
-          width={70} 
+          titleWidth={23} 
+          width={68} 
+          margin='1rem 0 0 0'
           register={register('password')}
         />
         <InputBoxStyle>
@@ -206,7 +208,7 @@ const RegisterStore = () => {
           <TimePick onChange={(e) => setCloseTime(e)} startTime={openTime as string} />
         </InputBoxStyle>
       </InputStyle>
-      <Button message='등록하기' />
+      <Button message='등록하기' width={30}/>
 
       {showToast && (
         <ToastPopup
@@ -239,8 +241,7 @@ export const InputStyle = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 4rem 0 3rem;  
-  gap: 1rem;
+  margin: 3rem 0 3rem;
 `
 
 export const InputBoxStyle = styled.div`
@@ -249,24 +250,25 @@ export const InputBoxStyle = styled.div`
   justify-content: center;
   width: 90%;
   gap: 0.8rem;
+  margin-top: 1rem;
 
   p {
-    width: 25%;
+    width: 23%;
     text-align: end;
   }
+`
 
-  button {
-      font-size: 1rem;
-      padding: 0.6rem 0.9rem;
-      background-color: #faed7d;
-      border: 1px solid #dbcdcd;
-      border-radius: 10px;
+const ButtonStyle = styled.button`
+  font-size: 1rem;
+  padding: 0.6rem 0.9rem;
+  background-color: #faed7d;
+  border: 1px solid #cbcdcd;
+  border-radius: 10px;
 
-      &:focus,
-      &:hover {
-        background-color: #ffd400;
-      }
-    }
+  &:focus,
+  &:hover {
+    background-color: #ffd400;
+  }
 `
 
 const ErrorText = styled.p`
